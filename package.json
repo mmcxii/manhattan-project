@@ -1,0 +1,19 @@
+{
+  "name": "manhattan-project",
+  "version": "1.0.0",
+  "description": "A MERN stack application for connection people with their poison",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmcxii/manhattan-project.git"
+  },
+  "author": "Team Taco",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mmcxii/manhattan-project/issues"
+  },
+  "homepage": "https://github.com/mmcxii/manhattan-project#readme"
+}
