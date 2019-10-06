@@ -1,3 +1,3 @@
-import Pages from './Pages';
+import Router from './Router';
 
-export default Pages;
+export default Router;

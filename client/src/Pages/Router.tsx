@@ -5,7 +5,7 @@ import Home from './Home';
 import SearchResults from './SearchResults';
 import User from './User';
 
-const Pages: React.FC = () => (
+const Router: React.FC = () => (
   <main>
     <BrowserRouter>
       <Switch>
@@ -25,4 +25,4 @@ const Pages: React.FC = () => (
   </main>
 );
 
-export default Pages;
+export default Router;

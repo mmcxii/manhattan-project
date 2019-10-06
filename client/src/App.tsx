@@ -2,7 +2,7 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
-import Pages from 'Pages';
+import Router from 'Pages';
 import { Header, Footer } from 'Elements';
 
 const App: React.FC = () => {
@@ -12,7 +12,7 @@ const App: React.FC = () => {
       <GlobalStyles />
 
       <Header />
-      <Pages />
+      <Router />
       <Footer />
     </>
   );
