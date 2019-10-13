@@ -5,7 +5,7 @@ import DB from './db';
 const app: Application = express();
 app.use(morgan('dev'));
 
-const PORT: string = process.env.PORT || '6969';
+const PORT = process.env.PORT || 6969;
 
 // Listen for HTTP traffic once DB connection is established
 DB.once('open', () => {
