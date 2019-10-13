@@ -1,12 +1,12 @@
 import { Router, Application } from 'express';
-import userRoutes from './userRoutes';
+import { UserRoutes } from './userRoutes';
 
 export default (app: Application) => {
   // Create new router and setup API routes
-  const router: Router = Router();
+  const apiRoutes: Router = Router();
 
-  userRoutes(router);
+  apiRoutes.use('/users', UserRoutes);
 
   // Attach router to Express app
-  app.use('/api', router);
+  app.use('/api', apiRoutes);
 };
