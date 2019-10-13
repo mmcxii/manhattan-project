@@ -1,4 +1,5 @@
 import { Router, Application } from 'express';
+import { HtmlRoutes } from './htmlRoutes'
 import { UserRoutes } from './userRoutes';
 
 export default (app: Application) => {
@@ -7,6 +8,7 @@ export default (app: Application) => {
 
   apiRoutes.use('/users', UserRoutes);
 
-  // Attach router to Express app
+  // Attach routers to Express app
+  app.use('/', HtmlRoutes);
   app.use('/api', apiRoutes);
 };
