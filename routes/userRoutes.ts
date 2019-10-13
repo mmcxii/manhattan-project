@@ -3,7 +3,7 @@ import { User } from '../models/User';
 
 export default (router: Router): void => {
   router
-    .get('/api/users', (req, res) => {
+    .get('/users', (req, res) => {
       // Get all users
       User.find()
         .then(users => {
@@ -15,17 +15,17 @@ export default (router: Router): void => {
           return;
         });
     })
-    .post('/api/users', (req, res) => {
+    .post('/users', (req, res) => {
       // Create new User
       // TODO
     })
-    .get('/api/users/:username', (req, res) => {
+    .get('/users/:username', (req, res) => {
       // Get User by username
       User.find({ username: req.params.username })
         .then(user => res.json(user))
         .catch(error => res.status(500).send(error));
     })
-    .put('/api/users/:username', (req, res) => {
+    .put('/users/:username', (req, res) => {
       // Update User by username
       // TODO
     });

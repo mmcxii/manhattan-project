@@ -8,5 +8,5 @@ export default (app: Application) => {
   userRoutes(router);
 
   // Attach router to Express app
-  app.use(router);
+  app.use('/api', router);
 };
