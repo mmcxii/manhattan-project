@@ -1,8 +1,14 @@
-/*
-  TypeScript allows for imports with import/ export syntax, rather than require/ module.exports
-  See example below
-*/
+import express, { Application } from 'express';
+import morgan from 'morgan'
+import DB from './db';
 
-import express from 'express';
+const app: Application = express();
+app.use(morgan('dev'));
 
-const app = express();
+const PORT = process.env.PORT || 6969;
+
+// Listen for HTTP traffic once DB connection is established
+DB.once('open', () => {
+    console.log('Successfully connected to DB.');
+    app.listen(PORT, () => console.log(`Listening for connections on port: ${PORT}`));
+});
