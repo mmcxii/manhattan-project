@@ -27,11 +27,13 @@
     "@types/node": "^12.7.11",
     "express": "^4.17.1",
     "mongoose": "^5.7.3",
+    "morgan": "^1.9.1",
     "ts-mongoose": "0.0.19",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "devDependencies": {
+    "@types/morgan": "^1.7.37",
     "concurrently": "^4.1.2",
     "nodemon": "^1.19.3"
   }
