@@ -4,8 +4,8 @@ import Normalize from 'react-normalize';
 
 import { ThemeContext } from 'Store';
 import Router from 'Pages';
-import { white, black } from 'Utilities';
-import { Header, Footer } from 'Elements';
+import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
+import { Header, Footer, Card, Button } from 'Elements';
 
 const App: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -41,6 +41,21 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     display: flex;
     flex-direction: column;
     
-    background: ${props => (props.theme === 'dark' ? black : white)};
+    background: ${props => (props.theme === 'dark' ? black : whiteLight)};
+  }
+
+  ${Card} {
+    background: ${props => (props.theme === 'dark' ? grey : white)};
+    border: 1px solid ${props => (props.theme === 'dark' ? blackDark : grey)};
+  }
+  
+  ${Button} {
+    color: ${props => (props.theme === 'dark' ? black : white)};
+    background: ${props => (props.theme === 'dark' ? white : grey)};
+    ${transition({ prop: 'background' })};
+
+    &:hover {
+      background: ${props => (props.theme === 'dark' ? greyLight : black)};
+    }
   }
 `;
