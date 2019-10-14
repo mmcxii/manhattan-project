@@ -1,14 +1,17 @@
+import path from 'path';
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import DB from './db';
-import apiRoutes from './routes';
+import routeConfig from './routes';
 
 // Create Express app
 const app: Application = express();
 app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Setup routes
-apiRoutes(app);
+routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
 
