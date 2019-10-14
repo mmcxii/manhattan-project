@@ -9,6 +9,6 @@ export default (app: Application) => {
   apiRoutes.use('/users', UserRoutes);
 
   // Attach routers to Express app
-  app.use('/', HtmlRoutes);
   app.use('/api', apiRoutes);
+  app.use('/', HtmlRoutes);
 };
