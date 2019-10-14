@@ -7,6 +7,7 @@ interface Props {}
 
 const User: React.FC<Props> = () => {
   const { username } = useParams();
+  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInformation, setProfileInformation] = useState<UserProps>({
     username: 'nichsecord',
     name: 'nich secord',
@@ -42,6 +43,7 @@ const User: React.FC<Props> = () => {
 
   return (
     <>
+      {isUsersProfile && <button>Edit information</button>}
       {profileInformation.name && <h2>{profileInformation.name}</h2>}
       {profileInformation.age && <small>{profileInformation.age}</small>}
       {profileInformation.bio && <p>{profileInformation.bio}</p>}
