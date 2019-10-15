@@ -9,5 +9,5 @@ export const whiteLight = '#dcdde1';
 export const grey = '#636e72';
 export const greyLight = '#b2bec3';
 
-export const lightBlue = '#0984e3';
 export const green = '#00b894';
+export const red = '#951313';

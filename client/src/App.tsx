@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
@@ -14,9 +15,11 @@ const App: React.FC = () => {
       <Normalize />
       <GlobalStyles theme={theme} />
 
-      <Header />
-      <Router />
-      <Footer />
+      <BrowserRouter>
+        <Header />
+        <Router />
+        <Footer />
+      </BrowserRouter>
     </>
   );
 };
