@@ -4,7 +4,7 @@ import { User } from '../models/User';
 
 const Strategy = passportLocal.Strategy;
 
-module.exports = function(passport) {
+export default (passport) => {
 
     passport.use(
         new Strategy((username : string, password: string, cb) => {
