@@ -4,7 +4,7 @@ import { User } from '../models/User';
 
 const Strategy = passportLocal.Strategy;
 
-export default (passport) => {
+export default (passport: any) => {
 
     passport.use(
         new Strategy((username : string, password: string, cb) => {
@@ -37,11 +37,11 @@ export default (passport) => {
         })
     )
 
-    passport.serializeUser((user, cb) => {
+    passport.serializeUser((user: any, cb: any) => {
         cb(null, user._id);
     })
 
-    passport.deserializeUser((id : string, cb) => {
+    passport.deserializeUser((id : string, cb: any) => {
         User.findById(id)
         .then(user => {
             cb(null, user)
