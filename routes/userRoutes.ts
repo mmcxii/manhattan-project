@@ -82,7 +82,7 @@ export const UserRoutes = Router()
     try {
       const user: IUser | null = await User.findOne({
         username: username
-      }).populate('followers');
+      },'followers').populate('followers');
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
@@ -177,7 +177,7 @@ export const UserRoutes = Router()
     try {
       const user: IUser | null = await User.findOne({
         username: username
-      }).populate('follows');
+      }, 'follows').populate('follows');
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
