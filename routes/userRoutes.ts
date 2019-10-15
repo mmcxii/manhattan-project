@@ -62,7 +62,7 @@ export const UserRoutes = Router()
     const userData = req.body;
 
     try {
-      const user: IUser | null = await User.findOneAndUpdate({ username: username }, userData, {
+      const user: IUser | null = await User.findOneAndUpdate({ username }, userData, {
         new: true
       });
 
@@ -75,14 +75,35 @@ export const UserRoutes = Router()
       return res.status(500).send(error);
     }
   })
+  .delete('/:username', async (req, res) => {
+    // Delete a User
+    // TODO - should be controlled via some Admin flag or equivalent
+    const username = req.params.username.trim().toLowerCase();
+
+    try {
+      const response = await User.deleteOne({ username });
+
+      if (!response.ok) {
+        return res.status(500).send('Error deleting User.');
+      }
+
+      if (!response.deletedCount || response.deletedCount === 0) {
+        return res.sendStatus(204);
+      }
+
+      return res.status(200).send(`User ${username} deleted.`);
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  })
   .get('/:username/followers', async (req, res) => {
     // Get user followers
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUser | null = await User.findOne({
-        username: username
-      },'followers').populate('followers');
+      const user: IUser | null = await User.findOne({ username }, 'followers').populate(
+        'followers'
+      );
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
@@ -175,9 +196,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUser | null = await User.findOne({
-        username: username
-      }, 'follows').populate('follows');
+      const user: IUser | null = await User.findOne({ username }, 'follows').populate('follows');
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
