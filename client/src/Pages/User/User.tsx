@@ -97,5 +97,7 @@ const User: React.FC<Props> = () => {
 export default User;
 
 const ProfileCard = styled(Card).attrs({ as: 'section' })`
-  margin: ${spacing.lg} 0;
+  &:not(:first-child) {
+    margin: ${spacing.lg} 0;
+  }
 `;

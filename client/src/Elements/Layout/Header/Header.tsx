@@ -10,19 +10,30 @@ interface Props {}
 
 const Header: React.FC<Props> = () => {
   return (
-    <HeaderContainer>
-      <Logo />
-      <Nav />
-    </HeaderContainer>
+    <Wrapper>
+      <HeaderContainer>
+        <Logo />
+        <Nav />
+      </HeaderContainer>
+    </Wrapper>
   );
 };
 
 export default Header;
 
-const HeaderContainer = styled(Container).attrs({ as: 'header' })`
+const Wrapper = styled.header`
+  position: fixed;
+  width: 100%;
+`;
+
+const HeaderContainer = styled(Container)`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   text-align: center;
   padding: ${spacing.md} 0;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: column;
+  }
 `;

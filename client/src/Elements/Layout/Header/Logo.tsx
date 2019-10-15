@@ -26,11 +26,20 @@ const Icon = styled.i`
   height: 50px;
   width: 50px !important;
   border-radius: 50%;
-  margin-right: ${spacing.sm};
   background: ${red};
+
+  @media screen and (min-width: 768px) {
+    margin-right: ${spacing.sm};
+  }
 `;
 
 const Text = styled.h1`
   margin: 0;
   font-size: 2rem;
+  display: none;
+  letter-spacing: 2px;
+
+  @media screen and (min-width: 768px) {
+    display: inline;
+  }
 `;

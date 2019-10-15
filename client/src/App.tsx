@@ -27,6 +27,7 @@ const App: React.FC = () => {
 export default App;
 
 const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
+  // Reset
 * {
     margin: 0;
     padding: 0;
@@ -34,17 +35,23 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     color: ${props => (props.theme === 'dark' ? white : black)};
   }
 
+  // Set up body layout with sticky footer
   body,
   html,
   #root {
     min-height:100vh
   }
 
+  // Theme styling for generic components, additional theming is done at component level in certain places
   #root {
     display: flex;
     flex-direction: column;
     
-    background: ${props => (props.theme === 'dark' ? black : whiteLight)};
+    background: ${props => (props.theme === 'dark' ? black : white)};
+  }
+
+  header {
+    background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};
   }
 
   ${Card} {

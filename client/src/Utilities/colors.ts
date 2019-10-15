@@ -11,3 +11,5 @@ export const greyLight = '#b2bec3';
 
 export const green = '#00b894';
 export const red = '#951313';
+
+export default { black, blackDark, white, whiteLight, grey, greyLight, green, red };
