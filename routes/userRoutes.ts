@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { IUser } from '../interfaces/IUser';
-import { User } from '../models/User';
+import { User, IUserDocument } from '../models/User';
 import { UserUtilities } from '../util/UserUtilities';
 
 const userUtilities = new UserUtilities();
@@ -9,7 +8,7 @@ export const UserRoutes = Router()
   .get('/', async (req, res) => {
     // Get all users
     try {
-      const users: IUser[] = await User.find();
+      const users: IUserDocument[] = await User.find();
       return res.json(users);
     } catch (error) {
       return res.status(500).send(error);
@@ -25,7 +24,7 @@ export const UserRoutes = Router()
     const newUser = new User(req.body);
 
     try {
-      const savedUser: IUser = await newUser.save();
+      const savedUser: IUserDocument = await newUser.save();
 
       return res.status(201).json(savedUser);
     } catch (error) {
@@ -41,7 +40,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUser | null = await User.findOne({ username });
+      const user: IUserDocument | null = await User.findOne({ username });
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
@@ -62,7 +61,7 @@ export const UserRoutes = Router()
     const userData = req.body;
 
     try {
-      const user: IUser | null = await User.findOneAndUpdate({ username }, userData, {
+      const user: IUserDocument | null = await User.findOneAndUpdate({ username }, userData, {
         new: true
       });
 
@@ -101,7 +100,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUser | null = await User.findOne({ username }, 'followers').populate(
+      const user: IUserDocument | null = await User.findOne({ username }, 'followers').populate(
         'followers'
       );
 
@@ -133,10 +132,9 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs: [IUser, IUser] | Error = await userUtilities.getUserAndFollower(
-        username,
-        followerName
-      );
+      const userDocs:
+        | [IUserDocument, IUserDocument]
+        | Error = await userUtilities.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -172,10 +170,9 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs: [IUser, IUser] | Error = await userUtilities.getUserAndFollower(
-        username,
-        followerName
-      );
+      const userDocs:
+        | [IUserDocument, IUserDocument]
+        | Error = await userUtilities.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -196,7 +193,9 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUser | null = await User.findOne({ username }, 'follows').populate('follows');
+      const user: IUserDocument | null = await User.findOne({ username }, 'follows').populate(
+        'follows'
+      );
 
       if (!user) {
         return res.status(404).send(`User ${username} not found.`);
@@ -261,10 +260,9 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs: [IUser, IUser] | Error = await userUtilities.getUserAndFollower(
-        username,
-        followerName
-      );
+      const userDocs:
+        | [IUserDocument, IUserDocument]
+        | Error = await userUtilities.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
