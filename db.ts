@@ -8,10 +8,8 @@ export default {
       .connect(DB_URI, {
         useCreateIndex: true,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
       })
-      .then(db =>
-        db.connection.on('error', error => console.log(`DB ERROR: ${error}`))
-      )
-  }
+      .then(db => db.connection.on('error', error => console.log(`DB ERROR: ${error}`)));
+  },
 };
