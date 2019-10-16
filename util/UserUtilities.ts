@@ -1,14 +1,8 @@
-import { IUser } from '../interfaces/IUser';
-import { User } from '../models/User';
-import { QueryUpdateOptions } from 'mongoose';
-
-interface IUpdateContext {
-  filter: Object;
-  options: QueryUpdateOptions;
-}
+import { User, IUserDocument } from '../models/User';
+import { IUpdateContext } from '../interfaces/IUpdateContext';
 
 export class UserUtilities {
-  addFollower(user: IUser, follower: IUser): Promise<number> {
+  addFollower(user: IUserDocument, follower: IUserDocument): Promise<number> {
     // Add follower to user
     const userContext: IUpdateContext = {
       filter: { _id: user._id },
@@ -24,7 +18,7 @@ export class UserUtilities {
     return this.updateFollowers(userContext, followerContext);
   }
 
-  removeFollower(user: IUser, follower: IUser): Promise<number> {
+  removeFollower(user: IUserDocument, follower: IUserDocument): Promise<number> {
     // Remove follower from followers
     const userContext: IUpdateContext = {
       filter: { _id: user._id },
@@ -52,15 +46,15 @@ export class UserUtilities {
   async getUserAndFollower(
     username: string,
     followerName: string
-  ): Promise<[IUser, IUser] | Error> {
+  ): Promise<[IUserDocument, IUserDocument] | Error> {
     // Find both user documents
-    const users: IUser[] = await User.find({
+    const users: IUserDocument[] = await User.find({
       username: [username, followerName]
     });
 
     // Match user documents on username
-    const user: IUser | undefined = users.find(u => u.username === username);
-    const follower: IUser | undefined = users.find(u => u.username === followerName);
+    const user: IUserDocument | undefined = users.find(u => u.username === username);
+    const follower: IUserDocument | undefined = users.find(u => u.username === followerName);
 
     // Return error if one or both documents not found
     if (!follower || !user) {
