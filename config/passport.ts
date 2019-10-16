@@ -1,51 +1,36 @@
-import passportLocal from 'passport-local';
-import bcrypt from 'bcrypt';
-import { User } from '../models/User';
+import passportLocal from "passport-local";
+import bcrypt from "bcrypt";
+import { User } from "../models/User";
+import { IUser } from "../interfaces/IUser";
 
 const Strategy = passportLocal.Strategy;
 
 export default (passport: any) => {
+  passport.use(
+    "login",
+    new Strategy(async (username: string, password: string, done) => {
+      //Find user
+      try {
+        const user: IUser | null = await User.findOne({
+          username: username.toLowerCase()
+        });
 
-    passport.use(
-        new Strategy((username : string, password: string, cb) => {
+        if (!user) {
+          return done(null, false, { message: "Username not found" });
+        }
 
-            //Find user
-            User.find({ username: username.toLocaleLowerCase() })
-            .then( user => {
-                
-                //If no return, user doesn't exist
-                if (!user) {
-                    return cb(null, false, {message: 'Username not found'});
-                }
+        bcrypt.compare(password, user.password, (err, match) => {
+          if (err) throw err;
 
-                //Match incoming pw with hashed pw
-
-                bcrypt.compare(password, user.password, (err, match) => {
-                    if (err) throw err;
-
-                    if (match) {
-                        return cb(null, user);
-                    } else {
-                        return cb(null, false, {message: 'Incorrect password'});
-                    }
-                });
-
-            })
-            .catch( err => {
-                console.log(err);
-            })
-        })
-    )
-
-    passport.serializeUser((user: any, cb: any) => {
-        cb(null, user._id);
+          if (match) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Incorrect password" });
+          }
+        });
+      } catch (err) {
+        return new Error(err);
+      }
     })
-
-    passport.deserializeUser((id : string, cb: any) => {
-        User.findById(id)
-        .then(user => {
-            cb(null, user)
-        })
-        .catch(cb);
-    })
-}
+  );
+};
