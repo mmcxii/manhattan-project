@@ -35,6 +35,7 @@ const Item = styled.li<{ theme: 'dark' | 'light' }>`
 
 const Icon = styled.i`
   margin-right: ${spacing.sm};
+  color: ${white};
 `;
 
 const Text = styled.span<{ theme: 'dark' | 'light' }>`

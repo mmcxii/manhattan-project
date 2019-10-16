@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
 import { ThemeContext } from 'Store';
-import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black } from 'Utilities';
+import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black, grey } from 'Utilities';
 import NavItem from './NavItem';
 
 interface Props {}
@@ -37,7 +37,7 @@ const Nav: React.FC<Props> = () => {
         <Hamburger toggle={navIsOpen} theme={theme} />
       </ToggleNavButton>
 
-      <NavList toggle={navIsOpen}>
+      <NavList toggle={navIsOpen} theme={theme}>
         {navItems.map(item => (
           <NavItem key={item.page} {...item} hideNav={toggleNav} theme={theme} />
         ))}
@@ -53,14 +53,14 @@ const Navbar = styled.nav`
   text-transform: capitalize;
 `;
 
-const NavList = styled.ul<{ toggle: boolean }>`
+const NavList = styled.ul<{ toggle: boolean; theme: string }>`
   ${absolute({})};
   height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  background: ${red};
+  background: ${props => (props.theme === 'dark' ? red : grey)};
   visibility: ${props => (props.toggle ? 'visable' : 'hidden')};
   animation: 100ms linear ${props => (props.toggle ? fadeIn : fadeOut)};
   list-style: none;
@@ -89,7 +89,7 @@ const Hamburger = styled.span<{ toggle: boolean; theme: 'dark' | 'light' }>`
   position: relative;
   height: 2px;
   width: 1.5rem;
-  background: ${props => (props.theme === 'dark' ? white : black)};
+  background: ${props => (props.theme === 'dark' ? white : props => (props.toggle ? white : black))};
 
   ${transition({ prop: 'transform' })};
   transform: rotate(${props => (props.toggle ? '45deg' : '0deg')});
@@ -101,7 +101,7 @@ const Hamburger = styled.span<{ toggle: boolean; theme: 'dark' | 'light' }>`
     display: block;
     height: 2px;
     width: 1.5rem;
-    background: ${props => (props.theme === 'dark' ? white : black)};
+    background: ${props => (props.theme === 'dark' ? white : props => (props.toggle ? white : black))};
   }
 
   &::before {

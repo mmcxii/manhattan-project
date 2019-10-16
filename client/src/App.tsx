@@ -50,7 +50,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     background: ${props => (props.theme === 'dark' ? black : white)};
   }
 
-  header {
+  header, footer {
     background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};
   }
 
