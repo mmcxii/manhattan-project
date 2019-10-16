@@ -107,7 +107,6 @@ const Hamburger = styled.span<{ toggle: boolean; theme: 'dark' | 'light' }>`
   &::before {
     transform: translateY(-5px);
 
-    ${transition({ prop: 'opacity' })};
     opacity: ${props => (props.toggle ? 0 : 1)};
   }
 
