@@ -12,8 +12,8 @@ const ProjectInfo: React.FC<Props> = () => {
       icon: 'fab fa-github',
     },
     {
-      name: 'untappd',
-      link: 'https://untappd.com/api/docs',
+      name: 'Brewery DB',
+      link: 'https://www.brewerydb.com/',
       icon: 'fas fa-beer',
     },
     {
