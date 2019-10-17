@@ -9,6 +9,7 @@ export default {
         useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useFindAndModify: false
       })
       .then(db => db.connection.on('error', error => console.log(`DB ERROR: ${error}`)));
   },
