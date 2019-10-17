@@ -10,8 +10,7 @@ const Strategy = passportLocal.Strategy;
 
 //JWT Sign and verify strategies
 
-
-export default (passport: any) => {
+export const passportStrategy = (passport: any) => {
   passport.use(
     "login",
     new Strategy(async (username: string, password: string, done) => {
@@ -29,8 +28,13 @@ export default (passport: any) => {
           if (err) throw err;
 
           if (match) {
-            const token: string = jwt.sign(user, 'privateKey', { expiresIn: '7d' })
-            console.log('Token created!', token);
+            const payload = {
+              _id: user._id,
+              username: user.username,
+              followers: user.followers,
+              follows: user.follows
+            }
+            const token: string = jwt.sign(payload, 'privateKey', { expiresIn: '7d' })
             return done(null, token);
           } else {
             return done(null, false, { message: "Incorrect password" });

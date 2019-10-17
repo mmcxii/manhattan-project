@@ -1,6 +1,7 @@
 import { Router, Application } from 'express';
 import { HtmlRoutes } from './htmlRoutes'
 import { UserRoutes } from './userRoutes';
+import { LoginRoutes } from './LoginRoutes';
 
 export default (app: Application) => {
   // Create new router and setup API routes
@@ -10,5 +11,6 @@ export default (app: Application) => {
 
   // Attach routers to Express app
   app.use('/api', apiRoutes);
+  app.use('/login', LoginRoutes);
   app.use('/', HtmlRoutes);
 };
