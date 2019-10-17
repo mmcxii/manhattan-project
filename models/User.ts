@@ -1,5 +1,15 @@
-import { Schema, SchemaTypes as Types, Model, model } from 'mongoose';
+import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
 import { IUser } from '../interfaces/IUser';
+
+// Create interface for User documents
+export interface IUserDocument extends IUser, Document {
+    // TODO - define user document methods
+}
+
+// Create interface for User model
+export interface IUserModel extends Model<IUserDocument> {
+    // TODO - define user model methods
+}
 
 const userSchema = new Schema({
     username: {
@@ -24,4 +34,4 @@ const userSchema = new Schema({
     }
 });
 
-export const User: Model<IUser> = model<IUser>('User', userSchema);
+export const User = model<IUserDocument, IUserModel>('User', userSchema);
