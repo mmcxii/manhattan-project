@@ -32,7 +32,6 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: ${props => (props.theme === 'dark' ? white : black)};
   }
 
   // Set up body layout with sticky footer
@@ -48,10 +47,15 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     flex-direction: column;
     
     background: ${props => (props.theme === 'dark' ? black : white)};
+    color: ${props => (props.theme === 'dark' ? white : black)};
   }
 
+  a {
+    color: inherit;
+  }
+  
   header, footer {
-    background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};
+    background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};    
   }
 
   ${Card} {

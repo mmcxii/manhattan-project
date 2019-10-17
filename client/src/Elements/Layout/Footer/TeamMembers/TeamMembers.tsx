@@ -1,5 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 
+import { spacing } from 'Utilities';
 import TeamMember from './TeamMember';
 
 interface Props {}
@@ -40,16 +42,32 @@ const TeamMembers: React.FC<Props> = () => {
   ];
 
   return (
-    <div>
-      <h4>Meet the team</h4>
+    <Wrapper>
+      <Title>
+        <i className='far fa-code' /> the devs
+      </Title>
 
-      <ul>
+      <List>
         {teamMembers.map(member => (
           <TeamMember key={member.name} {...member} />
         ))}
-      </ul>
-    </div>
+      </List>
+    </Wrapper>
   );
 };
 
 export default TeamMembers;
+
+const Wrapper = styled.div`
+  grid-area: team-members;
+`;
+
+const Title = styled.h4`
+  text-transform: uppercase;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  display: grid;
+  grid-gap: ${spacing.xs};
+`;

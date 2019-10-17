@@ -60,7 +60,7 @@ const NavList = styled.ul<{ toggle: boolean; theme: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  background: ${props => (props.theme === 'dark' ? red : grey)};
+  background: ${red};
   visibility: ${props => (props.toggle ? 'visable' : 'hidden')};
   animation: 100ms linear ${props => (props.toggle ? fadeIn : fadeOut)};
   list-style: none;
