@@ -34,7 +34,8 @@ export const passportStrategy = (passport: any) => {
               followers: user.followers,
               follows: user.follows
             }
-            const token: string = jwt.sign(payload, 'privateKey', { expiresIn: '7d' })
+            const token: string = jwt.sign(payload, 'privateKey')
+            console.log(token);
             return done(null, token);
           } else {
             return done(null, false, { message: "Incorrect password" });

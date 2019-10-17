@@ -8,7 +8,7 @@ const userUtilities = new UserUtilities();
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
     // Get all users
-    console.log('User decoded', req.user);
+    console.log('User', req.user);
     try {
       const users: IUserDocument[] = await User.find();
       return res.json(users);

@@ -10,7 +10,7 @@ export const validateToken = (req: any, res: any, next: any) => {
 
         try {
             //Verify and decode JWT
-            const decoded: object | string = jwt.verify(token, 'privateKey', { maxAge: '2ms' });
+            const decoded: object | string = jwt.verify(token, 'privateKey');
             //Attach user data to req
             req.user = decoded;
             //Call next middleware

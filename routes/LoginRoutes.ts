@@ -6,7 +6,7 @@ import passport from 'passport';
 
 
 export const LoginRoutes = Router()
-.post('/createuser', async(req, res) => {
+.post('/register', async(req, res) => {
     
     if (!req.body) {
         return res.status(400).send('Missing user data.');
@@ -54,7 +54,7 @@ export const LoginRoutes = Router()
       }
 
 })
-.post('/auth', passport.authenticate('login', {session: false, failureRedirect: '/'}), (req, res) => {
+.post('/login', passport.authenticate('login', {session: false}), (req, res) => {
   //Token fine, decide what other info we want attached/returned on login.
   res.status(200).json(req.user);
 })
