@@ -59,7 +59,7 @@ commentSchema.statics.createComment = async function(
     return Promise.resolve(new Error(`User ${username} not found.`));
   }
 
-  const text = comment.trim().toLowerCase();
+  const text = comment.trim();
 
   return Comment.create({ author: user._id, text });
 };
