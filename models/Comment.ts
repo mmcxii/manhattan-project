@@ -1,9 +1,11 @@
 import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
 import { IComment } from '../interfaces/IComment';
 import { User, IUserDocument } from '../models/User';
+import { ObjectID } from 'bson';
 
 // Create interface for Comment documents
 export interface ICommentDocument extends IComment, Document {
+  rating: number;
   upvote(user: IUserDocument): Promise<number>;
   downvote(user: IUserDocument): Promise<number>;
 }
@@ -23,11 +25,24 @@ const commentSchema = new Schema({
     type: Types.String,
     required: true
   },
-  rating: {
-    type: Types.Number,
-    default: 0
+  upvotes: {
+    type: [Types.ObjectId],
+    ref: 'User'
+  },
+  downvotes: {
+    type: [Types.ObjectId],
+    ref: 'User'
   }
 });
+
+commentSchema
+  .virtual('rating')
+  .get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
+    const upvotes: number = this.upvotes.length;
+    const downvotes: number = this.downvotes.length;
+    // Represent rating as a percentage (0.0 -> 1.0);
+    return upvotes / (upvotes + downvotes);
+  });
 
 // Comment schema method to create a new comment
 commentSchema.static('createComment', async function(
@@ -46,28 +61,46 @@ commentSchema.static('createComment', async function(
 });
 
 // User upvoting comment
-commentSchema.methods.upvote = async function(user: IUserDocument): Promise<number> {
-  // TODO - record which users upvote/downvote, validate passed in user
+commentSchema.methods.upvote = async function(
+  this: { _id: ObjectID },
+  user: IUserDocument
+): Promise<number> {
+  // Create query update uptions to add user id to upvotes and remove from downvotes
+  const options: QueryUpdateOptions = {
+    $pull: { downvotes: user._id },
+    $addToSet: { upvotes: user._id }
+  };
 
-  return updateRating(this._id, { $inc: { rating: 1 } });
+  return addVote(this._id, options);
 };
 
 // User downvoting comment
-commentSchema.methods.downvote = async function(user: IUserDocument): Promise<number> {
-  // TODO - record which users upvote/downvote, validate passed in user
+commentSchema.methods.downvote = async function(
+  this: { _id: ObjectID },
+  user: IUserDocument
+): Promise<number> {
+  // Create query update uptions to add user id to downvotes and remove from upvotes
+  const options: QueryUpdateOptions = {
+    $pull: { upvotes: user._id },
+    $addToSet: { downvotes: user._id }
+  };
 
-  return updateRating(this._id, { $inc: { rating: -1 } });
+  return addVote(this._id, options);
 };
 
 // Updates a comment's rating
-const updateRating = async function(id: any, options: QueryUpdateOptions): Promise<number> {
-  const result = await Comment.updateOne({ _id: id }, options);
+const addVote = async function(id: ObjectID, options: QueryUpdateOptions): Promise<number> {
+  try {
+    const result = await Comment.updateOne({ _id: id }, options);
 
-  if (!result || !result.ok) {
+    if (!result || !result.ok) {
+      return 500;
+    }
+  } catch (error) {
     return 500;
   }
 
-  return result.ok > 0 ? 200 : 202;
+  return 200;
 };
 
 export const Comment = model<ICommentDocument, ICommentModel>('Comment', commentSchema);
