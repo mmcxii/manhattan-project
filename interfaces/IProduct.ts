@@ -1,6 +1,4 @@
-import { Document } from 'mongoose';
-
-export interface IProduct extends Document {
+export interface IProduct {
     extID: string;
     type: string,
     name?: string;
