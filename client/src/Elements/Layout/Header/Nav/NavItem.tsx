@@ -24,8 +24,11 @@ const NavItem: React.FC<Props> = ({ page, link, icon, hideNav, theme }) => (
 export default NavItem;
 
 const Item = styled.li<{ theme: 'dark' | 'light' }>`
+  color: ${white};
+
   @media screen and (min-width: 768px) {
     padding: 0 ${spacing.md};
+    color: ${props => (props.theme === 'dark' ? white : black)};
 
     &:not(:last-child) {
       border-right: 2px solid ${props => (props.theme === 'dark' ? white : black)};
@@ -44,12 +47,16 @@ const Text = styled.span<{ theme: 'dark' | 'light' }>`
     content: '';
     height: 2px;
     width: 100%;
-    background: ${props => (props.theme === 'dark' ? white : black)};
+    background: ${white};
     transform: scaleX(0);
     position: absolute;
     left: 0;
     bottom: -2px;
-    ${transition({ prop: 'transform' })}
+    ${transition({ prop: 'transform' })};
+
+    @media screen and (min-width: 768px) {
+      background: ${props => (props.theme === 'dark' ? white : black)};
+    }
   }
 `;
 

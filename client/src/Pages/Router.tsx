@@ -28,9 +28,12 @@ const Router: React.FC = () => (
 export default Router;
 
 const PageContainer = styled(Container).attrs({ as: 'main' })`
-  margin-top: 85px;
+  --header-offset: 85px;
+
+  margin-top: var(--header-offset);
+  min-height: calc(100vh - var(--header-offset));
 
   @media screen and (min-width: 768px) {
-    margin-top: 140px;
+    --header-offset: 140px;
   }
 `;
