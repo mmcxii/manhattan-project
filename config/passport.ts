@@ -2,8 +2,14 @@ import passportLocal from "passport-local";
 import bcrypt from "bcrypt";
 import { User } from "../models/User";
 import { IUser } from "../interfaces/IUser";
+import * as jwt from 'jsonwebtoken';
 
+
+//Login strategy
 const Strategy = passportLocal.Strategy;
+
+//JWT Sign and verify strategies
+
 
 export default (passport: any) => {
   passport.use(
@@ -23,7 +29,9 @@ export default (passport: any) => {
           if (err) throw err;
 
           if (match) {
-            return done(null, user);
+            const token: string = jwt.sign(user, 'privateKey', { expiresIn: '7d' })
+            console.log('Token created!', token);
+            return done(null, token);
           } else {
             return done(null, false, { message: "Incorrect password" });
           }
