@@ -3,12 +3,17 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import DB from './db';
 import routeConfig from './routes';
+import { passportStrategy } from './config/passport';
+import passport from 'passport';
+
+passportStrategy(passport);
 
 // Create Express app
 const app: Application = express();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client/build')));
+
 
 // Setup routes
 routeConfig(app);
