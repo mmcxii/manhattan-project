@@ -10,7 +10,10 @@ export const Card = styled.div`
   }
 `;
 
-export const CardHeader = styled.h2``;
+export const CardHeader = styled.h2`
+  text-transform: capitalize;
+  padding-left: ${spacing.xs};
+`;
 
 export const CardBody = styled.div`
   padding: ${spacing.md};

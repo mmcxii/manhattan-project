@@ -54,7 +54,7 @@ const User: React.FC<Props> = () => {
       </Card>
 
       <Card as='section'>
-        <CardHeader as='h3'>{`${profileInformation.name}' s cellar`}</CardHeader>
+        <CardHeader as='h3'>{`${profileInformation.name}'s cellar`}</CardHeader>
         <CardBody>
           {profileInformation.favorites && (
             <>
