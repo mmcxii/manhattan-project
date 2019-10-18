@@ -20,9 +20,8 @@ routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
 
-//api.cocktaildb('');
+//api.cocktaildb('manhattan');
 api.brewerydb();
-//api.quiniwine();
 
 // Listen for HTTP traffic once DB connection is established
 DB.connect()
