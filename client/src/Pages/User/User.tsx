@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { spacing } from 'Utilities';
-import { Button, Card } from 'Elements';
+import { Button, Card, CardHeader, CardBody } from 'Elements';
 
 interface Props {}
 
@@ -46,58 +44,58 @@ const User: React.FC<Props> = () => {
 
   return (
     <>
-      <ProfileCard>
-        {isUsersProfile && <Button>Edit information</Button>}
-        {profileInformation.name && <h2>{profileInformation.name}</h2>}
-        {profileInformation.age && <small>{profileInformation.age}</small>}
-        {profileInformation.bio && <p>{profileInformation.bio}</p>}
-      </ProfileCard>
+      <Card as='section'>
+        <CardHeader>{profileInformation.name}</CardHeader>
+        <CardBody>
+          {isUsersProfile && <Button>Edit information</Button>}
+          {profileInformation.age && <small>{profileInformation.age}</small>}
+          {profileInformation.bio && <p>{profileInformation.bio}</p>}
+        </CardBody>
+      </Card>
 
-      <ProfileCard>
-        {profileInformation.favorites && (
-          <>
-            <h3>{profileInformation.name}'s cellar</h3>
-            {profileInformation.highlightedFavorite && <p>{profileInformation.highlightedFavorite}</p>}
-            <ul>
-              {profileInformation.favorites.map(fav => (
-                <li>{fav}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </ProfileCard>
+      <Card as='section'>
+        <CardHeader as='h3'>{`${profileInformation.name}'s cellar`}</CardHeader>
+        <CardBody>
+          {profileInformation.favorites && (
+            <>
+              {profileInformation.highlightedFavorite && <p>{profileInformation.highlightedFavorite}</p>}
+              <ul>
+                {profileInformation.favorites.map(fav => (
+                  <li>{fav}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </CardBody>
+      </Card>
 
-      <ProfileCard>
-        {profileInformation.follows && (
-          <>
-            <h3>follows</h3>
-            <ul>
-              {profileInformation.follows.map(follow => (
-                <li>{follow.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
+      <Card as='section'>
+        <CardBody>
+          {profileInformation.follows && (
+            <>
+              <h3>follows</h3>
+              <ul>
+                {profileInformation.follows.map(follow => (
+                  <li>{follow.name}</li>
+                ))}
+              </ul>
+            </>
+          )}
 
-        {profileInformation.following && (
-          <>
-            <h3>following</h3>
-            <ul>
-              {profileInformation.following.map(follow => (
-                <li>{follow.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </ProfileCard>
+          {profileInformation.following && (
+            <>
+              <h3>following</h3>
+              <ul>
+                {profileInformation.following.map(follow => (
+                  <li>{follow.name}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </CardBody>
+      </Card>
     </>
   );
 };
 
 export default User;
-
-const ProfileCard = styled(Card).attrs({ as: 'section' })`
-  &:not(:first-child) {
-    margin: ${spacing.lg} 0;
-  }
-`;
