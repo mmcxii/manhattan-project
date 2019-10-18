@@ -1,9 +1,8 @@
-export interface IUser  {
-    username: string;
-    password: string;
-    name?: string;
-    age?: number;
-    bio?: string;
-    follows?: IUser[];
-    followers?: IUser[];
+export interface IUser {
+  username: string;
+  follows: IUser[];
+  followers: IUser[];
+  name?: string;
+  age?: number;
+  bio?: string;
 }

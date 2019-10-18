@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User, IUserDocument } from '../models/User';
+import { User, IUserDocument } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
 
 const userUtilities = new UserUtilities();
@@ -7,31 +7,11 @@ const userUtilities = new UserUtilities();
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
     // Get all users
+    console.log('User', req.user);
     try {
       const users: IUserDocument[] = await User.find();
       return res.json(users);
     } catch (error) {
-      return res.status(500).send(error);
-    }
-  })
-  .post('/', async (req, res) => {
-    // Create new User
-    if (!req.body) {
-      return res.status(400).send('Missing user data.');
-    }
-
-    // TODO - encrypt password before saving
-    const newUser = new User(req.body);
-
-    try {
-      const savedUser: IUserDocument = await newUser.save();
-
-      return res.status(201).json(savedUser);
-    } catch (error) {
-      // Duplicate username error
-      if (error.name === 'MongoError' && error.code === 11000) {
-        return res.status(422).send('Username already exists!');
-      }
       return res.status(500).send(error);
     }
   })
