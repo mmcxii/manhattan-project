@@ -6,7 +6,7 @@ import Normalize from 'react-normalize';
 import { ThemeContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
-import { Header, Footer, Card, Button } from 'Elements';
+import { Header, Footer, Card, Button, CardBody } from 'Elements';
 
 const App: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -58,7 +58,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};    
   }
 
-  ${Card} {
+  ${CardBody} {
     background: ${props => (props.theme === 'dark' ? grey : white)};
     border: 1px solid ${props => (props.theme === 'dark' ? blackDark : grey)};
   }

@@ -32,6 +32,8 @@ const PageContainer = styled(Container).attrs({ as: 'main' })`
 
   margin-top: var(--header-offset);
   min-height: calc(100vh - var(--header-offset));
+  display: flex;
+  flex-direction: column;
 
   @media screen and (min-width: 768px) {
     --header-offset: 140px;
