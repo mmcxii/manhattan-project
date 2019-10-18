@@ -6,7 +6,7 @@ import { User, IUserDocument } from '../models/User';
 // Get votes of the specified type (upvotes or downvotes)
 const getVoters = async (id: string, type: 'upvotes' | 'downvotes'): Promise<IUser[] | null> => {
   const votes = await Comment.findById(id, {type}).populate(type);
-  console.log(votes);
+
   if (!votes) {
     return votes;
   }
@@ -51,7 +51,7 @@ export const CommentRoutes = Router()
     // Get comment by document ID
     try {
       const { id } = req.params;
-      const comment: ICommentDocument | null = await Comment.findById(id);
+      const comment: ICommentDocument | null = await Comment.findById(id).populate('author');
 
       if (!comment) {
         return res.status(404).send(`Comment ${id} not found.`);
