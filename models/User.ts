@@ -24,7 +24,8 @@ const userSchema = new Schema({
     },
     admin: {
         type: Types.String,
-        required: true
+        required: true,
+        default: 'notAdmin'
     },
     name: Types.String,
     age: Types.Number,
