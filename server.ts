@@ -5,6 +5,7 @@ import DB from './db';
 import routeConfig from './routes';
 import { passportStrategy } from './config/passport';
 import passport from 'passport';
+import api from './apiCalls';
 
 passportStrategy(passport);
 
@@ -19,8 +20,8 @@ routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
 
-//api.cocktaildb();
-//pi.brewerydb('citrus');
+//api.cocktaildb('');
+api.brewerydb();
 //api.quiniwine();
 
 // Listen for HTTP traffic once DB connection is established
