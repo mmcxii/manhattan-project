@@ -1,18 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import ModeSelection from './ModeSelection';
+interface Props {
+  type: 'beer' | 'wine' | 'cocktail';
+}
 
-interface Props {}
-
-const SearchForm: React.FC<Props> = () => {
-  const [selection, setSelection] = useState<'' | 'beer' | 'wine' | 'cocktails'>('');
-
+const SearchForm: React.FC<Props> = ({ type }) => {
   return (
     <>
-      {selection === '' && <ModeSelection setSelection={setSelection} />}
-      {selection === 'beer'}
-      {selection === 'wine'}
-      {selection === 'cocktails'}
+      <h3>{type} search</h3>
     </>
   );
 };

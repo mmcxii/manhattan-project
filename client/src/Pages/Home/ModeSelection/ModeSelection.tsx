@@ -1,17 +1,19 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import Overdrive from 'react-overdrive';
 
 import { ThemeContext } from 'Store';
-import { white, black, spacing, red, grey, elevation, transition } from 'Utilities';
+import { white, black, spacing, grey, elevation } from 'Utilities';
+import { Icon } from 'Elements';
 
 interface Props {
-  setSelection: React.Dispatch<React.SetStateAction<'' | 'beer' | 'wine' | 'cocktails'>>;
+  setSelection: React.Dispatch<React.SetStateAction<'' | 'beer' | 'wine' | 'cocktail'>>;
 }
 
 const ModeSelection: React.FC<Props> = ({ setSelection }) => {
   const { theme } = useContext(ThemeContext);
 
-  const options: { name: 'beer' | 'wine' | 'cocktails'; icon: string }[] = [
+  const options: { name: 'beer' | 'wine' | 'cocktail'; icon: string }[] = [
     {
       name: 'beer',
       icon: 'fa-beer',
@@ -21,12 +23,12 @@ const ModeSelection: React.FC<Props> = ({ setSelection }) => {
       icon: 'fa-wine-glass-alt',
     },
     {
-      name: 'cocktails',
+      name: 'cocktail',
       icon: 'fa-glass-martini-alt',
     },
   ];
 
-  const makeSelection = (choice: 'beer' | 'wine' | 'cocktails') => {
+  const makeSelection = (choice: 'beer' | 'wine' | 'cocktail') => {
     setSelection(choice);
   };
 
@@ -40,9 +42,9 @@ const ModeSelection: React.FC<Props> = ({ setSelection }) => {
       <Options theme={theme}>
         {options.map(option => (
           <OptionButton onClick={() => makeSelection(option.name)} key={`${option.name}-button`}>
-            <IconWrapper>
-              <Icon className={`fas ${option.icon}`} />
-            </IconWrapper>
+            <Overdrive id={`${option.name}-icon`}>
+              <Icon icon={`fas ${option.icon}`} />
+            </Overdrive>
             <Option>{option.name}</Option>
           </OptionButton>
         ))}
@@ -52,22 +54,6 @@ const ModeSelection: React.FC<Props> = ({ setSelection }) => {
 };
 
 export default ModeSelection;
-
-const IconWrapper = styled.div`
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  line-height: 3rem;
-  font-size: 1.5rem;
-  margin-bottom: ${spacing.sm};
-  background: ${red};
-  ${transition({ prop: 'box-shadow' })}
-`;
-
-const Icon = styled.i`
-  color: ${white};
-  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.7));
-`;
 
 const Option = styled.span`
   text-transform: capitalize;
@@ -81,10 +67,6 @@ const Options = styled.section<{ theme: string }>`
   > * {
     color: ${props => (props.theme === 'dark' ? white : black)};
   }
-
-  ${IconWrapper} {
-    border: 1px solid ${props => (props.theme === 'dark' ? black : grey)};
-  }
 `;
 
 const OptionButton = styled.button`
@@ -96,10 +78,4 @@ const OptionButton = styled.button`
   align-items: center;
   background: transparent;
   border: none;
-
-  &:hover {
-    ${IconWrapper} {
-      ${elevation[4]}
-    }
-  }
 `;

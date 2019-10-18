@@ -24,6 +24,7 @@ export default Header;
 const Wrapper = styled.header`
   position: fixed;
   width: 100%;
+  z-index: 5;
 `;
 
 const HeaderContainer = styled(Container)`

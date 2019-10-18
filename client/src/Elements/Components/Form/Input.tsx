@@ -23,7 +23,7 @@ export const Input: React.FC<Props> = ({
 }) => {
   return (
     <FormGroup hasIcon={icon !== undefined}>
-      {label && <FormLabel>{label}</FormLabel>}
+      <FormLabel>{label}</FormLabel>
 
       <FormInput type={type} name={name} placeholder={placeholder} value={value} onChange={onChange} />
 

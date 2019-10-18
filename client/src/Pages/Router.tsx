@@ -30,8 +30,8 @@ export default Router;
 const PageContainer = styled(Container).attrs({ as: 'main' })`
   --header-offset: 85px;
 
-  margin-top: var(--header-offset);
-  min-height: calc(100vh - var(--header-offset));
+  padding-top: var(--header-offset);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 
