@@ -22,6 +22,10 @@ const userSchema = new Schema({
         type: Types.String,
         required: true
     },
+    admin: {
+        type: Types.String,
+        required: true
+    },
     name: Types.String,
     age: Types.Number,
     bio: Types.String,
