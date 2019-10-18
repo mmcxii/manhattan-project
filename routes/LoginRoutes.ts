@@ -7,12 +7,12 @@ import passport from 'passport';
 
 export const LoginRoutes = Router()
 .post('/register', async(req, res) => {
-
-    if (!req.body) {
+  const {username, password} = req.body;
+    if (!username || !password) {
         return res.status(400).send('Missing user data.');
       }
 
-    const {username, password} = req.body;
+    
 
     try {
         //check if username exists

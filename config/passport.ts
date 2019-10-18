@@ -1,5 +1,6 @@
 import passportLocal from "passport-local";
 import bcrypt from "bcrypt";
+import passport from "passport";
 import { User, IUserDocument } from "../models";
 import * as jwt from 'jsonwebtoken';
 
@@ -9,7 +10,7 @@ const Strategy = passportLocal.Strategy;
 
 //JWT Sign and verify strategies
 
-export const passportStrategy = (passport: any) => {
+export const passportStrategy = () => {
   passport.use(
     "login",
     new Strategy(async (username: string, password: string, done) => {
