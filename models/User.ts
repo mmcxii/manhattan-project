@@ -5,6 +5,7 @@ import { IUser } from '../interfaces';
 export interface IUserDocument extends IUser, Document {
   // TODO - define user document methods
   password: string;
+  admin: string;
 }
 
 // Create interface for User model

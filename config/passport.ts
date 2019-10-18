@@ -31,8 +31,7 @@ export const passportStrategy = () => {
             const payload = {
               _id: user._id,
               username: user.username,
-              followers: user.followers,
-              follows: user.follows
+              admin: user.admin
             }
             const token: string = jwt.sign(payload, 'privateKey')
             console.log(token);

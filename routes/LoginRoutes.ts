@@ -7,8 +7,9 @@ import passport from 'passport';
 
 export const LoginRoutes = Router()
 .post('/register', async(req, res) => {
-  const {username, password} = req.body;
-    if (!username || !password) {
+  const {username, password, admin} = req.body;
+    
+  if (!username || !password) {
         return res.status(400).send('Missing user data.');
       }
 
@@ -36,7 +37,8 @@ export const LoginRoutes = Router()
               //TODO -- add default values for the rest of the account creation questions.
               const userData: object = {
                   username: username.toLowerCase(),
-                  password: hash
+                  password: hash,
+                  admin
               }
       ​
               const user: IUserDocument = new User(userData);

@@ -1,19 +1,20 @@
 import * as jwt from 'jsonwebtoken';
+import { IUserAuthInfo } from '../interfaces';
+import { Response, NextFunction } from 'express';
 
-export const validateToken = (req: any, res: any, next: any) => {
+export const validateToken = (req: IUserAuthInfo, res: Response, next: NextFunction) => {
     //Get header from request
-    const authHeader: string = req.headers.authorization;
+    const authHeader = req.headers.authorization;
     //Check that header is present
     if (authHeader) {
         const token: string = authHeader.split(' ')[1]; //Bearer <token>    
-        
 
         try {
             //Verify and decode JWT
             const decoded: object | string = jwt.verify(token, 'privateKey');
             //Attach user data to req
             req.user = decoded;
-            //Call next middleware
+
             next();
         } catch (err) {
             //Error validating token
