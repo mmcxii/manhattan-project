@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Card, CardHeader, CardBody } from 'Elements';
+import SearchForm from './SearchForm';
 
 interface Props {}
 
@@ -9,7 +10,9 @@ const Home: React.FC<Props> = () => {
   return (
     <WelcomeCard>
       <CardHeader>the manhattan project</CardHeader>
-      <CardBody>welcome to the manhattan project</CardBody>
+      <CardBody>
+        <SearchForm />
+      </CardBody>
     </WelcomeCard>
   );
 };
