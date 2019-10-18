@@ -1,10 +1,11 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 export interface IUser extends Document {
-    username: string;
-    name?: string;
-    age?: number;
-    bio?: string;
-    follows?: IUser[];
-    followers?: IUser[];
+  username: string;
+  password: string;
+  name?: string;
+  age?: number;
+  bio?: string;
+  follows?: IUser[];
+  followers?: IUser[];
 }
