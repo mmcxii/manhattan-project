@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { User, IUserDocument } from "../models/User";
-import { IUser } from "../interfaces/IUser";
+import { User, IUserDocument } from "../models";
+import { IUser } from "../interfaces";
 import bcrypt from "bcrypt";
 import passport from 'passport';
 
 
 export const LoginRoutes = Router()
 .post('/register', async(req, res) => {
-    
+
     if (!req.body) {
         return res.status(400).send('Missing user data.');
       }
-    
+
     const {username, password} = req.body;
 
     try {
@@ -19,7 +19,7 @@ export const LoginRoutes = Router()
         const user: IUser | null = await User.findOne({
           username: username.toLowerCase()
         });
-        
+
         //If user exists, reject it
         if(user) {
           return res.status(422).send('Username already exists!');
@@ -48,7 +48,7 @@ export const LoginRoutes = Router()
         const savedUser: IUserDocument = await newUser.save();
       ​
         return res.status(201).json(savedUser);
-        
+
       } catch (err) {
         return res.status(500).send(`Error creating user ${err}`);
       }

@@ -1,14 +1,15 @@
 import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
-import { IUser } from '../interfaces/IUser';
+import { IUser } from '../interfaces';
 
 // Create interface for User documents
 export interface IUserDocument extends IUser, Document {
-    // TODO - define user document methods
+  // TODO - define user document methods
+  password: string;
 }
 
 // Create interface for User model
 export interface IUserModel extends Model<IUserDocument> {
-    // TODO - define user model methods
+  // TODO - define user model methods
 }
 
 const userSchema = new Schema({

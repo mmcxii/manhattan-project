@@ -1,5 +1,13 @@
-import { Schema, SchemaTypes as Types, Model, model } from 'mongoose';
-import { IProduct } from '../interfaces/IProduct';
+import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
+import { IProduct } from '../interfaces';
+
+export interface IProductDocument extends IProduct, Document {
+    // TODO - define Product document methods
+}
+
+export interface IProductModel extends Model<IProductDocument> {
+    // TODO - define Product model methods
+}
 
 const productSchema = new Schema({
     extID: {
@@ -9,6 +17,7 @@ const productSchema = new Schema({
     },
     type: {
         type: Types.String,
+        enum: ['BEER','WINE','MIXED'],
         required: true
     },
     name: {
@@ -19,4 +28,4 @@ const productSchema = new Schema({
     ABV: Types.Number
 });
 
-export const Product: Model<IProduct> = model<IProduct>('Product', productSchema);
+export const Product = model<IProductDocument, IProductModel>('Product', productSchema);

@@ -1,7 +1,6 @@
 import passportLocal from "passport-local";
 import bcrypt from "bcrypt";
-import { User } from "../models/User";
-import { IUser } from "../interfaces/IUser";
+import { User, IUserDocument } from "../models";
 import * as jwt from 'jsonwebtoken';
 
 
@@ -16,7 +15,7 @@ export const passportStrategy = (passport: any) => {
     new Strategy(async (username: string, password: string, done) => {
       //Find user
       try {
-        const user: IUser | null = await User.findOne({
+        const user: IUserDocument | null = await User.findOne({
           username: username.toLowerCase()
         });
 

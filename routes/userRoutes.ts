@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { User, IUserDocument } from '../models/User';
+import { User, IUserDocument } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
-import { validateToken } from '../util/validateToken';
 
 const userUtilities = new UserUtilities();
 
