@@ -5,4 +5,5 @@ export interface IComment {
     text: string;
     upvotes: IUser[];
     downvotes: IUser[];
+    rating: number
 }

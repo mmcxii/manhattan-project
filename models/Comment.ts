@@ -5,7 +5,6 @@ import { ObjectID } from 'bson';
 
 // Create interface for Comment documents
 export interface ICommentDocument extends IComment, Document {
-  rating: number;
   upvote(user: IUserDocument): Promise<number | Error>;
   downvote(user: IUserDocument): Promise<number | Error>;
 }
