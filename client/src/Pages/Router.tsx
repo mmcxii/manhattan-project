@@ -6,6 +6,7 @@ import { Container } from 'Elements';
 import Home from './Home';
 import SearchResults from './SearchResults';
 import User from './User';
+import SearchForm from './SearchForm';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -16,6 +17,10 @@ const Router: React.FC = () => (
 
       <Route path='/user/:username'>
         <User />
+      </Route>
+
+      <Route path='/search/:type'>
+        <SearchForm />
       </Route>
 
       <Route path='/results/:type'>

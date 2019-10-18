@@ -1,16 +1,14 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import Overdrive from 'react-overdrive';
+import { Link } from 'react-router-dom';
 
 import { ThemeContext } from 'Store';
-import { white, black, spacing, grey, elevation } from 'Utilities';
+import { white, black, spacing } from 'Utilities';
 import { Icon } from 'Elements';
 
-interface Props {
-  setSelection: React.Dispatch<React.SetStateAction<'' | 'beer' | 'wine' | 'cocktail'>>;
-}
+interface Props {}
 
-const ModeSelection: React.FC<Props> = ({ setSelection }) => {
+const ModeSelection: React.FC<Props> = () => {
   const { theme } = useContext(ThemeContext);
 
   const options: { name: 'beer' | 'wine' | 'cocktail'; icon: string }[] = [
@@ -28,10 +26,6 @@ const ModeSelection: React.FC<Props> = ({ setSelection }) => {
     },
   ];
 
-  const makeSelection = (choice: 'beer' | 'wine' | 'cocktail') => {
-    setSelection(choice);
-  };
-
   return (
     <>
       <p>
@@ -41,10 +35,8 @@ const ModeSelection: React.FC<Props> = ({ setSelection }) => {
 
       <Options theme={theme}>
         {options.map(option => (
-          <OptionButton onClick={() => makeSelection(option.name)} key={`${option.name}-button`}>
-            <Overdrive id={`${option.name}-icon`}>
-              <Icon icon={`fas ${option.icon}`} />
-            </Overdrive>
+          <OptionButton to={`/search/${option.name}`} key={`${option.name}-button`}>
+            <Icon icon={`fas ${option.icon}`} />
             <Option>{option.name}</Option>
           </OptionButton>
         ))}
@@ -69,7 +61,7 @@ const Options = styled.section<{ theme: string }>`
   }
 `;
 
-const OptionButton = styled.button`
+const OptionButton = styled(Link)`
   cursor: pointer;
   display: flex;
   flex-direction: column;
