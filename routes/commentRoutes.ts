@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { Comment, ICommentDocument } from '../models/Comment';
-import { IUser } from '../interfaces/IUser';
-import { User, IUserDocument } from '../models/User';
+import { Comment, ICommentDocument, User, IUserDocument } from '../models';
+import { IUser } from '../interfaces';
 
 // Get votes of the specified type (upvotes or downvotes)
 const getVoters = async (id: string, type: 'upvotes' | 'downvotes'): Promise<IUser[] | null> => {

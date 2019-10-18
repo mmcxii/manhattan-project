@@ -1,5 +1,5 @@
 import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
-import { IProduct } from '../interfaces/IProduct';
+import { IProduct } from '../interfaces';
 
 export interface IProductDocument extends IProduct, Document {
     // TODO - define Product document methods

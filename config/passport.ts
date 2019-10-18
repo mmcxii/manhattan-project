@@ -1,7 +1,7 @@
 import passportLocal from "passport-local";
 import bcrypt from "bcrypt";
-import { User } from "../models/User";
-import { IUser } from "../interfaces/IUser";
+import { User } from "../models";
+import { IUser } from "../interfaces";
 import * as jwt from 'jsonwebtoken';
 
 

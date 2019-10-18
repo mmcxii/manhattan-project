@@ -1,6 +1,6 @@
 import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
-import { IComment } from '../interfaces/IComment';
-import { User, IUserDocument } from '../models/User';
+import { IComment } from '../interfaces';
+import { User, IUserDocument } from '../models';
 import { ObjectID } from 'bson';
 
 // Create interface for Comment documents
