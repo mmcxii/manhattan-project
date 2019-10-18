@@ -1,3 +1,7 @@
+// Load env variables
+import dotenv from 'dotenv';
+dotenv.config()
+
 import path from 'path';
 import express, { Application } from 'express';
 import morgan from 'morgan';
