@@ -14,6 +14,7 @@ const Container = styled.div`
   }
   @media screen and (min-width: 1200px) {
     --margin: 20%;
+    max-width: 1200px;
   }
 `;
 
