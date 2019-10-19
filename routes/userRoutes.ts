@@ -2,20 +2,16 @@ import express, { Router } from 'express';
 import { User, IUserDocument } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
 import { isAdmin } from '../util/isAdmin'
-
-declare module 'express' {
-  interface Request {
-      'token'?: any;
-      'body'?: any;
-  }
-}
-
+import { IUserRequest, IUserToken } from '../interfaces'
 const userUtilities = new UserUtilities();
 
 export const UserRoutes = Router()
-  .get('/', async (req: express.Request, res: express.Response) => {
+  .get('/', async (req: IUserRequest, res: express.Response) => {
     // Get all users
-    if (isAdmin(req.token.admin)) {
+    const {admin} = req.token as IUserToken;
+
+
+    if (isAdmin(admin)) {
       try {
         const users: IUserDocument[] = await User.find();
         return res.json(users);

@@ -1,15 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import express from 'express';
+import {IUserRequest, IUserToken} from '../interfaces'
 
-declare module 'express' {
-    interface Request {
-        'token'?: any;
-        'body'?: any;
-    }
-  }
-  
-
-export const validateToken = (req: express.Request, res: express.Response, next: any) => {
+export const validateToken = (req: IUserRequest, res: express.Response, next: any) => {
     //Get header from request
     const authHeader = req.headers.authorization;
     //Check that header is present
@@ -19,7 +12,7 @@ export const validateToken = (req: express.Request, res: express.Response, next:
         try {
             //Verify and decode JWT
             
-            const decoded: string | object = jwt.verify(token, 'privateKey')
+            const decoded: IUserToken = jwt.verify(token, 'privateKey') as IUserToken;
             //Attach user data to req
             
             req.token = decoded;

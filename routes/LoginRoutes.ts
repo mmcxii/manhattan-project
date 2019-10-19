@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { User, IUserDocument } from "../models";
-import { IUser } from "../interfaces";
+import { IUser, IUserRequest } from "../interfaces";
 import bcrypt from "bcrypt";
 import { loginUser } from '../util/loginUser';
 
@@ -63,7 +63,7 @@ export const LoginRoutes = Router()
       }
 
 })
-.post('/login', loginUser, (req: express.Request, res: express.Response) => {
+.post('/login', loginUser, (req: IUserRequest, res: express.Response) => {
   //Token fine, decide what other info we want attached/returned on login.
    res.status(200).send(req.token);
 })

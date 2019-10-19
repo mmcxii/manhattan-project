@@ -2,15 +2,9 @@ import bcrypt from "bcrypt";
 import { User, IUserDocument } from "../models";
 import express from 'express';
 import * as jwt from 'jsonwebtoken';
+import {IUserRequest, IUserToken} from '../interfaces'
 
-declare module 'express' {
-    interface Request {
-        'token'?: any;
-        'body'?: any;
-    }
-}
-
-export const loginUser = async (req: express.Request, res: express.Response, next: any) => {
+export const loginUser = async (req: IUserRequest, res: express.Response, next: any) => {
     
     if (!req.body) {
         return res.status(400).send('No user info included in request.')
@@ -33,7 +27,7 @@ export const loginUser = async (req: express.Request, res: express.Response, nex
                     username: user.username,
                     admin: user.admin
                   }
-                  const token: string | object = jwt.sign(payload, 'privateKey');
+                  const token: IUserToken = jwt.sign(payload, 'privateKey') as unknown as IUserToken;
 
                   req.token = token;
                   next();
