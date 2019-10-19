@@ -7,7 +7,7 @@ export const validateToken = (
   res: express.Response,
   next: any
 ) => {
-  console.log(req.method);
+  
   if (req.method === "GET") {
     return next();
   }
