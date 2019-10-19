@@ -20,11 +20,11 @@ routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
 
-//api.cocktaildb();
+//api.cocktaildb('');
 // const log = async () => {
 //   const data: any = await api.brewerydb();
 // };
-//api.brewerydb();
+api.brewerydb();
 
 // Listen for HTTP traffic once DB connection is established
 DB.connect()

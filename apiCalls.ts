@@ -19,33 +19,30 @@ const api: any = {
           image: data[i].labels
         });
       }
+      console.log(response);
       return await beersArray;
     } catch (error) {
       console.log(error);
     }
   },
-  cocktaildb: async () => {
-    const alphabet: String[] = ['a', 'b', 'c'];
-    for (let i in alphabet) {
-      let query: String = alphabet[i];
-      try {
-        const response: AxiosResponse<any> = await axios.get(
-          `https://www.thecocktaildb.com/api/json/v2/9973533/search.php?f=${query}`
-        );
-        const data: any[] = response.data.drinks;
-        const cocktailArray: any[] = [];
+  cocktaildb: async (query: String) => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?a=Alcoholic`
+      );
+      const data: any[] = response.data.drinks;
+      const cocktailArray: any[] = [];
 
-        for (let i in data) {
-          cocktailArray.push({
-            extID: data[i].idDrink,
-            type: 'cocktail',
-            name: data[i].strDrink
-          });
-        }
-        console.log(response);
-      } catch (error) {
-        console.log(error);
+      for (let i in data) {
+        cocktailArray.push({
+          extID: data[i].idDrink,
+          type: 'cocktail',
+          name: data[i].strDrink
+        });
       }
+      console.log(response.data.drinks.length);
+    } catch (error) {
+      console.log(error);
     }
   }
 };
