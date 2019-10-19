@@ -5,6 +5,7 @@ import { IUser } from '../interfaces';
 export interface IUserDocument extends IUser, Document {
   // TODO - define user document methods
   password: string;
+  admin: string;
 }
 
 // Create interface for User model
@@ -21,6 +22,11 @@ const userSchema = new Schema({
     password: {
         type: Types.String,
         required: true
+    },
+    admin: {
+        type: Types.String,
+        required: true,
+        default: 'notAdmin'
     },
     name: Types.String,
     age: Types.Number,

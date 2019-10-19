@@ -1,60 +1,50 @@
-import { Router } from 'express';
+import express, { Router } from "express";
 import { User, IUserDocument } from "../models";
-import { IUser } from "../interfaces";
+import { IUser, IUserRequest } from "../interfaces";
 import bcrypt from "bcrypt";
-import passport from 'passport';
-
+import { loginUser } from "../util/loginUser";
 
 export const LoginRoutes = Router()
-.post('/register', async(req, res) => {
+  .post("/register", async (req, res) => {
+    const { username, password, admin } = req.body;
 
-    if (!req.body) {
-        return res.status(400).send('Missing user data.');
-      }
-
-    const {username, password} = req.body;
+    if (!username || !password) {
+      return res.status(400).send("Missing user data.");
+    }
 
     try {
-        //check if username exists
-        const user: IUser | null = await User.findOne({
-          username: username.toLowerCase()
-        });
+      //check if username exists
+      const user: IUser | null = await User.findOne({
+        username: username.toLowerCase()
+      });
 
-        //If user exists, reject it
-        if(user) {
-          return res.status(422).send('Username already exists!');
-        }
-      ​
-        const newUser = await new Promise<IUserDocument>((resolve) => {
-      ​
-          //hash password
-          bcrypt.hash(password, 10, (err, hash) => {
-              if (err) {
-                  return res.status(500).send(`Error hashing password ${err}`);
-              }
-      ​
-              //TODO -- add default values for the rest of the account creation questions.
-              const userData: object = {
-                  username: username.toLowerCase(),
-                  password: hash
-              }
-      ​
-              const user: IUserDocument = new User(userData);
-      ​
-              resolve(user);
-            });
-        });
-      ​
-        const savedUser: IUserDocument = await newUser.save();
-      ​
-        return res.status(201).json(savedUser);
-
-      } catch (err) {
-        return res.status(500).send(`Error creating user ${err}`);
+      //If user exists, reject it
+      if (user) {
+        return res.status(422).send("Username already exists!");
       }
-
-})
-.post('/login', passport.authenticate('login', {session: false}), (req, res) => {
-  //Token fine, decide what other info we want attached/returned on login.
-  res.status(200).json(req.user);
-})
+      const newUser = await new Promise<IUserDocument>(resolve => {
+        //hash password
+        bcrypt.hash(password, 10, (err, hash) => {
+          if (err) {
+            return res.status(500).send(`Error hashing password ${err}`);
+          }
+          //TODO -- add default values for the rest of the account creation questions.
+          const userData: object = {
+            username: username.toLowerCase(),
+            password: hash,
+            admin
+          };
+          const user: IUserDocument = new User(userData);
+          resolve(user);
+        });
+      });
+      const savedUser: IUserDocument = await newUser.save();
+      return res.status(201).json(savedUser);
+    } catch (err) {
+      return res.status(500).send(`Error creating user ${err}`);
+    }
+  })
+  .post("/login", loginUser, (req: IUserRequest, res: express.Response) => {
+    //TODO add query and return user object + token
+    res.status(200).send(req.token);
+  });
