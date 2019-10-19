@@ -1,30 +1,18 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
 import { User, IUserDocument } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
-import { isAdmin } from '../util/isAdmin'
-import { IUserRequest, IUserToken } from '../interfaces'
 const userUtilities = new UserUtilities();
 
 export const UserRoutes = Router()
-  .get('/', async (req: IUserRequest, res: express.Response) => {
+  .get('/', async (req, res) => {
     // Get all users
-    const {admin} = req.token as IUserToken;
+    try {
+      const users: IUserDocument[] = await User.find();
 
-
-    if (isAdmin(admin)) {
-      try {
-        const users: IUserDocument[] = await User.find();
-        return res.json(users);
-      } catch (error) {
-        return res.status(500).send(error);
-      }
-    } else {
-      return res.status(401).send('Only admins can access this resource.')
-    }     
-
-
-      // res.status(403).send('Only accessible to admins');
-
+      return res.json(users);
+    } catch (error) {
+      return res.status(500).send(error);
+    }
   })
   .get('/:username', async (req, res) => {
     // Get User by username
