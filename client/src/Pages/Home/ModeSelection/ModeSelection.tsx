@@ -70,4 +70,5 @@ const OptionButton = styled(Link)`
   align-items: center;
   background: transparent;
   border: none;
+  text-decoration: none;
 `;

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { Container } from 'Elements';
 import Home from './Home';
-import SearchResults from './SearchResults';
 import User from './User';
 import SearchForm from './SearchForm';
 
@@ -21,10 +20,6 @@ const Router: React.FC = () => (
 
       <Route path='/search/:type'>
         <SearchForm />
-      </Route>
-
-      <Route path='/results/:type'>
-        <SearchResults />
       </Route>
     </Switch>
   </PageContainer>

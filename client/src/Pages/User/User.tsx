@@ -8,7 +8,7 @@ interface Props {}
 
 const User: React.FC<Props> = () => {
   const { username } = useParams();
-  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(true);
+  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInformation, setProfileInformation] = useState<UserProps>({
     username: 'nichsecord',
     name: 'nich secord',
@@ -31,9 +31,11 @@ const User: React.FC<Props> = () => {
   //   const getUser = async () => {
   //     try {
   //       const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
+  //       const profileCheck: boolean = (await response.status) === 200;
   //       const data: UserProps = await response.json();
 
   //       setProfileInformation(data);
+  //       setIsUsersProfile(profileCheck);
   //     } catch (err) {
   //       console.log(err);
   //     }
