@@ -1,6 +1,6 @@
 // Load env variables
 import dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 
 import path from 'path';
 import express, { Application } from 'express';
@@ -25,7 +25,10 @@ routeConfig(app);
 const PORT = process.env.PORT || 6969;
 
 //api.cocktaildb('manhattan');
-api.brewerydb();
+// const log = async () => {
+//   const data: any = await api.brewerydb();
+// };
+//api.brewerydb();
 
 // Listen for HTTP traffic once DB connection is established
 DB.connect()

@@ -12,13 +12,14 @@ const api: any = {
       for (let i in data) {
         beersArray.push({
           extID: data[i].id,
-          type: 'Beer',
+          type: 'BEER',
           name: data[i].name,
           desc: data[i].description,
-          ABV: data[i].abv
+          ABV: data[i].abv,
+          image: data[i].labels
         });
       }
-      console.log(response.data.data);
+      return await beersArray;
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +27,7 @@ const api: any = {
   cocktaildb: async (query: String) => {
     try {
       const response: AxiosResponse<any> = await axios.get(
-        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${query}`
+        `https://www.thecocktaildb.com/api/json/v2/9973533/search.php?s=${query}`
       );
       const data: any[] = response.data.drinks;
       const cocktailArray: any[] = [];
@@ -38,7 +39,7 @@ const api: any = {
           name: data[i].strDrink
         });
       }
-      console.log(cocktailArray);
+      console.log(response.data.drinks);
     } catch (error) {
       console.log(error);
     }
