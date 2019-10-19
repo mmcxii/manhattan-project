@@ -7,11 +7,14 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import DB from './db';
 import routeConfig from './routes';
+<<<<<<< HEAD
 import { passportStrategy } from './config/passport';
 import passport from 'passport';
 import api from './apiCalls';
 
 passportStrategy(passport);
+=======
+>>>>>>> master
 
 // Create Express app
 const app: Application = express();
