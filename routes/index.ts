@@ -1,8 +1,8 @@
 import { Router, Application } from 'express';
+import { AuthRoutes } from './authRoutes';
 import { HtmlRoutes } from './htmlRoutes'
 import { UserRoutes } from './userRoutes';
 import { CommentRoutes } from './commentRoutes';
-import { LoginRoutes } from './LoginRoutes';
 import { ProductRoutes } from './productRoutes';
 import { SearchRoutes } from './searchRoutes';
 import { validateToken } from '../util/validateToken';
@@ -15,8 +15,8 @@ export default (app: Application) => {
   apiRoutes.use('/products', ProductRoutes);
 
   // Attach routers to Express app
+  app.use('/auth', AuthRoutes);
   app.use('/search', SearchRoutes);
-  app.use('/auth', LoginRoutes);
   app.use('/api', validateToken, apiRoutes);
   app.use('/', HtmlRoutes);
 };
