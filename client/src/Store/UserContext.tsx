@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useReducer } from 'react';
 
 export interface UserProps {
   username: string;
@@ -12,14 +12,26 @@ export interface UserProps {
   following?: UserProps[];
 }
 
-const intitialState: UserProps = {
-  username: '',
+interface ActionProps {
+  type: 'LOG_USER_IN' | 'LOG_USER_OUT';
+  payload: UserProps;
+}
+
+const initialState: UserProps = { username: '' };
+
+export const UserContext = createContext<UserProps | any>(initialState);
+
+const reducer = (state: UserProps, action: ActionProps): UserProps => {
+  switch (action.type) {
+    case 'LOG_USER_IN':
+      return { ...action.payload };
+    case 'LOG_USER_OUT':
+      return { ...initialState };
+  }
 };
 
-export const UserContext = createContext<UserProps | any>(intitialState);
-
 export const UserContextProvider = (props: any) => {
-  const [user, setUser] = useState<UserProps>(intitialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  return <UserContext.Provider value={{ user, setUser }}>{props.children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ state, dispatch }}>{props.children}</UserContext.Provider>;
 };
