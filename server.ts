@@ -7,14 +7,7 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import DB from './db';
 import routeConfig from './routes';
-<<<<<<< HEAD
-import { passportStrategy } from './config/passport';
-import passport from 'passport';
 import api from './apiCalls';
-
-passportStrategy(passport);
-=======
->>>>>>> master
 
 // Create Express app
 const app: Application = express();
@@ -27,7 +20,7 @@ routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
 
-//api.cocktaildb('manhattan');
+//api.cocktaildb();
 // const log = async () => {
 //   const data: any = await api.brewerydb();
 // };
