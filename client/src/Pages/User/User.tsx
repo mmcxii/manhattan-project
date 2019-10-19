@@ -11,6 +11,7 @@ const User: React.FC<Props> = () => {
   const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInformation, setProfileInformation] = useState<UserProps>({
     username: 'nichsecord',
+    theme: 'dark',
     name: 'nich secord',
     age: 25,
     bio:
