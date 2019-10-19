@@ -15,16 +15,17 @@ const userUtilities = new UserUtilities();
 export const UserRoutes = Router()
   .get('/', async (req: express.Request, res: express.Response) => {
     // Get all users
-    if(req.token) {
-      console.log(req.token.admin)  
-    }
-         
+    if (isAdmin(req.token.admin)) {
       try {
         const users: IUserDocument[] = await User.find();
         return res.json(users);
       } catch (error) {
         return res.status(500).send(error);
       }
+    } else {
+      return res.status(401).send('Only admins can access this resource.')
+    }     
+
 
       // res.status(403).send('Only accessible to admins');
 
