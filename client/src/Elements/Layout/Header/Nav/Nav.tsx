@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
 import { ThemeContext } from 'Store';
-import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black, grey } from 'Utilities';
+import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black } from 'Utilities';
 import NavItem from './NavItem';
 
 interface Props {}
