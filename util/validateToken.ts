@@ -1,8 +1,15 @@
 import * as jwt from 'jsonwebtoken';
-import { IUserAuthInfo } from '../interfaces';
-import { Response, NextFunction } from 'express';
+import express from 'express';
 
-export const validateToken = (req: IUserAuthInfo, res: Response, next: NextFunction) => {
+declare module 'express' {
+    interface Request {
+        'token'?: any;
+        'body'?: any;
+    }
+  }
+  
+
+export const validateToken = (req: express.Request, res: express.Response, next: any) => {
     //Get header from request
     const authHeader = req.headers.authorization;
     //Check that header is present
@@ -11,9 +18,11 @@ export const validateToken = (req: IUserAuthInfo, res: Response, next: NextFunct
 
         try {
             //Verify and decode JWT
-            const decoded: object | string = jwt.verify(token, 'privateKey');
+            
+            const decoded: string | object = jwt.verify(token, 'privateKey')
             //Attach user data to req
-            req.user = decoded;
+            
+            req.token = decoded;
 
             next();
         } catch (err) {

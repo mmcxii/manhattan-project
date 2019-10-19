@@ -1,5 +1,9 @@
 import { Request } from 'express';
 
 export interface IUserAuthInfo extends Request {
-    user: string | object;
+    user: {
+        _id: string,
+        username: string,
+        admin: string
+    };
 }

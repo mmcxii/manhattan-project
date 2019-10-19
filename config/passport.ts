@@ -5,6 +5,7 @@ import { User, IUserDocument } from "../models";
 import * as jwt from 'jsonwebtoken';
 
 
+
 //Login strategy
 const Strategy = passportLocal.Strategy;
 
@@ -33,8 +34,8 @@ export const passportStrategy = () => {
               username: user.username,
               admin: user.admin
             }
-            const token: string = jwt.sign(payload, 'privateKey')
-            console.log(token);
+            const token: string | object = jwt.sign(payload, 'privateKey')
+            console.log(typeof token);
             return done(null, token);
           } else {
             return done(null, false, { message: "Incorrect password" });

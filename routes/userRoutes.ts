@@ -1,27 +1,32 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { User, IUserDocument } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
 import { isAdmin } from '../util/isAdmin'
 
+declare module 'express' {
+  interface Request {
+      'token'?: any;
+      'body'?: any;
+  }
+}
+
 const userUtilities = new UserUtilities();
 
 export const UserRoutes = Router()
-  .get('/', async (req, res) => {
+  .get('/', async (req: express.Request, res: express.Response) => {
     // Get all users
-
-    const {admin} = req.user;
-
-    if (isAdmin(admin)){
-      
+    if(req.token) {
+      console.log(req.token.admin)  
+    }
+         
       try {
         const users: IUserDocument[] = await User.find();
         return res.json(users);
       } catch (error) {
         return res.status(500).send(error);
       }
-    } else {
-      res.status(403).send('Only accessible to admins');
-    }
+
+      // res.status(403).send('Only accessible to admins');
 
   })
   .get('/:username', async (req, res) => {

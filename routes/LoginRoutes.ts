@@ -1,8 +1,15 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { User, IUserDocument } from "../models";
 import { IUser } from "../interfaces";
 import bcrypt from "bcrypt";
-import passport from 'passport';
+import { loginUser } from '../util/loginUser';
+
+declare module 'express' {
+  interface Request {
+      'token'?: any;
+      'body'?: any;
+  }
+}
 
 
 export const LoginRoutes = Router()
@@ -56,7 +63,7 @@ export const LoginRoutes = Router()
       }
 
 })
-.post('/login', passport.authenticate('login', {session: false}), (req, res) => {
+.post('/login', loginUser, (req: express.Request, res: express.Response) => {
   //Token fine, decide what other info we want attached/returned on login.
-  res.status(200).json(req.user);
+   res.status(200).send(req.token);
 })
