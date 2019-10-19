@@ -1,31 +1,35 @@
-import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
-import { IProduct } from '../interfaces';
+import { Schema, SchemaTypes as Types, Model, model, Document } from "mongoose";
+import { IProduct } from "../interfaces";
 
 export interface IProductDocument extends IProduct, Document {
-    // TODO - define Product document methods
+  // TODO - define Product document methods
 }
 
 export interface IProductModel extends Model<IProductDocument> {
-    // TODO - define Product model methods
+  // TODO - define Product model methods
 }
 
 const productSchema = new Schema({
-    extID: {
-        type: Types.String,
-        required: true,
-        unique: true
-    },
-    type: {
-        type: Types.String,
-        enum: ['BEER','WINE','MIXED'],
-        required: true
-    },
-    name: {
-        type: Types.String,
-        required: true
-    },
-    desc: Types.String,
-    ABV: Types.Number
+  extID: {
+    type: Types.String,
+    required: true,
+    unique: true
+  },
+  type: {
+    type: Types.String,
+    enum: ["BEER", "WINE", "MIXED"],
+    required: true
+  },
+  name: {
+    type: Types.String,
+    required: true
+  },
+  desc: Types.String,
+  imgUrl: Types.String,
+  comments: [{ Type: Types.ObjectId, ref: "Comment" }]
 });
 
-export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
+export const Product = model<IProductDocument, IProductModel>(
+  "Product",
+  productSchema
+);
