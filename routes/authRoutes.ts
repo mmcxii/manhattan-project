@@ -45,9 +45,33 @@ export const AuthRoutes = Router()
       return res.status(500).send(`Error creating user ${err}`);
     }
   })
-  .post('/login', loginUser, (req: IUserRequest, res: express.Response) => {
-    //TODO add query and return user object + token
-    res.status(200).send(req.token);
+  .post('/login', loginUser, async (req: IUserRequest, res: express.Response) => {
+
+    // Verify username is supplied
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).send('Username data missing.');
+    }
+
+    // Verify token has been attached to response header
+    if (!req.tokenString) {
+      return res.status(400).send('Login failed. Missing authorization header.');
+    }
+
+    // Lookup associated User doc and return with token
+    const user: IUser | null = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send(`User ${username} not found.`);
+    }
+
+    const userData = {
+      token: req.tokenString,
+      user
+    };
+
+    res.status(200).send(userData);
   })
   .get('/:username', validateToken, async (req: IUserRequest, res: express.Response) => {
     // Verify identity of provided user. Verifies user matches username in supplied token.
