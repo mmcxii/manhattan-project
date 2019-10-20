@@ -7,7 +7,6 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import DB from './db';
 import routeConfig from './routes';
-import api from './apiCalls';
 
 // Create Express app
 const app: Application = express();
@@ -19,12 +18,6 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
-
-//api.cocktaildb('');
-// const log = async () => {
-//   const data: any = await api.brewerydb();
-// };
-api.brewerydb();
 
 // Listen for HTTP traffic once DB connection is established
 DB.connect()
