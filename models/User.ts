@@ -26,6 +26,9 @@ export interface IUserDocument extends IUser, Document {
   // TODO - define user document methods
   password: string;
   admin: string;
+  follows: IUserDocument[];
+  followers: IUserDocument[];
+  toUserData: () => UserData
 }
 
 // Create interface for User model
@@ -60,5 +63,9 @@ const userSchema = new Schema({
         ref: 'User'
     }
 });
+
+userSchema.methods.toUserData = function(this: IUser): UserData {
+    return new UserData(this);
+}
 
 export const User = model<IUserDocument, IUserModel>('User', userSchema);
