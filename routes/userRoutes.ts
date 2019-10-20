@@ -96,13 +96,13 @@ export const UserRoutes = Router()
   })
   .put('/:username/followers', async (req, res) => {
     // Add a follower to a user.
-    if (!req.body.follower) {
+    if (!req.body.username) {
       return res.status(400).send('Missing follower username.');
     }
 
     // Get username and follower name
     const username = req.params.username.trim().toLowerCase();
-    const followerName: string = String(req.body.follower)
+    const followerName: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
@@ -134,13 +134,13 @@ export const UserRoutes = Router()
   .delete('/:username/followers', async (req, res) => {
     // Remove a follower from user
 
-    if (!req.body.follower) {
+    if (!req.body.username) {
       return res.status(400).send('Missing follower username.');
     }
 
     // Get username and follower name
     const username = req.params.username.trim().toLowerCase();
-    const followerName: string = String(req.body.follower)
+    const followerName: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
@@ -232,7 +232,7 @@ export const UserRoutes = Router()
 
     // Get username and follower name
     const followerName = req.params.username.trim().toLowerCase();
-    const username: string = String(req.body.follower)
+    const username: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
