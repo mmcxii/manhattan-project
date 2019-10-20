@@ -43,7 +43,6 @@ uploads.on('connection', socket => {
     fileInfo.slice++;
 
     // Check if more slices are needed, else notify end of upload
-    // TODO - might need to be gte vs gt
     if (file.size >= fileInfo.slice * SLICE_SIZE) {
       uploads.emit('file-slice-request', { name: fileInfo.name, currentSlice: fileInfo.slice});
     } else {
