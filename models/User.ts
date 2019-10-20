@@ -1,6 +1,26 @@
 import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
 import { IUser } from '../interfaces';
 
+// User DTO class
+export class UserData {
+
+    username: string;
+    follows: number;
+    followers: number;
+    name?: string;
+    age?: number;
+    bio?: string;
+
+    constructor(user: IUser) {
+        this.username = user.username;
+        this.follows = user.follows.length;
+        this.followers = user.followers.length;
+        this.name = user.name;
+        this.age = user.age;
+        this.bio = user.bio;
+    }
+}
+
 // Create interface for User documents
 export interface IUserDocument extends IUser, Document {
   // TODO - define user document methods

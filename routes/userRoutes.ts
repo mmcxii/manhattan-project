@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User, IUserDocument } from '../models';
+import { User, IUserDocument, UserData } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
 const userUtilities = new UserUtilities();
 
@@ -8,8 +8,9 @@ export const UserRoutes = Router()
     // Get all users
     try {
       const users: IUserDocument[] = await User.find();
+      const userData: UserData[] = users.map(u => new UserData(u));
 
-      return res.json(users);
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -25,7 +26,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user);
+      const userData: UserData = new UserData(user);
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -87,7 +90,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.followers);
+      const userData: UserData[] = user.followers.map(u => new UserData(u));
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -180,7 +185,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.follows);
+      const userData: UserData[] = user.follows.map(u => new UserData(u));
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
