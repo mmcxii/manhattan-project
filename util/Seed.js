@@ -36,19 +36,28 @@ app.get('/', function(req, res) {
 });
 
 app.post('/seed/beer', function(req, res) {
-  dump(brewerydb());
+  dumpBeer();
 });
 
 app.post('/seed/cocktail', function(req, res) {
-  dump();
+  dumpMixed();
 });
 
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
 });
 
-const dump = async () => {
+const dumpMixed = async () => {
   const data = await cocktaildbId();
+  product.create(data, function(err, products) {
+    if (err) {
+      throw err;
+    }
+  });
+};
+
+const dumpBeer = async () => {
+  const data = await brewerydb();
   product.create(data, function(err, products) {
     if (err) {
       throw err;
@@ -157,7 +166,10 @@ const cocktaildb = async queryArray => {
       ];
       for (let j in ingredientNum) {
         if (ingredientNum[j] != null) {
-          ingredients.push({ [ingredientNum[j]]: ingredientMeasure[j] });
+          ingredients.push({
+            Ingredient: ingredientNum[j],
+            Measurement: ingredientMeasure[j]
+          });
         }
       }
       cocktail.push({
