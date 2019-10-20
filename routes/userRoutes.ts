@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import { User, IUserDocument, UserData } from '../models';
-import { UserUtilities } from '../util/UserUtilities';
-const userUtilities = new UserUtilities();
 
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
@@ -117,7 +115,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -126,7 +124,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.addFollower(user, follower);
+      const status = await user.addFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -155,7 +153,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -164,7 +162,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.removeFollower(user, follower);
+      const status = await user.removeFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -210,7 +208,7 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs = await userUtilities.getUserAndFollower(username, followerName);
+      const userDocs = await User.getUserAndFollower(username, followerName);
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
       }
@@ -218,7 +216,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.addFollower(user, follower);
+      const status = await user.addFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -247,7 +245,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -256,7 +254,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.removeFollower(user, follower);
+      const status = await user.removeFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
