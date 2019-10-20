@@ -1,30 +1,19 @@
-import express, { Router } from 'express';
-import { User, IUserDocument } from '../models';
+import { Router } from 'express';
+import { User, IUserDocument, UserData } from '../models';
 import { UserUtilities } from '../util/UserUtilities';
-import { isAdmin } from '../util/isAdmin'
-import { IUserRequest, IUserToken } from '../interfaces'
 const userUtilities = new UserUtilities();
 
 export const UserRoutes = Router()
-  .get('/', async (req: IUserRequest, res: express.Response) => {
+  .get('/', async (req, res) => {
     // Get all users
-    const {admin} = req.token as IUserToken;
+    try {
+      const users: IUserDocument[] = await User.find();
+      const userData: UserData[] = users.map(u => new UserData(u));
 
-
-    if (isAdmin(admin)) {
-      try {
-        const users: IUserDocument[] = await User.find();
-        return res.json(users);
-      } catch (error) {
-        return res.status(500).send(error);
-      }
-    } else {
-      return res.status(401).send('Only admins can access this resource.')
-    }     
-
-
-      // res.status(403).send('Only accessible to admins');
-
+      return res.json(userData);
+    } catch (error) {
+      return res.status(500).send(error);
+    }
   })
   .get('/:username', async (req, res) => {
     // Get User by username
@@ -37,7 +26,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user);
+      const userData: UserData = new UserData(user);
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -99,7 +90,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.followers);
+      const userData: UserData[] = user.followers.map(u => new UserData(u));
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -192,7 +185,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.follows);
+      const userData: UserData[] = user.follows.map(u => new UserData(u));
+
+      return res.json(userData);
     } catch (error) {
       return res.status(500).send(error);
     }
