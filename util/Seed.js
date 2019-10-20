@@ -12,21 +12,21 @@ mongoose.connect('mongodb://localhost:27017/manhattenDB', {
 let Schema = mongoose.Schema;
 
 let detailSchema = new Schema({
-  desc: String,
+  Desc: String,
   ABV: Number,
-  image: [],
+  Image: [],
   Subtype: String,
   Organic: Boolean,
-  ingredients: [],
-  directions: String,
-  glassType: String
+  Ingredients: [],
+  Directions: String,
+  GlassType: String
 });
 
 var productSchema = new Schema({
-  extID: String,
-  type: String,
-  name: String,
-  details: [detailSchema]
+  ExtID: String,
+  Type: String,
+  Name: String,
+  Details: [detailSchema]
 });
 
 let product = mongoose.model('Product', productSchema);
@@ -81,14 +81,14 @@ const brewerydb = async () => {
           organic = true;
         }
         beersArray.push({
-          extID: data[i].id,
-          type: 'BEER',
-          name: data[i].name,
-          details: [
+          ExtID: data[i].id,
+          Type: 'BEER',
+          Name: data[i].name,
+          Details: [
             {
-              desc: data[i].description,
+              Desc: data[i].description,
               ABV: data[i].abv,
-              image: data[i].labels,
+              Image: data[i].labels,
               Subtype: data[i].style.shortName,
               Organic: organic
             }
@@ -173,15 +173,15 @@ const cocktaildb = async queryArray => {
         }
       }
       cocktail.push({
-        extID: data[0].idDrink,
-        type: 'MIXED',
-        name: data[0].strDrink,
-        details: [
+        ExtID: data[0].idDrink,
+        Type: 'MIXED',
+        Name: data[0].strDrink,
+        Details: [
           {
-            image: data[0].strDrinkThumb,
-            ingredients: ingredients,
-            directions: data[0].strInstructions,
-            glassType: data[0].strGlass
+            Image: data[0].strDrinkThumb,
+            Ingredients: ingredients,
+            Directions: data[0].strInstructions,
+            GlassType: data[0].strGlass
           }
         ]
       });
