@@ -6,6 +6,8 @@ export class UserData {
   username: string;
   follows: number;
   followers: number;
+  theme?: 'dark' | 'light';
+  highlightedFavorite?: string;
   name?: string;
   age?: number;
   bio?: string;
@@ -14,6 +16,8 @@ export class UserData {
     this.username = user.username;
     this.follows = user.follows.length;
     this.followers = user.followers.length;
+    this.theme = user.theme;
+    this.highlightedFavorite = user.highlightedFavorite;
     this.name = user.name;
     this.age = user.age;
     this.bio = user.bio;
@@ -28,8 +32,8 @@ export interface IUserDocument extends IUser, Document {
   follows: IUserDocument[];
   followers: IUserDocument[];
   toUserData: () => UserData;
-  addFollower: (follower: IUserDocument) => Promise<number>
-  removeFollower: (follower: IUserDocument) => Promise<number>
+  addFollower: (follower: IUserDocument) => Promise<number>;
+  removeFollower: (follower: IUserDocument) => Promise<number>;
 }
 
 // Create interface for User model
@@ -44,28 +48,34 @@ const userSchema = new Schema({
   username: {
     type: Types.String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: Types.String,
-    required: true
+    required: true,
   },
   admin: {
     type: Types.String,
     required: true,
-    default: 'notAdmin'
+    default: 'notAdmin',
   },
   name: Types.String,
   age: Types.Number,
   bio: Types.String,
+  highlightedFavorite: Types.String,
+  theme: {
+    type: Types.String,
+    required: true,
+    default: 'dark',
+  },
   follows: {
     type: [Types.ObjectId],
-    ref: 'User'
+    ref: 'User',
   },
   followers: {
     type: [Types.ObjectId],
-    ref: 'User'
-  }
+    ref: 'User',
+  },
 });
 
 // Schema methods
@@ -76,7 +86,7 @@ userSchema.statics.getUserAndFollower = async function(
 ): Promise<[IUserDocument, IUserDocument] | Error> {
   // Find both user documents
   const users: IUserDocument[] = await User.find({
-    username: [username, followerName]
+    username: [username, followerName],
   });
 
   // Match user documents on username
@@ -118,13 +128,13 @@ userSchema.methods.addFollower = async function(
   // Add follower to user
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
-    options: { $addToSet: { followers: follower._id } }
+    options: { $addToSet: { followers: follower._id } },
   };
 
   // Add user to follows
   const followerContext: IUpdateContext = {
     filter: { _id: follower._id },
-    options: { $addToSet: { follows: this._id } }
+    options: { $addToSet: { follows: this._id } },
   };
 
   return updateFollowers(userContext, followerContext);
@@ -138,13 +148,13 @@ userSchema.methods.removeFollower = async function(
   // Remove follower from followers
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
-    options: { $pull: { followers: follower._id } }
+    options: { $pull: { followers: follower._id } },
   };
 
   // Remove user from follows
   const followerContext: IUpdateContext = {
     filter: { _id: follower._id },
-    options: { $pull: { follows: this._id } }
+    options: { $pull: { follows: this._id } },
   };
 
   return updateFollowers(userContext, followerContext);
