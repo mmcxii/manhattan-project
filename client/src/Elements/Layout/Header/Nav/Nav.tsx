@@ -22,11 +22,6 @@ const Nav: React.FC<Props> = () => {
       link: '/user/nichsecord',
       icon: 'far fa-user',
     },
-    {
-      page: 'about the team',
-      link: '/about',
-      icon: 'far fa-glass-martini-alt',
-    },
   ];
 
   const toggleNav = () => setNavIsOpen(!navIsOpen);
