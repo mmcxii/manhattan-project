@@ -48,6 +48,7 @@ const Login: React.FC<Props> = () => {
       }
 
       localStorage.setItem('loginToken', loginToken);
+      localStorage.setItem('userInfo', JSON.stringify({ ...userData }));
       dispatch({ type: 'LOG_USER_IN', payload: userData });
     } catch (err) {
       console.log(err);
