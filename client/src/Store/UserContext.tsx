@@ -1,4 +1,4 @@
-import React, { createContext, useState, useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 export interface UserProps {
   username: string;
