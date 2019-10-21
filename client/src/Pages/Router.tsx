@@ -6,12 +6,17 @@ import { Container } from 'Elements';
 import Home from './Home';
 import User from './User';
 import SearchForm from './SearchForm';
+import Login from './Login';
 
 const Router: React.FC = () => (
   <PageContainer>
     <Switch>
       <Route exact path='/'>
         <Home />
+      </Route>
+
+      <Route path='/login'>
+        <Login />
       </Route>
 
       <Route path='/user/:username'>
