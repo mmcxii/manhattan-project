@@ -16,7 +16,7 @@ export const AuthRoutes = Router()
     try {
       //check if username exists
       const user: IUser | null = await User.findOne({
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
       });
 
       //If user exists, reject it
@@ -33,7 +33,7 @@ export const AuthRoutes = Router()
           const userData: object = {
             username: username.toLowerCase(),
             password: hash,
-            admin
+            admin,
           };
           const user: IUserDocument = new User(userData);
           resolve(user);
@@ -46,7 +46,6 @@ export const AuthRoutes = Router()
     }
   })
   .post('/login', loginUser, async (req: IUserRequest, res: express.Response) => {
-
     // Verify username is supplied
     const { username } = req.body;
 
@@ -68,12 +67,12 @@ export const AuthRoutes = Router()
 
     const userData = {
       token: req.tokenString,
-      user
+      user,
     };
 
     res.status(200).send(userData);
   })
-  .get('/:username', validateToken, async (req: IUserRequest, res: express.Response) => {
+  .post('/:username', validateToken, async (req: IUserRequest, res: express.Response) => {
     // Verify identity of provided user. Verifies user matches username in supplied token.
     // Returns associated User document, else 401 status.
     const username: string = req.params.username.toLowerCase();
