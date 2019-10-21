@@ -65,7 +65,6 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
       `
         : ''}
   }
-
   
   a {
     color: inherit;
