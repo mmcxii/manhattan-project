@@ -3,4 +3,5 @@ import { IUserToken } from './IUserToken';
 
 export interface IUserRequest extends express.Request {
     token?: IUserToken;
+    tokenString?: string;
 }
