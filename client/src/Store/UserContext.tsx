@@ -31,7 +31,7 @@ const reducer = (state: UserProps, action: ActionProps): UserProps => {
 };
 
 export const UserContextProvider = (props: any) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [user, dispatch] = useReducer(reducer, initialState);
 
-  return <UserContext.Provider value={{ state, dispatch }}>{props.children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user, dispatch }}>{props.children}</UserContext.Provider>;
 };

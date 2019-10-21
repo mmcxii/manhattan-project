@@ -1,17 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
-import { ThemeContext } from 'Store';
+import { ThemeContext, UserContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
 import { Header, Footer, Button, CardBody, CardHeader } from 'Elements';
 import homebg from './Assets/img/homebg.png';
 
 const App: React.FC = () => {
+  const { user } = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <>
