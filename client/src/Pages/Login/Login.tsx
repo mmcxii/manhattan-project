@@ -1,30 +1,98 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
+import { UserContext, UserProps } from 'Store';
 import { useForm } from 'Hooks';
-import { Form, Input, Button } from 'Elements';
+import { Form, Input, Button, Card, CardBody, CardHeader } from 'Elements';
 
 interface Props {}
 
 const Login: React.FC<Props> = () => {
+  const { dispatch } = useContext(UserContext);
   const [values, handleChange] = useForm({ username: '', password: '' });
 
-  const attemptLogin = async () => {};
+  const attemptLogin = async () => {
+    try {
+      const response: Response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values }),
+      });
+      const data: {
+        token: string;
+        user: {
+          username: string;
+          theme: 'dark' | 'light';
+          name?: string;
+          age?: number;
+          bio?: string;
+          follows: UserProps[];
+          followers: UserProps[];
+        };
+      } = await response.json();
+
+      const loginToken: string = data.token;
+      const userData: UserProps = {
+        username: data.user.username,
+        theme: data.user.theme,
+        follows: data.user.follows,
+        followers: data.user.followers,
+      };
+      if (data.user.name) {
+        userData.name = data.user.name;
+      }
+      if (data.user.age) {
+        userData.age = data.user.age;
+      }
+      if (data.user.bio) {
+        userData.bio = data.user.bio;
+      }
+
+      localStorage.setItem('loginToken', loginToken);
+      dispatch({ type: 'LOG_USER_IN', payload: userData });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <section>
-      <Form
-        onSubmit={e => {
-          e.preventDefault();
+    <Card as='section'>
+      <CardHeader>Please log in to access the Manhattan Project</CardHeader>
+      <CardBody>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
 
-          attemptLogin();
-        }}
-      >
-        <Input name='username' value={values.username} onChange={handleChange} />
-        <Input name='password' value={values.password} onChange={handleChange} />
+            attemptLogin();
+          }}
+        >
+          <Input
+            name='username'
+            value={values.username}
+            onChange={handleChange}
+            required
+            placeholder='Enter your username'
+            icon='fas fa-user'
+          />
+          <Input
+            name='password'
+            value={values.password}
+            onChange={handleChange}
+            type='password'
+            required
+            placeholder='Enter your password'
+            icon='fas fa-lock'
+          />
+          <small>
+            Forgot your password? Click <a href={/* TODO: Make reset password page */ ''}>here</a>.
+          </small>
+          <small>
+            Click <a href={/* TODO: Make create account page */ ''}>here</a> to create an account.
+          </small>
 
-        <Button type='submit'>Log In</Button>
-      </Form>
-    </section>
+          <Button type='submit'>Log In</Button>
+        </Form>
+      </CardBody>
+    </Card>
   );
 };
 

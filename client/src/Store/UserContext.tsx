@@ -9,7 +9,7 @@ export interface UserProps {
   highlightedFavorite?: string;
   favorites?: string[];
   follows?: UserProps[];
-  following?: UserProps[];
+  followers?: UserProps[];
 }
 
 interface ActionProps {
