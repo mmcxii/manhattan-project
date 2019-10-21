@@ -3,32 +3,48 @@ import { useParams } from 'react-router-dom';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
+import ResultsItem from './ResultsItem';
 
 // TODO: Austin display search results
-// TODO: Define props for data returned from fetch call
 
 interface Props {}
 
-interface BeerProps {
-  // TODO: Define search result props here
+interface CommonProps {
+  _id: string;
+  image: string;
+  desc: string;
+}
+// abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
+export interface BeerProps extends CommonProps {
+  organic: boolean;
+  subtype: string;
+  abv: number;
 }
 
-interface CocktailProps {
-  // TODO: Define search result props here
+export interface CocktailProps extends CommonProps {
+  glass: string;
+  directions: string;
 }
 
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
-  const [searchResults, setSearchResults] = useState<BeerProps[] | CocktailProps[]>([]);
+  const [searchResults, setSearchResults] = useState<
+    BeerProps[] | CocktailProps[]
+  >([]);
   const [values, handleChange] = useForm({ query: '' });
-  const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
+  const icon =
+    type === 'beer'
+      ? 'fa-beer'
+      : type === 'wine'
+      ? 'fa-wine-glass-alt'
+      : 'fa-glass-martini-alt';
 
   const APISearch = async (mode: string) => {
     try {
       const response: Response = await fetch(`/api/search/${mode}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: values.query }),
+        body: JSON.stringify({ query: values.query })
       });
       const data: BeerProps[] | CocktailProps[] = await response.json();
 
@@ -70,8 +86,11 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
-            {searchResults.map(item => (
-              <p>render display component passing in item info as props</p>
+            {/* {searchResults.map((item: BeerProps | CocktailProps) => (
+              <ResultsItem key={item._id} item={item} />
+            ))} */}
+            {searchResults.map((item: BeerProps | CocktailProps) => (
+              <p>{item._id}</p>
             ))}
           </CardBody>
         </Card>
