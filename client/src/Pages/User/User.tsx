@@ -11,6 +11,7 @@ const User: React.FC<Props> = () => {
   const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInformation, setProfileInformation] = useState<UserProps>({
     username: 'nichsecord',
+    theme: 'dark',
     name: 'nich secord',
     age: 25,
     bio:
@@ -21,7 +22,7 @@ const User: React.FC<Props> = () => {
       { username: 'z-murph', name: 'zach murphy' },
       { username: 'brandtkstrom', name: 'brandt strom' },
     ],
-    following: [
+    followers: [
       { username: 'jirafaro', name: 'austin robbins' },
       { username: 'remte0', name: 'john remeto' },
     ],
@@ -84,11 +85,11 @@ const User: React.FC<Props> = () => {
             </>
           )}
 
-          {profileInformation.following && (
+          {profileInformation.followers && (
             <>
               <h3>following</h3>
               <ul>
-                {profileInformation.following.map(follow => (
+                {profileInformation.followers.map(follow => (
                   <li>{follow.name}</li>
                 ))}
               </ul>

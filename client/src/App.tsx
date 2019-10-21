@@ -1,32 +1,36 @@
 import React, { useContext } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
 import { ThemeContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
-import { Header, Footer, Button, CardBody } from 'Elements';
+import { Header, Footer, Button, CardBody, CardHeader } from 'Elements';
+import homebg from './Assets/img/homebg.png';
+import { useLSUserInfo } from 'Hooks';
 
 const App: React.FC = () => {
+  useLSUserInfo();
+
   const { theme } = useContext(ThemeContext);
+  const { pathname } = useLocation();
+
   return (
     <>
       <Normalize />
-      <GlobalStyles theme={theme} />
+      <GlobalStyles theme={theme} location={pathname} />
 
-      <BrowserRouter>
-        <Header />
-        <Router />
-        <Footer />
-      </BrowserRouter>
+      <Header />
+      <Router />
+      <Footer />
     </>
   );
 };
 
 export default App;
 
-const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
+const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: string }>`
   // Reset
 * {
     margin: 0;
@@ -48,14 +52,28 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light' }>`
     
     background: ${props => (props.theme === 'dark' ? black : white)};
     color: ${props => (props.theme === 'dark' ? white : black)};
+    ${props =>
+      props.location === '/'
+        ? `
+        background-image: url(${homebg});
+        background-color: rgba(0,0,0,0.25);
+        background-blend-mode: darken;
+        background-size: cover;
+        background-position: center;
+      `
+        : ''}
   }
-
+  
   a {
     color: inherit;
   }
   
   header, footer {
     background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};    
+  }
+
+  ${CardHeader} {
+    color: ${props => (props.location === '/' ? white : 'intitial')}
   }
 
   ${CardBody} {
