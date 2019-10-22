@@ -11,26 +11,24 @@ interface Props {}
 
 interface CommonProps {
   _id: string;
-  image: string;
-  desc: string;
+  _image: string;
+  _desc: string;
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
 export interface BeerProps extends CommonProps {
-  organic: boolean;
-  subtype: string;
-  abv: number;
+  _organic: boolean;
+  _subtype: string;
+  _abv: number;
 }
 
-export interface CocktailProps extends CommonProps {
-  glass: string;
-  directions: string;
-}
+// export interface CocktailProps extends CommonProps {
+//   _glass: string;
+//   _directions: string;
+// }
 
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
-  const [searchResults, setSearchResults] = useState<
-    BeerProps[] | CocktailProps[]
-  >([]);
+  const [searchResults, setSearchResults] = useState<BeerProps[]>([]);
   const [values, handleChange] = useForm({ query: '' });
   const icon =
     type === 'beer'
@@ -46,7 +44,7 @@ const SearchForm: React.FC<Props> = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: values.query })
       });
-      const data: BeerProps[] | CocktailProps[] = await response.json();
+      const data: BeerProps[] = await response.json();
 
       setSearchResults(data);
     } catch (err) {
@@ -89,8 +87,12 @@ const SearchForm: React.FC<Props> = () => {
             {/* {searchResults.map((item: BeerProps | CocktailProps) => (
               <ResultsItem key={item._id} item={item} />
             ))} */}
-            {searchResults.map((item: BeerProps | CocktailProps) => (
-              <p>{item._id}</p>
+            {searchResults.map((item: BeerProps) => (
+              <ResultsItem> 
+                <h1>{item._id}</h1>
+                <p>{item._desc}</p>
+                <img alt='what you want to see is lost'>{item._image}</img>
+              <ResultsItem/>
             ))}
           </CardBody>
         </Card>
