@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
@@ -25,11 +26,11 @@ const SearchForm: React.FC<Props> = () => {
 
   const APISearch = async (mode: string) => {
     try {
-      const response: Response = await fetch(`/api/search/${mode}`, {
+      const params = queryString.stringify(values);
+      const response: Response = await fetch(`/api/products?type=${mode}&${params}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: values.query }),
       });
+
       const data: BeerProps[] | CocktailProps[] = await response.json();
 
       setSearchResults(data);
