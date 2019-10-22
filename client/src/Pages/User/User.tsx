@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { UserProps } from 'Store';
 import { Button, Card, CardHeader, CardBody } from 'Elements';
-import { spacing } from 'Utilities';
 import FavoritesSection from './FavoritesSection';
+import FollowsAndFollowers from './FollowsAndFollowers';
 
 interface Props {}
 
@@ -73,27 +72,10 @@ const User: React.FC<Props> = () => {
 
       <Card as='section'>
         <CardBody>
-          {profileInformation.follows && (
-            <>
-              <h3>follows</h3>
-              <ul>
-                {profileInformation.follows.map(follow => (
-                  <li>{follow.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {profileInformation.followers && (
-            <>
-              <h3>followers</h3>
-              <ul>
-                {profileInformation.followers.map(follow => (
-                  <li>{follow.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+          <FollowsAndFollowers
+            follows={profileInformation.follows}
+            followers={profileInformation.followers}
+          />
         </CardBody>
       </Card>
     </>
