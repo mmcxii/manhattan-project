@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { UserProps } from 'Store';
 import { Button, Card, CardHeader, CardBody } from 'Elements';
+import { spacing } from 'Utilities';
+import FavoritesSection from './FavoritesSection';
 
 interface Props {}
 
@@ -48,7 +51,7 @@ const User: React.FC<Props> = () => {
   return (
     <>
       <Card as='section'>
-        <CardHeader>{profileInformation.name}</CardHeader>
+        <CardHeader>{profileInformation.name || profileInformation.username}</CardHeader>
         <CardBody>
           {isUsersProfile && <Button>Edit information</Button>}
           {profileInformation.age && <small>{profileInformation.age}</small>}
@@ -57,18 +60,14 @@ const User: React.FC<Props> = () => {
       </Card>
 
       <Card as='section'>
-        <CardHeader as='h3'>{`${profileInformation.name}'s cellar`}</CardHeader>
+        <CardHeader as='h3'>
+          {`${profileInformation.name || profileInformation.username}'s cellar`}
+        </CardHeader>
         <CardBody>
-          {profileInformation.favorites && (
-            <>
-              {profileInformation.highlightedFavorite && <p>{profileInformation.highlightedFavorite}</p>}
-              <ul>
-                {profileInformation.favorites.map(fav => (
-                  <li>{fav}</li>
-                ))}
-              </ul>
-            </>
-          )}
+          <FavoritesSection
+            highlightedFavorite={profileInformation.highlightedFavorite}
+            favorites={profileInformation.favorites}
+          />
         </CardBody>
       </Card>
 
@@ -87,7 +86,7 @@ const User: React.FC<Props> = () => {
 
           {profileInformation.followers && (
             <>
-              <h3>following</h3>
+              <h3>followers</h3>
               <ul>
                 {profileInformation.followers.map(follow => (
                   <li>{follow.name}</li>
