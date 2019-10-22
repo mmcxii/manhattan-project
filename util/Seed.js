@@ -1,32 +1,36 @@
 var express = require('express');
 var mongoose = require('mongoose');
 let axios = require('axios');
+require('dotenv').config();
+
 // //import path from 'path';
 var app = express();
 //port
 var PORT = process.env.PORT || 6969;
-
-mongoose.connect('mongodb://localhost:27017/manhattenDB', {
+var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
+let BEER_KEY = process.env.BEER_KEY;
+let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
+mongoose.connect(DB_URI, {
   useNewUrlParser: true
 });
 let Schema = mongoose.Schema;
 
 let detailSchema = new Schema({
-  Desc: String,
+  desc: String,
   ABV: Number,
-  Image: [],
-  Subtype: String,
-  Organic: Boolean,
-  Ingredients: [],
-  Directions: String,
-  GlassType: String
+  image: [],
+  subtype: String,
+  organic: Boolean,
+  ingredients: [],
+  directions: String,
+  glassType: String
 });
 
 var productSchema = new Schema({
-  ExtID: String,
-  Type: String,
-  Name: String,
-  Details: [detailSchema]
+  extID: String,
+  type: String,
+  name: String,
+  details: [detailSchema]
 });
 
 let product = mongoose.model('Product', productSchema);
@@ -71,7 +75,7 @@ const brewerydb = async () => {
   for (let i = 0; i < 24; i++) {
     try {
       const response = await axios.get(
-        `https://sandbox-api.brewerydb.com/v2/beers/?key=e443f3404d9312e3735f78180d54b782&p=${i}`
+        `https://sandbox-api.brewerydb.com/v2/beers/?key=${BEER_KEY}&p=${i}`
       );
       const data = response.data.data;
 
@@ -106,7 +110,7 @@ const cocktaildbId = async () => {
   const cocktailID = [];
   try {
     const response = await axios.get(
-      `https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?a=Alcoholic`
+      `https://www.thecocktaildb.com/api/json/v2/${COCKTAIL_KEY}/filter.php?a=Alcoholic`
     );
     const data = response.data.drinks;
 
@@ -165,7 +169,7 @@ const cocktaildb = async queryArray => {
         data[0].strMeasure15
       ];
       for (let j in ingredientNum) {
-        if (ingredientNum[j] != null) {
+        if (ingredientNum[j] != null || ingredientNum[j] === '') {
           ingredients.push({
             Ingredient: ingredientNum[j],
             Measurement: ingredientMeasure[j]
