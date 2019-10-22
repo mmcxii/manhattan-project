@@ -40,7 +40,7 @@ const SearchForm: React.FC<Props> = () => {
   const APISearch = async (mode: string) => {
     try {
       const response: Response = await fetch(`/api/search/${mode}`, {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: values.query })
       });
