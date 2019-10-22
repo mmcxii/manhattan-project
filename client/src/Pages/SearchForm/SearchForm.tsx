@@ -88,11 +88,11 @@ const SearchForm: React.FC<Props> = () => {
               <ResultsItem key={item._id} item={item} />
             ))} */}
             {searchResults.map((item: BeerProps) => (
-              <ResultsItem> 
+              <ResultsItem key={item._id} item={item}>
                 <h1>{item._id}</h1>
                 <p>{item._desc}</p>
                 <img alt='what you want to see is lost'>{item._image}</img>
-              <ResultsItem/>
+              </ResultsItem>
             ))}
           </CardBody>
         </Card>
