@@ -8,8 +8,11 @@ import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
 import { Header, Footer, Button, CardBody, CardHeader } from 'Elements';
 import homebg from './Assets/img/homebg.png';
+import { useLSUserInfo } from 'Hooks';
 
 const App: React.FC = () => {
+  useLSUserInfo();
+
   const { theme } = useContext(ThemeContext);
   const { pathname } = useLocation();
 
@@ -60,7 +63,6 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
       `
         : ''}
   }
-
   
   a {
     color: inherit;

@@ -1,16 +1,5 @@
 import React, { createContext, useState } from 'react';
 
-export interface UserProps {
-  username: string;
-  name?: string;
-  age?: number;
-  bio?: string;
-  highlightedFavorite?: string;
-  favorites?: string[];
-  follows?: UserProps[];
-  following?: UserProps[];
-}
-
 type ThemeTypes = 'dark' | 'light';
 export const ThemeContext = createContext({ theme: 'dark', toggleTheme: () => {} });
 
