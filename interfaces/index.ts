@@ -1,5 +1,5 @@
 export { IComment } from './IComment';
-export { IProduct } from './IProduct';
+export { IProduct, ProductType } from './IProduct';
 export { IUser } from './IUser';
 export { IUpdateContext } from './IUpdateContext';
 export { IUserRequest } from './IUserRequest';

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
@@ -9,11 +10,17 @@ import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 
 interface Props {}
 
-interface BeerProps {
-  // TODO: Define search result props here
+interface ProductProps {
+  _id: string,
+  name: string
 }
 
-interface CocktailProps {
+interface BeerProps extends ProductProps {
+  // TODO: Define search result props here
+
+}
+
+interface CocktailProps extends ProductProps {
   // TODO: Define search result props here
 }
 
@@ -25,11 +32,11 @@ const SearchForm: React.FC<Props> = () => {
 
   const APISearch = async (mode: string) => {
     try {
-      const response: Response = await fetch(`/api/search/${mode}`, {
+      const params = queryString.stringify(values);
+      const response: Response = await fetch(`/api/products?type=${mode}&${params}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: values.query }),
       });
+
       const data: BeerProps[] | CocktailProps[] = await response.json();
 
       setSearchResults(data);
@@ -71,7 +78,7 @@ const SearchForm: React.FC<Props> = () => {
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
             {searchResults.map(item => (
-              <p>render display component passing in item info as props</p>
+              <p key={item._id}>{ item.name }</p>
             ))}
           </CardBody>
         </Card>

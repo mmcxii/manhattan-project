@@ -16,7 +16,7 @@ const productSchema = new Schema({
         unique: true
     },
     type: {
-        type: Types.String,
+        type: Types.Number,
         enum: ['BEER','WINE','MIXED'],
         required: true
     },
