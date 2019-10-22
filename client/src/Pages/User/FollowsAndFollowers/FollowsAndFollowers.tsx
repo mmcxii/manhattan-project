@@ -38,7 +38,7 @@ const FollowsAndFollowers: React.FC<Props> = ({ profileInfo }) => {
           ))}
         </Tabs>
         <ContentWrapper>
-          {lists.map(list => currentTab === list.title && <List list={list} />)}
+          {lists.map(list => currentTab === list.title && <List list={list} key={list.title} />)}
         </ContentWrapper>
       </CardBody>
     </Wrapper>
