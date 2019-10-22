@@ -1,30 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { UserProps } from 'Store';
 import { spacing } from 'Utilities';
+import { Card, CardHeader, CardBody } from 'Elements';
 
 interface Props {
-  highlightedFavorite: string | undefined;
-  favorites: string[] | undefined;
+  profileInfo: UserProps;
 }
 
-const FavoritesSection: React.FC<Props> = ({ highlightedFavorite, favorites }) => (
+const FavoritesSection: React.FC<Props> = ({ profileInfo }) => (
   <Wrapper>
-    {favorites && <HighlightedFavorite>{highlightedFavorite || favorites[0]}</HighlightedFavorite>}
-
-    <Favorites>
-      {favorites ? (
-        favorites.map(fav => <FavoritesItem key={fav}>{fav}</FavoritesItem>)
-      ) : (
-        <NoFavsMessage>This user does not have any favorites yet</NoFavsMessage>
+    <CardHeader as='h3'>{`${profileInfo.name || profileInfo.username}'s cellar`}</CardHeader>
+    <CardBody>
+      {profileInfo.favorites && (
+        <HighlightedFavorite>
+          {profileInfo.highlightedFavorite || profileInfo.favorites[0]}
+        </HighlightedFavorite>
       )}
-    </Favorites>
+
+      <Favorites>
+        {profileInfo.favorites ? (
+          profileInfo.favorites.map(fav => <FavoritesItem key={fav}>{fav}</FavoritesItem>)
+        ) : (
+          <NoFavsMessage>This user does not have any favorites yet</NoFavsMessage>
+        )}
+      </Favorites>
+    </CardBody>
   </Wrapper>
 );
 
 export default FavoritesSection;
 
-const Wrapper = styled.section`
+const Wrapper = styled(Card).attrs({ as: 'section' })`
   text-transform: capitalize;
 `;
 
