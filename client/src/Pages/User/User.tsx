@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { UserProps } from 'Store';
-import { Button, Card, CardHeader, CardBody } from 'Elements';
+import { Card, CardHeader, CardBody } from 'Elements';
+import UserInfo from './UserInfo';
 import FavoritesSection from './FavoritesSection';
 import FollowsAndFollowers from './FollowsAndFollowers';
 
@@ -11,73 +12,63 @@ interface Props {}
 const User: React.FC<Props> = () => {
   const { username } = useParams();
   const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
-  const [profileInformation, setProfileInformation] = useState<UserProps>({
-    username: 'nichsecord',
-    theme: 'dark',
-    name: 'nich secord',
-    age: 25,
-    bio:
-      'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit ipsa voluptas pariatur reprehenderit, similique at veritatis perspiciatis odio eligendi aliquam, natus unde voluptates nemo. Quibusdam, distinctio? Et nam expedita voluptatem!',
-    favorites: ['bodizafa', "maker's mark", 'purple haze'],
-    highlightedFavorite: 'bodizafa',
-    follows: [
-      { username: 'z-murph', name: 'zach murphy' },
-      { username: 'brandtkstrom', name: 'brandt strom' },
-    ],
-    followers: [
-      { username: 'jirafaro', name: 'austin robbins' },
-      { username: 'remte0', name: 'john remeto' },
-    ],
-  });
+  const [profileInfo, setProfileInfo] = useState<UserProps | null>(null);
 
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     try {
-  //       const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
-  //       const profileCheck: boolean = (await response.status) === 200;
-  //       const data: UserProps = await response.json();
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        // Get profile information from database
+        const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
+        const data: UserProps = await response.json();
 
-  //       setProfileInformation(data);
-  //       setIsUsersProfile(profileCheck);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
+        // Compare current profile against current user info
+        // If the check passes the edit profile button will be rendered
+        const lsUserInfo = localStorage.getItem('userInfo');
+        let profileCheck: boolean = false;
+        if (lsUserInfo) {
+          profileCheck = username === JSON.parse(lsUserInfo).username;
+        }
 
-  //   getUser();
-  // }, [username]);
+        // Update state with returned information
+        setIsUsersProfile(profileCheck);
+        setProfileInfo(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUser();
+  }, [username]);
 
   return (
     <>
-      <Card as='section'>
-        <CardHeader>{profileInformation.name || profileInformation.username}</CardHeader>
-        <CardBody>
-          {isUsersProfile && <Button>Edit information</Button>}
-          {profileInformation.age && <small>{profileInformation.age}</small>}
-          {profileInformation.bio && <p>{profileInformation.bio}</p>}
-        </CardBody>
-      </Card>
-
-      <Card as='section'>
-        <CardHeader as='h3'>
-          {`${profileInformation.name || profileInformation.username}'s cellar`}
-        </CardHeader>
-        <CardBody>
-          <FavoritesSection
-            highlightedFavorite={profileInformation.highlightedFavorite}
-            favorites={profileInformation.favorites}
-          />
-        </CardBody>
-      </Card>
-
-      <Card as='section'>
-        <CardBody>
-          <FollowsAndFollowers
-            follows={profileInformation.follows}
-            followers={profileInformation.followers}
-          />
-        </CardBody>
-      </Card>
+      {profileInfo ? (
+        <>
+          <Card as='section'>
+            <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
+            <CardBody>
+              <UserInfo profileInfo={profileInfo} isUsersProfile={isUsersProfile} />
+            </CardBody>
+          </Card>
+          <Card as='section'>
+            <CardHeader as='h3'>{`${profileInfo.name || profileInfo.username}'s cellar`}</CardHeader>
+            <CardBody>
+              <FavoritesSection
+                highlightedFavorite={profileInfo.highlightedFavorite}
+                favorites={profileInfo.favorites}
+              />
+            </CardBody>
+          </Card>
+          <Card as='section'>
+            <CardHeader as='h3'>{profileInfo.name || profileInfo.username}'s connections</CardHeader>
+            <CardBody>
+              <FollowsAndFollowers follows={profileInfo.follows} followers={profileInfo.followers} />
+            </CardBody>
+          </Card>
+        </>
+      ) : (
+        <p>Error: No User was found with that name.</p>
+      )}
     </>
   );
 };
