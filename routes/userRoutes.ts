@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { User, IUserDocument, UserData } from '../models';
+import { NotFound, ServerError, BadRequest, Ok, OkNoContent } from './Status';
 
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
@@ -9,9 +10,9 @@ export const UserRoutes = Router()
 
       const users: UserData[] = userDocs.map(user => user.toUserData());
 
-      return res.json(users);
+      return Ok(res, users);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:username', async (req, res) => {
@@ -22,18 +23,18 @@ export const UserRoutes = Router()
       const userDoc: IUserDocument | null = await User.findOne({ username });
 
       if (!userDoc) {
-        return res.status(404).send(`User ${username} not found.`);
+        return NotFound(res, `User ${username} not found.`);
       }
 
-      return res.json(userDoc.toUserData());
+      return Ok(res, userDoc.toUserData());
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .put('/:username', async (req, res) => {
     // Update User by username
     if (!req.body) {
-      return res.status(400).send('Missing user data.');
+      return BadRequest(res, 'Missing user data.');
     }
 
     const username = req.params.username.trim().toLowerCase();
@@ -45,12 +46,12 @@ export const UserRoutes = Router()
       });
 
       if (!user) {
-        return res.status(404).send(`Cannot update user: ${username} not found.`);
+        return NotFound(res, `Cannot update user: ${username} not found.`);
       }
 
-      return res.json(user);
+      return Ok(res, user);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .delete('/:username', async (req, res) => {
@@ -62,16 +63,16 @@ export const UserRoutes = Router()
       const response = await User.deleteOne({ username });
 
       if (!response.ok) {
-        return res.status(500).send('Error deleting User.');
+        return ServerError(res, 'Error deleting User.');
       }
 
       if (!response.deletedCount || response.deletedCount === 0) {
-        return res.sendStatus(204);
+        return OkNoContent(res);
       }
 
-      return res.status(200).send(`User ${username} deleted.`);
+      return Ok(res, `User ${username} deleted.`);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:username/followers', async (req, res) => {
@@ -84,20 +85,20 @@ export const UserRoutes = Router()
       );
 
       if (!userDoc) {
-        return res.status(404).send(`User ${username} not found.`);
+        return NotFound(res, `User ${username} not found.`);
       }
 
       const followersData: UserData[] = userDoc.followers.map(user => user.toUserData());
 
-      return res.json(followersData);
+      return Ok(res, followersData);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .put('/:username/followers', async (req, res) => {
     // Add a follower to a user.
     if (!req.body.username) {
-      return res.status(400).send('Missing follower username.');
+      return BadRequest(res, 'Missing follower username.');
     }
 
     // Get username and follower name
@@ -108,7 +109,7 @@ export const UserRoutes = Router()
 
     // Make sure user and follower are different...
     if (username === followerName) {
-      return res.status(400).send('User cannot follow themself.');
+      return BadRequest(res, 'User cannot follow themself.');
     }
 
     try {
@@ -118,7 +119,7 @@ export const UserRoutes = Router()
         | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
-        return res.status(404).send(userDocs.message);
+        return NotFound(res, userDocs.message);
       }
 
       const [user, follower] = userDocs;
@@ -128,14 +129,14 @@ export const UserRoutes = Router()
 
       return res.sendStatus(status);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .delete('/:username/followers', async (req, res) => {
     // Remove a follower from user
 
     if (!req.body.username) {
-      return res.status(400).send('Missing follower username.');
+      return BadRequest(res, 'Missing follower username.');
     }
 
     // Get username and follower name
@@ -146,7 +147,7 @@ export const UserRoutes = Router()
 
     // Make sure user and follower are different...
     if (username === followerName) {
-      return res.status(400).send('User cannot follow themself.');
+      return BadRequest(res, 'User cannot follow themself.');
     }
 
     try {
@@ -156,7 +157,7 @@ export const UserRoutes = Router()
         | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
-        return res.status(404).send(userDocs.message);
+        return NotFound(res, userDocs.message);
       }
 
       const [user, follower] = userDocs;
@@ -166,7 +167,7 @@ export const UserRoutes = Router()
 
       return res.sendStatus(status);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:username/follows', async (req, res) => {
@@ -179,20 +180,20 @@ export const UserRoutes = Router()
       );
 
       if (!user) {
-        return res.status(404).send(`User ${username} not found.`);
+        return NotFound(res, `User ${username} not found.`);
       }
 
       const followsData: UserData[] = user.follows.map(user => user.toUserData());
 
-      return res.json(followsData);
+      return Ok(res, followsData);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .put('/:username/follows', async (req, res) => {
     // Adds a user to the specified user's follow list
     if (!req.body.username) {
-      return res.status(400).send('Missing username to follow.');
+      return BadRequest(res, 'Missing username to follow.');
     }
 
     // Get username and follower name. The provided user in the route is the follower.
@@ -203,14 +204,14 @@ export const UserRoutes = Router()
 
     // Make sure user and follower are different...
     if (username === followerName) {
-      return res.status(400).send('User cannot follow themself.');
+      return BadRequest(res, 'User cannot follow themself.');
     }
 
     try {
       // Lookup both user and follower User documents
       const userDocs = await User.getUserAndFollower(username, followerName);
       if (userDocs instanceof Error) {
-        return res.status(404).send(userDocs.message);
+        return NotFound(res, userDocs.message);
       }
 
       const [user, follower] = userDocs;
@@ -220,14 +221,14 @@ export const UserRoutes = Router()
 
       return res.sendStatus(status);
     } catch (error) {
-      return res.status(500).send(error);
+        return ServerError(res, error);
     }
   })
   .delete('/:username/follows', async (req, res) => {
     // Remove user from the specified user's follow list
 
     if (!req.body.username) {
-      return res.status(400).send('Missing username to unfollow.');
+      return BadRequest(res, 'Missing username to unfollow.');
     }
 
     // Get username and follower name
@@ -238,7 +239,7 @@ export const UserRoutes = Router()
 
     // Make sure user and follower are different...
     if (username === followerName) {
-      return res.status(400).send('User cannot follow themself.');
+      return BadRequest(res, 'User cannot follow themself.');
     }
 
     try {
@@ -248,7 +249,7 @@ export const UserRoutes = Router()
         | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
-        return res.status(404).send(userDocs.message);
+        return NotFound(res, userDocs.message);
       }
 
       const [user, follower] = userDocs;
@@ -258,6 +259,6 @@ export const UserRoutes = Router()
 
       return res.sendStatus(status);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   });
