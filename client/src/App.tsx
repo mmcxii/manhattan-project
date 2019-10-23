@@ -6,7 +6,7 @@ import Normalize from 'react-normalize';
 import { ThemeContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
-import { Header, Footer, Button, CardBody, CardHeader } from 'Elements';
+import { Header, Footer, Button, CardBody, CardHeader, ButtonLink } from 'Elements';
 import homebg from './Assets/img/homebg.png';
 import { useLSUserInfo } from 'Hooks';
 
@@ -81,7 +81,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
     border: 1px solid ${props => (props.theme === 'dark' ? blackDark : grey)};
   }
   
-  ${Button} {
+  ${Button}, ${ButtonLink} {
     color: ${props => (props.theme === 'dark' ? black : white)};
     background: ${props => (props.theme === 'dark' ? white : grey)};
     ${transition({ prop: 'background' })};
