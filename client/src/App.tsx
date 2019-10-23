@@ -8,10 +8,10 @@ import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
 import { Header, Footer, Button, CardBody, CardHeader, ButtonLink } from 'Elements';
 import homebg from './Assets/img/homebg.png';
-import { useLSUserInfo } from 'Hooks';
+import { useReadLSUserInfo } from 'Hooks';
 
 const App: React.FC = () => {
-  useLSUserInfo();
+  useReadLSUserInfo();
 
   const { theme } = useContext(ThemeContext);
   const { pathname } = useLocation();
