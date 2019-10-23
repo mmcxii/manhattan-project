@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { Button, Card, CardHeader, CardBody } from 'Elements';
+import { ButtonLink, Card, CardHeader, CardBody } from 'Elements';
 import { spacing } from 'Utilities';
 
 interface Props {
