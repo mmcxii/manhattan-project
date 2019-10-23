@@ -11,13 +11,12 @@ import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 interface Props {}
 
 interface ProductProps {
-  _id: string,
-  name: string
+  _id: string;
+  name: string;
 }
 
 interface BeerProps extends ProductProps {
   // TODO: Define search result props here
-
 }
 
 interface CocktailProps extends ProductProps {
@@ -78,7 +77,7 @@ const SearchForm: React.FC<Props> = () => {
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
             {searchResults.map(item => (
-              <p key={item._id}>{ item.name }</p>
+              <p key={item._id}>{item.name}</p>
             ))}
           </CardBody>
         </Card>
