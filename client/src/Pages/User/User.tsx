@@ -8,9 +8,10 @@ interface Props {}
 
 const User: React.FC<Props> = () => {
   const { username } = useParams();
-  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(true);
+  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInformation, setProfileInformation] = useState<UserProps>({
     username: 'nichsecord',
+    theme: 'dark',
     name: 'nich secord',
     age: 25,
     bio:
@@ -21,7 +22,7 @@ const User: React.FC<Props> = () => {
       { username: 'z-murph', name: 'zach murphy' },
       { username: 'brandtkstrom', name: 'brandt strom' },
     ],
-    following: [
+    followers: [
       { username: 'jirafaro', name: 'austin robbins' },
       { username: 'remte0', name: 'john remeto' },
     ],
@@ -31,9 +32,11 @@ const User: React.FC<Props> = () => {
   //   const getUser = async () => {
   //     try {
   //       const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
+  //       const profileCheck: boolean = (await response.status) === 200;
   //       const data: UserProps = await response.json();
 
   //       setProfileInformation(data);
+  //       setIsUsersProfile(profileCheck);
   //     } catch (err) {
   //       console.log(err);
   //     }
@@ -82,11 +85,11 @@ const User: React.FC<Props> = () => {
             </>
           )}
 
-          {profileInformation.following && (
+          {profileInformation.followers && (
             <>
               <h3>following</h3>
               <ul>
-                {profileInformation.following.map(follow => (
+                {profileInformation.followers.map(follow => (
                   <li>{follow.name}</li>
                 ))}
               </ul>

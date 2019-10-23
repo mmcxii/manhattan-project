@@ -7,8 +7,20 @@
     "jest": true
   },
   "rules": {
-    "@typescript-eslint/no-empty-interface": [0],
-    "@typescript-eslint/no-explicit-any": [0]
+    "jsx-quotes": ["error", "prefer-single"],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxEOF": 0
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/semi": ["error"],
+    "react/no-unescaped-entities": 0
   },
   "settings": {
     "react": {

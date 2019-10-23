@@ -5,12 +5,13 @@ import { spacing, roundedInner, black } from 'Utilities';
 
 interface Props {
   name: string;
+  value: string;
+  onChange: any;
   type?: string;
   label?: string;
   placeholder?: string;
   icon?: string;
-  value: string;
-  onChange: any;
+  required?: boolean;
 }
 export const Input: React.FC<Props> = ({
   name,
@@ -20,12 +21,20 @@ export const Input: React.FC<Props> = ({
   icon,
   value,
   onChange,
+  required,
 }) => {
   return (
     <FormGroup hasIcon={icon !== undefined}>
-      {label && <FormLabel>{label}</FormLabel>}
+      <FormLabel>{label}</FormLabel>
 
-      <FormInput type={type} name={name} placeholder={placeholder} value={value} onChange={onChange} />
+      <FormInput
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required
+      />
 
       {icon && <FormIcon className={icon} />}
     </FormGroup>

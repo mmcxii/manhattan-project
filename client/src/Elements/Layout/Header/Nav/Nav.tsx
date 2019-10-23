@@ -1,15 +1,17 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
-import { ThemeContext } from 'Store';
-import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black, grey } from 'Utilities';
+import { ThemeContext, UserContext } from 'Store';
+import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black } from 'Utilities';
 import NavItem from './NavItem';
 
 interface Props {}
 
 const Nav: React.FC<Props> = () => {
+  const { user } = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
   const [navIsOpen, setNavIsOpen] = useState<boolean>(false);
+
   const navItems: { page: string; link: string; icon: string }[] = [
     {
       page: 'search',
@@ -17,15 +19,9 @@ const Nav: React.FC<Props> = () => {
       icon: 'far fa-search',
     },
     {
-      page: 'profile',
-      // TODO: make route dynamically read username
-      link: '/user/nichsecord',
+      page: user.username === '' ? 'log in' : user.username,
+      link: user.username === '' ? '/login' : `/user/${user.username}`,
       icon: 'far fa-user',
-    },
-    {
-      page: 'about the team',
-      link: '/about',
-      icon: 'far fa-glass-martini-alt',
     },
   ];
 
