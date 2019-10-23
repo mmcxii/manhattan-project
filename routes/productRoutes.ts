@@ -33,9 +33,11 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
 
   // Determine search name
   if (query) {
-    const prodName: string = query.toString().trim();
-    if (prodName !== '') {
-      const pattern = new RegExp(prodName);
+    const queryString: string = query.toString().trim();
+    if (queryString !== '') {
+      // Split up and trim search terms around ','
+      const searchTerms = queryString.split(',').map(s => s.trim()).join('|');
+      const pattern = new RegExp(searchTerms);
       productQuery.where({ name: { $regex: pattern, $options: 'i' } });
     }
   }
