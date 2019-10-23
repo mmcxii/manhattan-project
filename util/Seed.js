@@ -28,7 +28,7 @@ let detailSchema = new Schema({
 
 var productSchema = new Schema({
   extID: String,
-  type: String,
+  type: Number,
   name: String,
   details: [detailSchema]
 });
@@ -86,7 +86,7 @@ const brewerydb = async () => {
         }
         beersArray.push({
           ExtID: data[i].id,
-          Type: 'BEER',
+          Type: 0,
           Name: data[i].name,
           Details: [
             {
@@ -178,7 +178,7 @@ const cocktaildb = async queryArray => {
       }
       cocktail.push({
         ExtID: data[0].idDrink,
-        Type: 'MIXED',
+        Type: 2,
         Name: data[0].strDrink,
         Details: [
           {
