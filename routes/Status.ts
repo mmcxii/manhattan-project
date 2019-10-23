@@ -1,13 +1,25 @@
-import { Response } from 'express';
+import { Response, response } from 'express';
 
 export enum Status {
   OK = 200,
   Created = 201,
+  Accepted = 202,
+  NoContent = 204,
   BadRequest = 400,
   Unauthorized = 401,
   Forbidden = 403,
   NotFound = 404,
   ServerError = 500
+}
+
+export const Ok = <T extends unknown>(res: Response, data: T): Response => {
+  const setMsg = typeof data === 'string';
+  const resData = setMsg ? { message: data } : data;
+  return res.status(Status.OK).json(resData);
+}
+
+export const OkNoContent = (res: Response): Response => {
+  return res.sendStatus(Status.NoContent);
 }
 
 export const BadRequest = (res: Response, message: string): Response => {
