@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
@@ -9,22 +10,24 @@ import ResultsItem from './ResultsItem';
 
 interface Props {}
 
-interface CommonProps {
+interface ProductProps {
   _id: string;
-  _image: string;
-  _desc: string;
-}
-// abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
-export interface BeerProps extends CommonProps {
-  _organic: boolean;
-  _subtype: string;
-  _abv: number;
+  name: string;
+  description: string;
+  image: string;
 }
 
-// export interface CocktailProps extends CommonProps {
-//   _glass: string;
-//   _directions: string;
-// }
+export interface BeerProps extends ProductProps {
+  abv: number;
+  organic: boolean;
+  subtype: string;
+}
+// abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
+interface CocktailProps extends ProductProps {
+  glass: string;
+  directions: string;
+  ingrediants: string;
+}
 
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
@@ -39,11 +42,14 @@ const SearchForm: React.FC<Props> = () => {
 
   const APISearch = async (mode: string) => {
     try {
-      const response: Response = await fetch(`/api/search/${mode}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: values.query })
-      });
+      const params = queryString.stringify(values);
+      const response: Response = await fetch(
+        `/api/products?type=${mode}&${params}`,
+        {
+          method: 'GET'
+        }
+      );
+
       const data: BeerProps[] = await response.json();
 
       setSearchResults(data);
@@ -84,14 +90,11 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
-            {/* {searchResults.map((item: BeerProps | CocktailProps) => (
-              <ResultsItem key={item._id} item={item} />
-            ))} */}
             {searchResults.map((item: BeerProps) => (
               <ResultsItem key={item._id} item={item}>
-                <h1>{item._id}</h1>
-                <p>{item._desc}</p>
-                <img alt='what you want to see is lost'>{item._image}</img>
+                <h1>{item.name}</h1>
+                <p>{item.description}</p>
+                <img alt='${item.name}'>{item.image}</img>
               </ResultsItem>
             ))}
           </CardBody>
