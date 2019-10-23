@@ -8,7 +8,11 @@ interface Props {
 const ResultsItem: React.FC<Props> = ({ item }) => {
   console.log(item);
 
-  return <>howdy</>;
+  return (
+    <>
+      {item.name} <br></br>
+    </>
+  );
 };
 
 export default ResultsItem;
