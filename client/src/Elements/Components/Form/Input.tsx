@@ -25,16 +25,26 @@ export const Input: React.FC<Props> = ({
 }) => {
   return (
     <FormGroup hasIcon={icon !== undefined}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel htmlFor={name}>{label}</FormLabel>
 
-      <FormInput
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required
-      />
+      {type === 'textarea' ? (
+        <TextArea
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required={required}
+        />
+      ) : (
+        <FormInput
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required={required}
+        />
+      )}
 
       {icon && <FormIcon className={icon} />}
     </FormGroup>
@@ -59,6 +69,15 @@ const FormLabel = styled.label`
 `;
 
 const FormInput = styled.input`
+  grid-area: input;
+
+  padding: ${spacing.sm} ${spacing.md};
+  border-radius: ${roundedInner};
+  border: none;
+  color: ${black};
+`;
+
+const TextArea = styled.textarea`
   grid-area: input;
 
   padding: ${spacing.sm} ${spacing.md};

@@ -1,20 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
-import { ThemeContext } from 'Store';
+import { ThemeContext, UserContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
-import { Header, Footer, Button, CardBody, CardHeader } from 'Elements';
+import { Header, Footer, Button, CardBody, CardHeader, ButtonLink } from 'Elements';
 import homebg from './Assets/img/homebg.png';
-import { useLSUserInfo } from 'Hooks';
+import { useReadLSUserInfo } from 'Hooks';
 
 const App: React.FC = () => {
-  useLSUserInfo();
+  useReadLSUserInfo();
 
-  const { theme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (user.theme !== theme) {
+      toggleTheme();
+    }
+  }, [user]);
 
   return (
     <>
@@ -31,8 +38,10 @@ const App: React.FC = () => {
 export default App;
 
 const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: string }>`
+  @import url('https://fonts.googleapis.com/css?family=Cinzel|Open+Sans&display=swap');
+
   // Reset
-* {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -62,6 +71,11 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
         background-position: center;
       `
         : ''}
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-family: 'Cinzel', serif;
   }
   
   a {
@@ -81,7 +95,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
     border: 1px solid ${props => (props.theme === 'dark' ? blackDark : grey)};
   }
   
-  ${Button} {
+  ${Button}, ${ButtonLink} {
     color: ${props => (props.theme === 'dark' ? black : white)};
     background: ${props => (props.theme === 'dark' ? white : grey)};
     ${transition({ prop: 'background' })};

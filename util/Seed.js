@@ -28,8 +28,8 @@ let detailSchema = new Schema({
 
 var productSchema = new Schema({
   extID: String,
-  type: String,
-  name: String,
+  type: Number,
+  name: {type: String, text: true},
   details: [detailSchema]
 });
 
@@ -85,16 +85,16 @@ const brewerydb = async () => {
           organic = true;
         }
         beersArray.push({
-          ExtID: data[i].id,
-          Type: 'BEER',
-          Name: data[i].name,
-          Details: [
+          extID: data[i].id,
+          type: 0,
+          name: data[i].name,
+          details: [
             {
-              Desc: data[i].description,
+              desc: data[i].description,
               ABV: data[i].abv,
-              Image: data[i].labels,
-              Subtype: data[i].style.shortName,
-              Organic: organic
+              image: data[i].labels,
+              subtype: data[i].style.shortName,
+              organic: organic
             }
           ]
         });
@@ -171,21 +171,21 @@ const cocktaildb = async queryArray => {
       for (let j in ingredientNum) {
         if (ingredientNum[j] != null || ingredientNum[j] === '') {
           ingredients.push({
-            Ingredient: ingredientNum[j],
-            Measurement: ingredientMeasure[j]
+            ingredient: ingredientNum[j],
+            measurement: ingredientMeasure[j]
           });
         }
       }
       cocktail.push({
-        ExtID: data[0].idDrink,
-        Type: 'MIXED',
-        Name: data[0].strDrink,
-        Details: [
+        extID: data[0].idDrink,
+        type: 2,
+        name: data[0].strDrink,
+        details: [
           {
-            Image: data[0].strDrinkThumb,
-            Ingredients: ingredients,
-            Directions: data[0].strInstructions,
-            GlassType: data[0].strGlass
+            image: data[0].strDrinkThumb,
+            ingredients: ingredients,
+            directions: data[0].strInstructions,
+            glassType: data[0].strGlass
           }
         ]
       });
