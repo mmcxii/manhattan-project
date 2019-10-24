@@ -6,7 +6,26 @@ import sharp from 'sharp';
 
 // Define image resize width
 const IMG_WIDTH = 350;
+// Define upload directory
+const UPLOAD_DIR = path.join(__dirname, '../temp/uploads');
 
+// Make sure the upload directory exists
+fs.exists(UPLOAD_DIR, exists => {
+  if (exists) {
+    // All good!
+    return;
+  }
+
+  fs.mkdir(UPLOAD_DIR, { recursive: true }, err => {
+    if (err) {
+      // Throw error... This directory is required for uploads
+      console.log('Error creating upload directory:', err.message);
+      throw err;
+    }
+  });
+});
+
+// File router
 export const FileRoutes = Router().post('/images', async (req, res) => {
   if (!req.files) {
     return res.status(400).send('No files to upload.');
@@ -18,7 +37,7 @@ export const FileRoutes = Router().post('/images', async (req, res) => {
   }
 
   const newFileName = file.name.replace(/\.{1}\w+{3,4}$/, '.png');
-  const uploadDir = path.join(__dirname, '../temp/uploads', newFileName);
+  const uploadPath = path.join(UPLOAD_DIR, newFileName);
 
   try {
     // Resize image and convert to png format
@@ -28,9 +47,9 @@ export const FileRoutes = Router().post('/images', async (req, res) => {
       .toBuffer();
 
     // Write out file from buffer to temp dir
-    fs.writeFile(uploadDir, resized, err => {
+    fs.writeFile(uploadPath, resized, err => {
       if (err) {
-        throw new Error(`Error writing file ${err}`)
+        throw new Error(`Error writing file ${err}`);
       }
       return res.sendStatus(201);
     });
