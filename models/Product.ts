@@ -22,6 +22,7 @@ const productSchema = new Schema({
     },
     name: {
         type: Types.String,
+        text: true,
         required: true
     },
     desc: Types.String,
