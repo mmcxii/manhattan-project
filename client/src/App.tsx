@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Normalize from 'react-normalize';
 
-import { ThemeContext } from 'Store';
+import { ThemeContext, UserContext } from 'Store';
 import Router from 'Pages';
 import { white, black, grey, whiteLight, transition, blackDark, greyLight } from 'Utilities';
 import { Header, Footer, Button, CardBody, CardHeader, ButtonLink } from 'Elements';
@@ -13,8 +13,15 @@ import { useReadLSUserInfo } from 'Hooks';
 const App: React.FC = () => {
   useReadLSUserInfo();
 
-  const { theme } = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (user.theme !== theme) {
+      toggleTheme();
+    }
+  }, [user]);
 
   return (
     <>

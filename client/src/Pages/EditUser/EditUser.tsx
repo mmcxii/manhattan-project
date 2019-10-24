@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { UserProps, UserContext } from 'Store';
 import { useForm } from 'Hooks';
-import { Card, Form, Input, Button, CardBody, CardHeader } from 'Elements';
+import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
 
 interface Props {}
 
@@ -22,6 +22,7 @@ const EditUser: React.FC<Props> = () => {
     highlightedFavorite: '',
     ...initialState,
   });
+  const [theme, setTheme] = useState(initialState.theme);
 
   const saveDataToDataBase = async () => {
     try {
@@ -31,7 +32,7 @@ const EditUser: React.FC<Props> = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${loginToken}`,
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, theme }),
       });
       const data: UserProps = await response.json();
 
@@ -73,7 +74,13 @@ const EditUser: React.FC<Props> = () => {
             <Input name='name' value={values.name} onChange={handleChange} />
             <Input name='age' value={values.age} onChange={handleChange} type='number' />
             <Input name='bio' value={values.bio} onChange={handleChange} type='textarea' />
-            {/* TODO: Make <Toggle /> component for toggling theme */}
+            <Toggle
+              initialState={values.theme === 'dark'}
+              trueCondition='dark'
+              falseCondition='light'
+              name='theme'
+              setStateAction={setTheme}
+            />
 
             <Button type='submit'>Save Changes</Button>
           </Form>
