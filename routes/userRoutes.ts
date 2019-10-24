@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { User, IUserDocument, UserData } from '../models';
-import { NotFound, ServerError, BadRequest, Ok, OkNoContent } from './Status';
+import { NotFound, ServerError, BadRequest, Ok, OkNoContent, SendStatus } from './Status';
 
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
@@ -127,7 +127,7 @@ export const UserRoutes = Router()
       // Update Users follows/followers
       const status = await user.addFollower(follower);
 
-      return res.sendStatus(status);
+      return SendStatus(res, status);
     } catch (error) {
       return ServerError(res, error);
     }
@@ -165,7 +165,7 @@ export const UserRoutes = Router()
       // Update Users follows/followers
       const status = await user.removeFollower(follower);
 
-      return res.sendStatus(status);
+      return SendStatus(res, status);
     } catch (error) {
       return ServerError(res, error);
     }
@@ -219,7 +219,7 @@ export const UserRoutes = Router()
       // Update Users follows/followers
       const status = await user.addFollower(follower);
 
-      return res.sendStatus(status);
+      return SendStatus(res, status);
     } catch (error) {
         return ServerError(res, error);
     }
@@ -257,7 +257,7 @@ export const UserRoutes = Router()
       // Update Users follows/followers
       const status = await user.removeFollower(follower);
 
-      return res.sendStatus(status);
+      return SendStatus(res, status);
     } catch (error) {
       return ServerError(res, error);
     }
