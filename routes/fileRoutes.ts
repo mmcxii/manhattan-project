@@ -33,7 +33,7 @@ export const FileRoutes = Router().post('/images', async (req, res) => {
 
   const file = req.files.file as UploadedFile;
   if (file == null) {
-    return;
+    return res.status(400).send('No valid files to upload.');
   }
 
   const newFileName = file.name.replace(/\.{1}\w+{3,4}$/, '.png');
