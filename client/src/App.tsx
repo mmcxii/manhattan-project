@@ -38,8 +38,10 @@ const App: React.FC = () => {
 export default App;
 
 const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: string }>`
+  @import url('https://fonts.googleapis.com/css?family=Cinzel|Open+Sans&display=swap');
+
   // Reset
-* {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -69,6 +71,11 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
         background-position: center;
       `
         : ''}
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-family: 'Cinzel', serif;
   }
   
   a {
