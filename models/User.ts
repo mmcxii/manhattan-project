@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { Schema, SchemaTypes as Types, Model, model, Document } from "mongoose";
-import { IUser } from "../interfaces";
-=======
 import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
 import { IUser, IUpdateContext } from '../interfaces';
 
@@ -27,7 +23,6 @@ export class UserData {
     this.bio = user.bio;
   }
 }
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
 
 // Create interface for User documents
 export interface IUserDocument extends IUser, Document {
