@@ -1,43 +1,31 @@
-import express, { Router } from 'express';
-import { User, IUserDocument } from '../models';
-import { UserUtilities } from '../util/UserUtilities';
-import { isAdmin } from '../util/isAdmin'
-import { IUserRequest, IUserToken } from '../interfaces'
-const userUtilities = new UserUtilities();
+import { Router } from 'express';
+import { User, IUserDocument, UserData } from '../models';
 
 export const UserRoutes = Router()
-  .get('/', async (req: IUserRequest, res: express.Response) => {
+  .get('/', async (req, res) => {
     // Get all users
-    const {admin} = req.token as IUserToken;
+    try {
+      const userDocs: IUserDocument[] = await User.find();
 
+      const users: UserData[] = userDocs.map(user => user.toUserData());
 
-    if (isAdmin(admin)) {
-      try {
-        const users: IUserDocument[] = await User.find();
-        return res.json(users);
-      } catch (error) {
-        return res.status(500).send(error);
-      }
-    } else {
-      return res.status(401).send('Only admins can access this resource.')
-    }     
-
-
-      // res.status(403).send('Only accessible to admins');
-
+      return res.json(users);
+    } catch (error) {
+      return res.status(500).send(error);
+    }
   })
   .get('/:username', async (req, res) => {
     // Get User by username
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUserDocument | null = await User.findOne({ username });
+      const userDoc: IUserDocument | null = await User.findOne({ username });
 
-      if (!user) {
+      if (!userDoc) {
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user);
+      return res.json(userDoc.toUserData());
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -91,28 +79,30 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUserDocument | null = await User.findOne({ username }, 'followers').populate(
+      const userDoc: IUserDocument | null = await User.findOne({ username }, 'followers').populate(
         'followers'
       );
 
-      if (!user) {
+      if (!userDoc) {
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.followers);
+      const followersData: UserData[] = userDoc.followers.map(user => user.toUserData());
+
+      return res.json(followersData);
     } catch (error) {
       return res.status(500).send(error);
     }
   })
   .put('/:username/followers', async (req, res) => {
     // Add a follower to a user.
-    if (!req.body.follower) {
+    if (!req.body.username) {
       return res.status(400).send('Missing follower username.');
     }
 
     // Get username and follower name
     const username = req.params.username.trim().toLowerCase();
-    const followerName: string = String(req.body.follower)
+    const followerName: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
@@ -125,7 +115,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -134,7 +124,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.addFollower(user, follower);
+      const status = await user.addFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -144,13 +134,13 @@ export const UserRoutes = Router()
   .delete('/:username/followers', async (req, res) => {
     // Remove a follower from user
 
-    if (!req.body.follower) {
+    if (!req.body.username) {
       return res.status(400).send('Missing follower username.');
     }
 
     // Get username and follower name
     const username = req.params.username.trim().toLowerCase();
-    const followerName: string = String(req.body.follower)
+    const followerName: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
@@ -163,7 +153,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -172,7 +162,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.removeFollower(user, follower);
+      const status = await user.removeFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -192,7 +182,9 @@ export const UserRoutes = Router()
         return res.status(404).send(`User ${username} not found.`);
       }
 
-      return res.json(user.follows);
+      const followsData: UserData[] = user.follows.map(user => user.toUserData());
+
+      return res.json(followsData);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -216,7 +208,7 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs = await userUtilities.getUserAndFollower(username, followerName);
+      const userDocs = await User.getUserAndFollower(username, followerName);
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
       }
@@ -224,7 +216,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.addFollower(user, follower);
+      const status = await user.addFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
@@ -240,7 +232,7 @@ export const UserRoutes = Router()
 
     // Get username and follower name
     const followerName = req.params.username.trim().toLowerCase();
-    const username: string = String(req.body.follower)
+    const username: string = String(req.body.username)
       .trim()
       .toLowerCase();
 
@@ -253,7 +245,7 @@ export const UserRoutes = Router()
       // Lookup both user and follower User documents
       const userDocs:
         | [IUserDocument, IUserDocument]
-        | Error = await userUtilities.getUserAndFollower(username, followerName);
+        | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return res.status(404).send(userDocs.message);
@@ -262,7 +254,7 @@ export const UserRoutes = Router()
       const [user, follower] = userDocs;
 
       // Update Users follows/followers
-      const status = await userUtilities.removeFollower(user, follower);
+      const status = await user.removeFollower(follower);
 
       return res.sendStatus(status);
     } catch (error) {
