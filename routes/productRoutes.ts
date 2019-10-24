@@ -15,12 +15,8 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
   const { type, query } = parms;
 
   // Determine product type
-  if (type) {
-    const prodType: string = type
-      .toString()
-      .trim()
-      .toLowerCase();
-
+  const prodType = type && type.toString().trim().toLowerCase();
+  if (prodType) {
     switch (prodType) {
       case 'beer':
         productQuery.where('type', ProductType.BEER);
@@ -32,14 +28,9 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
   }
 
   // Determine search name
-  if (query) {
-    const queryString: string = query.toString().trim();
-    if (queryString !== '') {
-      // Split up and trim search terms around ','
-      const searchTerms = queryString.split(',').map(s => s.trim()).join('|');
-      const pattern = new RegExp(searchTerms);
-      productQuery.where({ name: { $regex: pattern, $options: 'i' } });
-    }
+  const queryString = query && query.trim();
+  if (queryString) {
+    productQuery.where({ $text: { $search: queryString } });
   }
 
   return productQuery;
