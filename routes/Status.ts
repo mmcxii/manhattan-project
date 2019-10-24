@@ -12,6 +12,10 @@ export enum Status {
   ServerError = 500
 }
 
+export const SendStatus = (res: Response, statusCode: Status): Response => {
+  return res.status(statusCode).send(Status[statusCode]);
+}
+
 export const Ok = <T extends unknown>(res: Response, data: T): Response => {
   const setMsg = typeof data === 'string';
   const resData = setMsg ? { message: data } : data;
