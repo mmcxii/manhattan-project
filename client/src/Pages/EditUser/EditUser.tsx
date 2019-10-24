@@ -71,9 +71,9 @@ const EditUser: React.FC<Props> = () => {
               saveDataToDataBase();
             }}
           >
-            <Input name='name' value={values.name} onChange={handleChange} />
-            <Input name='age' value={values.age} onChange={handleChange} type='number' />
-            <Input name='bio' value={values.bio} onChange={handleChange} type='textarea' />
+            <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
+            <Input name='age' value={values.age} onChange={handleChange} type='number' placeholder='Enter your age' />
+            <Input name='bio' value={values.bio} onChange={handleChange} type='textarea' placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?' />
             <Toggle
               initialState={values.theme === 'dark'}
               trueCondition='dark'
