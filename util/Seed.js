@@ -9,6 +9,7 @@ const Schema = mongoose.Schema;
 // //import path from 'path';
 var app = express();
 //port
+
 var PORT = process.env.PORT || 6969;
 var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
 let BEER_KEY = process.env.BEER_KEY;
@@ -16,7 +17,6 @@ let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
   useNewUrlParser: true
 });
-
 
 var ingredientsSchema = new Schema({
   name: Types.String,
@@ -41,7 +41,7 @@ productSchema = new Schema({
   },
   type: {
     type: Types.String,
-    enum: ["BEER", "WINE", "MIXED"],
+    enum: ['BEER', 'WINE', 'MIXED'],
     required: true
   },
   name: {
@@ -51,28 +51,24 @@ productSchema = new Schema({
   },
   desc: Types.String,
   imgUrl: Types.String,
-  comments: [{ Type: Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: Types.ObjectId, ref: 'Comment' }],
   upvotes: [
     {
       type: Types.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
   downvotes: [
     {
       type: Types.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
   details: productDetailsSchema
 });
 
 let product = mongoose.model('Product', productSchema);
-
-app.get('/', function(req, res) {
-  res.send('Hello');
-});
-
+//routes
 app.post('/seed/beer', function(req, res) {
   dumpBeer();
 });
@@ -84,7 +80,7 @@ app.post('/seed/cocktail', function(req, res) {
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
 });
-
+//awaits the api call and then pushes data into db
 const dumpMixed = async () => {
   const data = await cocktaildbId();
   product.create(data, function(err, products) {
@@ -93,7 +89,7 @@ const dumpMixed = async () => {
     }
   });
 };
-
+//awaits the api call and then pushes data into db
 const dumpBeer = async () => {
   const data = await brewerydb();
   product.create(data, function(err, products) {
@@ -102,7 +98,7 @@ const dumpBeer = async () => {
     }
   });
 };
-
+//hits brewery API and stores data in beersArray
 const brewerydb = async () => {
   const beersArray = [];
 
@@ -114,23 +110,51 @@ const brewerydb = async () => {
       const data = response.data.data;
 
       for (let i in data) {
+        //check if data exists
+        if (data === undefined) {
+          continue;
+        }
+        //check and set image, if no image set to an empty img src
+        let imageLink = data[i].labels;
+        let image;
+        if (imageLink === undefined) {
+          image = '//:0';
+        } else {
+          image = imageLink.contentAwareLarge;
+        }
+        //check to see if desc exists, sets default
+        let descValue = data[i].description;
+        let desc;
+        if (descValue === undefined) {
+          desc = 'No description';
+        } else {
+          desc = descValue;
+        }
+        //checks if there is a subtype, if not set to N/A
+        let subName = data[i].style;
+        let beerType;
+        if (subName === undefined) {
+          beerType = 'N/A';
+        } else {
+          beerType = data[i].style.shortName;
+        }
+        //changes organic to boolean
         let organic = false;
         if (data[i].isOrganic == 'Y') {
           organic = true;
         }
+        //create object array
         beersArray.push({
           extID: data[i].id,
-          type: 0,
+          type: 'BEER',
           name: data[i].name,
-          details: [
-            {
-              desc: data[i].description,
-              ABV: data[i].abv,
-              image: data[i].labels,
-              subtype: data[i].style.shortName,
-              organic: organic
-            }
-          ]
+          imgUrl: image,
+          details: {
+            desc: desc,
+            ABV: data[i].abv,
+            subtype: beerType,
+            organic: organic
+          }
         });
       }
     } catch (error) {
@@ -139,7 +163,7 @@ const brewerydb = async () => {
   }
   return await beersArray;
 };
-
+//gets all cocktails in db and stores their id in cocktailID
 const cocktaildbId = async () => {
   const cocktailID = [];
   try {
@@ -158,7 +182,7 @@ const cocktaildbId = async () => {
     console.log(error);
   }
 };
-
+//awaits cocktailID and searches for all cocktails by IDs in array
 const cocktaildb = async queryArray => {
   const cocktail = [];
   for (let i in queryArray) {
@@ -168,6 +192,7 @@ const cocktaildb = async queryArray => {
       );
       const data = response.data.drinks;
       let ingredients = [];
+      //set up ingredient objects
       const ingredientNum = [
         data[0].strIngredient1,
         data[0].strIngredient2,
@@ -210,18 +235,17 @@ const cocktaildb = async queryArray => {
           });
         }
       }
+      //set up for cocktail object
       cocktail.push({
         extID: data[0].idDrink,
-        type: 2,
+        type: 'MIXED',
         name: data[0].strDrink,
-        details: [
-          {
-            image: data[0].strDrinkThumb,
-            ingredients: ingredients,
-            directions: data[0].strInstructions,
-            glassType: data[0].strGlass
-          }
-        ]
+        imgUrl: data[0].strDrinkThumb,
+        details: {
+          ingredients: ingredients,
+          directions: data[0].strInstructions,
+          glassType: data[0].strGlass
+        }
       });
     } catch (error) {
       console.log(error);

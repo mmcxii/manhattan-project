@@ -68,7 +68,11 @@ productSchema
     return upvotes / (upvotes + downvotes);
   });
 
+<<<<<<< HEAD
 export const Product = model<IProductDocument, IProductModel>(
   'Product',
   productSchema
 );
+=======
+export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
+>>>>>>> 1041f581ac81d3a136be39b7f703aeab82898755
