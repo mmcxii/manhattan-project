@@ -1,11 +1,11 @@
-import { IProductDetails } from "./IProductDetails";
-import { IComment } from "./IComment";
-import { IUser } from "./IUser";
+import { IProductDetails } from './IProductDetails';
+import { IComment } from './IComment';
+import { IUser } from './IUser';
 
 export enum ProductType {
-  "BEER",
-  "WINE",
-  "MIXED"
+  BEER = 'BEER',
+  WINE = 'WINE',
+  MIXED = 'MIXED'
 }
 export interface IProduct {
   extID: string;
