@@ -48,68 +48,34 @@ const userSchema = new Schema({
   username: {
     type: Types.String,
     required: true,
-<<<<<<< HEAD
     unique: true
   },
   password: {
     type: Types.String,
     required: true
-=======
-    unique: true,
-  },
-  password: {
-    type: Types.String,
-    required: true,
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
   },
   admin: {
     type: Types.String,
     required: true,
-<<<<<<< HEAD
-    default: "notAdmin"
-=======
-    default: 'notAdmin',
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
+    default: 'notAdmin'
   },
   name: Types.String,
   age: Types.Number,
   bio: Types.String,
-<<<<<<< HEAD
-  follows: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  followers: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  favorites: {
-    type: [Types.ObjectId],
-    ref: "Product"
-  },
-  theme: Types.String,
-  highlightedFavorite: {
-    type: Types.ObjectId,
-    ref: "Product"
-  }
-});
-
-export const User = model<IUserDocument, IUserModel>("User", userSchema);
-=======
   highlightedFavorite: Types.String,
   theme: {
     type: Types.String,
     required: true,
-    default: 'dark',
+    default: 'dark'
   },
   follows: {
     type: [Types.ObjectId],
-    ref: 'User',
+    ref: 'User'
   },
   followers: {
     type: [Types.ObjectId],
-    ref: 'User',
-  },
+    ref: 'User'
+  }
 });
 
 // Schema methods
@@ -120,12 +86,16 @@ userSchema.statics.getUserAndFollower = async function(
 ): Promise<[IUserDocument, IUserDocument] | Error> {
   // Find both user documents
   const users: IUserDocument[] = await User.find({
-    username: [username, followerName],
+    username: [username, followerName]
   });
 
   // Match user documents on username
-  const user: IUserDocument | undefined = users.find(u => u.username === username);
-  const follower: IUserDocument | undefined = users.find(u => u.username === followerName);
+  const user: IUserDocument | undefined = users.find(
+    u => u.username === username
+  );
+  const follower: IUserDocument | undefined = users.find(
+    u => u.username === followerName
+  );
 
   // Return error if one or both documents not found
   if (!follower || !user) {
@@ -140,9 +110,13 @@ userSchema.statics.getUserAndFollower = async function(
 // Document methods
 
 // Uses the provided IUpdateContext to perform User document updates
-const updateFollowers = async (...updateContext: IUpdateContext[]): Promise<number> => {
+const updateFollowers = async (
+  ...updateContext: IUpdateContext[]
+): Promise<number> => {
   // Get User/Follower update results and return appropriate status
-  const results = await Promise.all(updateContext.map(u => User.updateOne(u.filter, u.options)));
+  const results = await Promise.all(
+    updateContext.map(u => User.updateOne(u.filter, u.options))
+  );
 
   const allOk = results.every(result => result.ok === 1);
 
@@ -162,13 +136,13 @@ userSchema.methods.addFollower = async function(
   // Add follower to user
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
-    options: { $addToSet: { followers: follower._id } },
+    options: { $addToSet: { followers: follower._id } }
   };
 
   // Add user to follows
   const followerContext: IUpdateContext = {
     filter: { _id: follower._id },
-    options: { $addToSet: { follows: this._id } },
+    options: { $addToSet: { follows: this._id } }
   };
 
   return updateFollowers(userContext, followerContext);
@@ -182,17 +156,16 @@ userSchema.methods.removeFollower = async function(
   // Remove follower from followers
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
-    options: { $pull: { followers: follower._id } },
+    options: { $pull: { followers: follower._id } }
   };
 
   // Remove user from follows
   const followerContext: IUpdateContext = {
     filter: { _id: follower._id },
-    options: { $pull: { follows: this._id } },
+    options: { $pull: { follows: this._id } }
   };
 
   return updateFollowers(userContext, followerContext);
 };
 
 export const User = model<IUserDocument, IUserModel>('User', userSchema);
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
