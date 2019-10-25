@@ -57,51 +57,31 @@ const userSchema = new Schema({
   admin: {
     type: Types.String,
     required: true,
-<<<<<<< HEAD
     default: 'notAdmin'
-=======
-    default: 'notAdmin',
->>>>>>> f9264b9a9a8bbfc528ab14f5eeac53d20712202a
   },
   name: Types.String,
   age: Types.Number,
   bio: Types.String,
-<<<<<<< HEAD
-  highlightedFavorite: Types.String,
+  follows: {
+    type: [Types.ObjectId],
+    ref: 'User'
+  },
+  followers: {
+    type: [Types.ObjectId],
+    ref: 'User'
+  },
+  favorites: {
+    type: [Types.ObjectId],
+    ref: 'Product'
+  },
+  highlightedFavorite: {
+    type: Types.ObjectId,
+    ref: 'Product'
+  },
   theme: {
     type: Types.String,
     required: true,
     default: 'dark'
-  },
-  follows: {
-    type: [Types.ObjectId],
-    ref: 'User'
-  },
-  followers: {
-    type: [Types.ObjectId],
-    ref: 'User'
-=======
-  follows: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  followers: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  favorites: {
-    type: [Types.ObjectId],
-    ref: "Product"
-  },
-  highlightedFavorite: {
-    type: Types.ObjectId,
-    ref: "Product"
-  },
-  theme: {
-    type: Types.String,
-    required: true,
-    default: 'dark',
->>>>>>> f9264b9a9a8bbfc528ab14f5eeac53d20712202a
   }
 });
 
@@ -195,8 +175,4 @@ userSchema.methods.removeFollower = async function(
   return updateFollowers(userContext, followerContext);
 };
 
-<<<<<<< HEAD
 export const User = model<IUserDocument, IUserModel>('User', userSchema);
-=======
-export const User = model<IUserDocument, IUserModel>('User', userSchema);
->>>>>>> f9264b9a9a8bbfc528ab14f5eeac53d20712202a
