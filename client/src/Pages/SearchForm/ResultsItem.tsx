@@ -1,8 +1,8 @@
 import React from 'react';
-import { BeerProps } from './SearchForm';
+import { BeerProps, CocktailProps } from './SearchForm';
 
 interface Props {
-  item: BeerProps;
+  item: BeerProps | CocktailProps;
 }
 
 const ResultsItem: React.FC<Props> = ({ item }) => {

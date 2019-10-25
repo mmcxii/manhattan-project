@@ -49,6 +49,8 @@ export const ProductRoutes = Router()
     try {
       const products: IProduct[] = await findProducts.exec();
 
+      console.log(products);
+
       return res.json(products);
     } catch (error) {
       return res.status(500).send(error);
