@@ -48,55 +48,28 @@ const userSchema = new Schema({
   username: {
     type: Types.String,
     required: true,
-<<<<<<< HEAD
     unique: true
   },
   password: {
     type: Types.String,
     required: true
-=======
-    unique: true,
   },
   password: {
     type: Types.String,
     required: true,
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
   },
   admin: {
     type: Types.String,
     required: true,
-<<<<<<< HEAD
-    default: "notAdmin"
-=======
     default: 'notAdmin',
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
   },
   name: Types.String,
   age: Types.Number,
   bio: Types.String,
-<<<<<<< HEAD
-  follows: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  followers: {
-    type: [Types.ObjectId],
-    ref: "User"
-  },
-  favorites: {
-    type: [Types.ObjectId],
-    ref: "Product"
-  },
-  theme: Types.String,
   highlightedFavorite: {
     type: Types.ObjectId,
     ref: "Product"
-  }
-});
-
-export const User = model<IUserDocument, IUserModel>("User", userSchema);
-=======
-  highlightedFavorite: Types.String,
+  },
   theme: {
     type: Types.String,
     required: true,
@@ -195,4 +168,3 @@ userSchema.methods.removeFollower = async function(
 };
 
 export const User = model<IUserDocument, IUserModel>('User', userSchema);
->>>>>>> fef87df0742a5d889baff4750bd064265ecc4edf
