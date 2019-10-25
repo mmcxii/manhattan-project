@@ -3,6 +3,9 @@ var mongoose = require('mongoose');
 let axios = require('axios');
 require('dotenv').config();
 
+const Types = mongoose.SchemaTypes;
+const Schema = mongoose.Schema;
+
 // //import path from 'path';
 var app = express();
 //port
@@ -13,24 +16,54 @@ let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
   useNewUrlParser: true
 });
-let Schema = mongoose.Schema;
 
-let detailSchema = new Schema({
-  desc: String,
-  ABV: Number,
-  image: [],
-  subtype: String,
-  organic: Boolean,
-  ingredients: [],
-  directions: String,
-  glassType: String
+var ingredientsSchema = new Schema({
+  name: Types.String,
+  measurement: Types.String
 });
 
-var productSchema = new Schema({
-  extID: String,
-  type: Number,
-  name: { type: String, text: true },
-  details: [detailSchema]
+var productDetailsSchema = new Schema({
+  subType: Types.String,
+  ingredients: [ingredientsSchema],
+  directions: Types.String,
+  glassType: Types.String,
+  ABV: Types.Number,
+  desc: Types.String,
+  organic: Types.Boolean
+});
+
+productSchema = new Schema({
+  extID: {
+    type: Types.String,
+    required: true,
+    unique: true
+  },
+  type: {
+    type: Types.String,
+    enum: ['BEER', 'WINE', 'MIXED'],
+    required: true
+  },
+  name: {
+    type: Types.String,
+    required: true,
+    text: true
+  },
+  desc: Types.String,
+  imgUrl: Types.String,
+  comments: [{ Type: Types.ObjectId, ref: 'Comment' }],
+  upvotes: [
+    {
+      type: Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  downvotes: [
+    {
+      type: Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  details: productDetailsSchema
 });
 
 let product = mongoose.model('Product', productSchema);
