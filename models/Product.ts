@@ -1,6 +1,6 @@
-import { Schema, SchemaTypes as Types, Model, model, Document } from "mongoose";
-import { IProduct } from "../interfaces";
-import { ObjectID } from "bson";
+import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
+import { IProduct } from '../interfaces';
+import { ObjectID } from 'bson';
 
 export interface IProductDocument extends IProduct, Document {
   // TODO - define Product document methods
@@ -33,7 +33,7 @@ const productSchema = new Schema({
   },
   type: {
     type: Types.String,
-    enum: ["BEER", "WINE", "MIXED"],
+    enum: ['BEER', 'WINE', 'MIXED'],
     required: true
   },
   name: {
@@ -43,24 +43,24 @@ const productSchema = new Schema({
   },
   desc: Types.String,
   imgUrl: Types.String,
-  comments: [{ Type: Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: Types.ObjectId, ref: 'Comment' }],
   upvotes: [
     {
       type: Types.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
   downvotes: [
     {
       type: Types.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
   details: productDetailsSchema
 });
 
 productSchema
-  .virtual("rating")
+  .virtual('rating')
   .get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
     const upvotes: number = this.upvotes.length;
     const downvotes: number = this.downvotes.length;
@@ -69,6 +69,6 @@ productSchema
   });
 
 export const Product = model<IProductDocument, IProductModel>(
-  "Product",
+  'Product',
   productSchema
 );

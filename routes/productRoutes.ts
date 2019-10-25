@@ -15,7 +15,12 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
   const { type, query } = parms;
 
   // Determine product type
-  const prodType = type && type.toString().trim().toLowerCase();
+  const prodType =
+    type &&
+    type
+      .toString()
+      .trim()
+      .toLowerCase();
   if (prodType) {
     switch (prodType) {
       case 'beer':
@@ -38,6 +43,7 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
 
 export const ProductRoutes = Router()
   .get('/', async (req, res) => {
+    console.log('hi');
     const findProducts = buildProductsQuery(req.query);
 
     // Get all Product documents from DB
