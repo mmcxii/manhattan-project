@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Comment, ICommentDocument, User, IUserDocument } from '../models';
 import { IUser } from '../interfaces';
+import { Ok, BadRequest, ServerError, NotFound, Status, SendStatus } from './Status';
 
 // Get votes of the specified type (upvotes or downvotes)
 const getVoters = async (id: string, type: 'upvotes' | 'downvotes'): Promise<IUser[] | null> => {
@@ -18,9 +19,9 @@ export const CommentRoutes = Router()
     // Get all comment documents
     try {
       const comments: ICommentDocument[] = await Comment.find();
-      return res.json(comments);
+      return Ok(res, comments);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .post('/', async (req, res) => {
@@ -28,10 +29,10 @@ export const CommentRoutes = Router()
     const { text, author } = req.body;
 
     if (!text) {
-      return res.status(400).send('Missing comment text.');
+      return BadRequest(res, 'Missing comment text.');
     }
     if (!author) {
-      return res.status(400).send('Missing comment author (user).');
+      return BadRequest(res, 'Missing comment author (user).');
     }
 
     try {
@@ -41,9 +42,9 @@ export const CommentRoutes = Router()
         throw newComment;
       }
 
-      return res.json(newComment);
+      return Ok(res, newComment);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:id', async (req, res) => {
@@ -53,12 +54,12 @@ export const CommentRoutes = Router()
       const comment: ICommentDocument | null = await Comment.findById(id).populate('author');
 
       if (!comment) {
-        return res.status(404).send(`Comment ${id} not found.`);
+        return NotFound(res, `Comment ${id} not found.`);
       }
 
-      return res.json(comment);
+      return Ok(res, comment);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:id/upvotes', async (req, res) => {
@@ -69,9 +70,9 @@ export const CommentRoutes = Router()
     try {
       const upvoters = await getVoters(id, 'upvotes');
 
-      return res.json(upvoters);
+      return Ok(res, upvoters);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .get('/:id/downvotes', async (req, res) => {
@@ -81,68 +82,74 @@ export const CommentRoutes = Router()
     try {
       const downvoters = await getVoters(id, 'downvotes');
 
-      return res.json(downvoters);
+      return Ok(res, downvoters);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .put('/:id/upvotes', async (req, res) => {
     // Add comment upvoter
     const { id } = req.params;
-    const { username } = req.body;
+    let { username } = req.body;
+
+    // Verify username is provided
+    username = username && username.trim().toLowerCase();
 
     if (!username) {
-      return res.status(400).send('Missing username.');
-    }
-
-    // Get User document
-    const user: IUserDocument | null = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).send(`User ${username} not found.`);
+      return BadRequest(res, 'Username missing or empty.');
     }
 
     // Get Comment document
     const comment: ICommentDocument | null = await Comment.findById(id);
     if (!comment) {
-      return res.status(404).send(`Comment ${id} not found.`);
+      return NotFound(res, `Comment ${id} not found.`);
+    }
+
+    // Get User document
+    const user: IUserDocument | null = await User.findOne({ username });
+    if (!user) {
+      return NotFound(res, `User ${username} not found.`);
     }
 
     // Perform upvote, then return updated upvote count
     const upvotes: number | Error = await comment.upvote(user);
 
     if (upvotes instanceof Error) {
-      return res.status(500).send(upvotes);
+      return ServerError(res, upvotes);
     }
 
-    res.json(upvotes);
+    return Ok(res, upvotes);
   })
   .put('/:id/downvotes', async (req, res) => {
     // Add comment downvoter
     const { id } = req.params;
-    const { username } = req.body;
+    let { username } = req.body;
+
+    // Verify username is provided
+    username = username && username.trim().toLowerCase();
 
     if (!username) {
-      return res.status(400).send('Missing username.');
-    }
-
-    // Get User document
-    const user: IUserDocument | null = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).send(`User ${username} not found.`);
+      return BadRequest(res, 'Username missing or empty.');
     }
 
     // Get Comment document
     const comment: ICommentDocument | null = await Comment.findById(id);
     if (!comment) {
-      return res.status(404).send(`Comment ${id} not found.`);
+      return NotFound(res, `Comment ${id} not found.`);
+    }
+
+    // Get User document
+    const user: IUserDocument | null = await User.findOne({ username });
+    if (!user) {
+      return NotFound(res, `User ${username} not found.`);
     }
 
     // Perform downvote, then return updated downvote count
     const downvotes: number | Error = await comment.downvote(user);
 
     if (downvotes instanceof Error) {
-      return res.status(500).send(downvotes);
+      return ServerError(res, downvotes);
     }
 
-    res.json(downvotes);
+    return Ok(res, downvotes);
   });

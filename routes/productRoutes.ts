@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { IProduct, ProductType } from '../interfaces';
 import { Product, Query } from '../models';
+import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 
 interface IProductFilters {
   query?: string;
@@ -49,39 +50,41 @@ export const ProductRoutes = Router()
     try {
       const products: IProduct[] = await findProducts.exec();
 
-      console.log(products);
-
-      return res.json(products);
+      return Ok(res, products);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   })
   .post('/', async (req, res) => {
     if (!req.body) {
-      return res.status(400).send('Missing product data.');
+      return BadRequest(res, 'Missing product data.');
     }
 
     try {
       const newProduct = await Product.create(req.body);
 
-      return res.status(201).json(newProduct);
+      return Ok(res, newProduct, Status.Created);
     } catch (error) {
-      return res.status(500).send(`Error creating new product: ${error}`);
+      return ServerError(res, `Error creating new product: ${error}`);
     }
   })
   .get('/:id', async (req, res) => {
     // Get product by id
     const { id } = req.params;
 
+    if (!id || id.trim() === '') {
+      return BadRequest(res, 'No product ID.');
+    }
+
     try {
       const product: IProduct | null = await Product.findById(id);
 
       if (!product) {
-        return res.status(404).send(`Product ${id} not found.`);
+        return NotFound(res, `Product ${id} not found.`);
       }
 
-      return res.json(product);
+      return Ok(res, product);
     } catch (error) {
-      return res.status(500).send(error);
+      return ServerError(res, error);
     }
   });

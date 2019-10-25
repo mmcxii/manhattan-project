@@ -1,48 +1,69 @@
 import express, { Router } from 'express';
-import { User, IUserDocument } from '../models';
+import { User, UserData } from '../models';
 import { IUser, IUserRequest, IUserToken } from '../interfaces';
 import bcrypt from 'bcrypt';
 import { loginUser } from '../util/loginUser';
 import { validateToken } from '../util/validateToken';
+import { Status, NotFound, ServerError, BadRequest, Ok, Unprocessable, Unauthorized } from './Status';
+
+const PW_LENGTH = 4;
+
+async function registerUser(
+  username: string,
+  password: string,
+  admin: string
+): Promise<IUser | Error> {
+  try {
+    // Encrypt user password
+    const encrypted = await bcrypt.hash(password, 10);
+
+    // Create new User document
+    const newUser = new User({ username, password: encrypted, admin });
+
+    // Save and return new User
+    return newUser.save();
+  } catch (error) {
+    return error;
+  }
+}
 
 export const AuthRoutes = Router()
   .post('/register', async (req, res) => {
-    const { username, password, admin } = req.body;
+    let { username, password, admin } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).send('Missing user data.');
+    username = username && username.trim().toLowerCase();
+    password = password && password.trim();
+
+    if (!username) {
+      return BadRequest(res, 'Username is missing or empty.');
+    }
+    if (!password) {
+      return BadRequest(res, 'Password is missing or empty.');
+    }
+
+    // Require password length
+    if (password.length < PW_LENGTH) {
+      return BadRequest(res, `Password must be at least ${PW_LENGTH} characters long.`);
     }
 
     try {
       //check if username exists
-      const user: IUser | null = await User.findOne({
-        username: username.toLowerCase(),
-      });
+      const user: IUser | null = await User.findOne({ username });
 
       //If user exists, reject it
       if (user) {
-        return res.status(422).send('Username already exists!');
+        return Unprocessable(res, 'Username already exists!');
       }
-      const newUser = await new Promise<IUserDocument>(resolve => {
-        //hash password
-        bcrypt.hash(password, 10, (err, hash) => {
-          if (err) {
-            return res.status(500).send(`Error hashing password ${err}`);
-          }
-          //TODO -- add default values for the rest of the account creation questions.
-          const userData: object = {
-            username: username.toLowerCase(),
-            password: hash,
-            admin,
-          };
-          const user: IUserDocument = new User(userData);
-          resolve(user);
-        });
-      });
-      const savedUser: IUserDocument = await newUser.save();
-      return res.status(201).json(savedUser);
+
+      const newUser: IUser | Error = await registerUser(username, password, admin);
+
+      if (newUser instanceof Error) {
+        throw newUser;
+      }
+
+      return Ok(res, new UserData(newUser), Status.Created);
     } catch (err) {
-      return res.status(500).send(`Error creating user ${err}`);
+      return ServerError(res, `Error creating user ${err}`);
     }
   })
   .post('/login', loginUser, async (req: IUserRequest, res: express.Response) => {
@@ -50,27 +71,27 @@ export const AuthRoutes = Router()
     const { username } = req.body;
 
     if (!username) {
-      return res.status(400).send('Username data missing.');
+      return BadRequest(res, 'Username data missing.');
     }
 
     // Verify token has been attached to response header
     if (!req.tokenString) {
-      return res.status(400).send('Login failed. Missing authorization header.');
+      return BadRequest(res, 'Login failed. Missing authorization header.');
     }
 
     // Lookup associated User doc and return with token
     const user: IUser | null = await User.findOne({ username });
 
     if (!user) {
-      return res.status(404).send(`User ${username} not found.`);
+      return NotFound(res, `User ${username} not found.`);
     }
 
     const userData = {
       token: req.tokenString,
-      user,
+      user: new UserData(user)
     };
 
-    res.status(200).send(userData);
+    return Ok(res, userData);
   })
   .post('/:username', validateToken, async (req: IUserRequest, res: express.Response) => {
     // Verify identity of provided user. Verifies user matches username in supplied token.
@@ -80,13 +101,13 @@ export const AuthRoutes = Router()
 
     const unauthorized = !userToken || userToken.username !== username;
     if (unauthorized) {
-      return res.sendStatus(401);
+      return Unauthorized(res, `Failed to verify identity of user ${username}`);
     }
 
     const user: IUser | null = await User.findOne({ username });
     if (!user) {
-      return res.status(404).send(`User ${username} not found.`);
+      return NotFound(res, `User ${username} not found.`);
     }
 
-    return res.json(user);
+    return Ok(res, user);
   });
