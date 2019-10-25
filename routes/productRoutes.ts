@@ -43,7 +43,6 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
 
 export const ProductRoutes = Router()
   .get('/', async (req, res) => {
-    console.log('hi');
     const findProducts = buildProductsQuery(req.query);
 
     // Get all Product documents from DB

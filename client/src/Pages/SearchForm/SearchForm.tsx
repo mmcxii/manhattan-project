@@ -105,7 +105,7 @@ const SearchForm: React.FC<Props> = () => {
               <ResultsItem key={item.name} item={item}>
                 <h1>{item.name}</h1>
                 <p>{item.details[0]}</p>
-                <img alt='${item.name}'>{item.image}</img>
+                <img alt={`${item.name}`}>{item.details[0].image[0].icon}</img>
               </ResultsItem>
             ))}
           </CardBody>

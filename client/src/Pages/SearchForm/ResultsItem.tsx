@@ -6,7 +6,7 @@ interface Props {
 }
 
 const ResultsItem: React.FC<Props> = ({ item }) => {
-  console.log(item.details[0].image[0]);
+  console.log(item);
 
   return (
     <>
