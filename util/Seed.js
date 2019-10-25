@@ -29,7 +29,7 @@ let detailSchema = new Schema({
 var productSchema = new Schema({
   extID: String,
   type: Number,
-  name: {type: String, text: true},
+  name: { type: String, text: true },
   details: [detailSchema]
 });
 
