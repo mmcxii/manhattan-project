@@ -1,7 +1,7 @@
 import { useEffect, useContext } from 'react';
 import { UserContext } from 'Store';
 
-export const useLSUserInfo = () => {
+export const useReadLSUserInfo = () => {
   const { dispatch } = useContext(UserContext);
 
   useEffect(() => {
