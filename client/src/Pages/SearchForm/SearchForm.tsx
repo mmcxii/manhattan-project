@@ -11,23 +11,34 @@ import ResultsItem from './ResultsItem';
 interface Props {}
 
 interface ProductProps {
-  _id: string;
+  // _id: string;
+  // type: number;
+  // extID: string;
   name: string;
-  description: string;
-  image: string;
+  details: BeerProps[];
 }
 
 export interface BeerProps extends ProductProps {
-  abv: number;
-  organic: boolean;
-  subtype: string;
+  // desc: string;
+  image: {
+    // contentAwareIcon: string;
+    // contentAwareLarge: string;
+    // contentAwareMedium: string;
+    icon: string;
+    // large: string;
+    // medium: string;
+  }[];
+  // ABV: number;
+  // organic: boolean;
+  // subtype: string;
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
-interface CocktailProps extends ProductProps {
-  glass: string;
-  directions: string;
-  ingrediants: string;
-}
+// interface CocktailProps extends ProductProps {
+//   glassType: string;
+//   directions: string;
+//   image: string[];
+//   ingrediants: string;
+// }
 
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
@@ -91,9 +102,9 @@ const SearchForm: React.FC<Props> = () => {
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
             {searchResults.map((item: BeerProps) => (
-              <ResultsItem key={item._id} item={item}>
+              <ResultsItem key={item.name} item={item}>
                 <h1>{item.name}</h1>
-                <p>{item.description}</p>
+                <p>{item.details[0]}</p>
                 <img alt='${item.name}'>{item.image}</img>
               </ResultsItem>
             ))}
