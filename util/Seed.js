@@ -236,16 +236,14 @@ const cocktaildb = async queryArray => {
       }
       cocktail.push({
         extID: data[0].idDrink,
-        type: 2,
+        type: 'MIXED',
         name: data[0].strDrink,
-        details: [
-          {
-            image: data[0].strDrinkThumb,
-            ingredients: ingredients,
-            directions: data[0].strInstructions,
-            glassType: data[0].strGlass
-          }
-        ]
+        imgUrl: data[0].strDrinkThumb,
+        details: {
+          ingredients: ingredients,
+          directions: data[0].strInstructions,
+          glassType: data[0].strGlass
+        }
       });
     } catch (error) {
       console.log(error);
