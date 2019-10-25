@@ -9,8 +9,9 @@ const Schema = mongoose.Schema;
 // //import path from 'path';
 var app = express();
 //port
+//process.env.MONGODB_URI ||
 var PORT = process.env.PORT || 6969;
-var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
+var DB_URI = 'mongodb://localhost:27017/manhattenDB';
 let BEER_KEY = process.env.BEER_KEY;
 let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
@@ -50,7 +51,7 @@ productSchema = new Schema({
   },
   desc: Types.String,
   imgUrl: Types.String,
-  comments: [{ Type: Types.ObjectId, ref: 'Comment' }],
+  comments: [{ type: Types.ObjectId, ref: 'Comment' }],
   upvotes: [
     {
       type: Types.ObjectId,
@@ -113,23 +114,47 @@ const brewerydb = async () => {
       const data = response.data.data;
 
       for (let i in data) {
+        if (data === undefined) {
+          continue;
+        }
+        let imageLink = data[i].labels;
+        let image;
+        if (imageLink === undefined) {
+          image = '//:0';
+        } else {
+          image = imageLink.contentAwareLarge;
+        }
+        let descValue = data[i].description;
+        let desc;
+        if (descValue === undefined) {
+          desc = 'No description';
+        } else {
+          desc = descValue;
+        }
+        //checks if there is a subtype, if not set to N/A
+        let subName = data[i].style;
+        let beerType;
+        if (subName === undefined) {
+          beerType = 'N/A';
+        } else {
+          beerType = data[i].style.shortName;
+        }
+        //changes organic to boolean
         let organic = false;
         if (data[i].isOrganic == 'Y') {
           organic = true;
         }
         beersArray.push({
           extID: data[i].id,
-          type: 0,
+          type: 'BEER',
           name: data[i].name,
-          details: [
-            {
-              desc: data[i].description,
-              ABV: data[i].abv,
-              image: data[i].labels,
-              subtype: data[i].style.shortName,
-              organic: organic
-            }
-          ]
+          imgUrl: image,
+          details: {
+            desc: desc,
+            ABV: data[i].abv,
+            subtype: beerType,
+            organic: organic
+          }
         });
       }
     } catch (error) {
