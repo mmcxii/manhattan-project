@@ -4,10 +4,10 @@ import { HtmlRoutes } from './htmlRoutes'
 import { UserRoutes } from './userRoutes';
 import { CommentRoutes } from './commentRoutes';
 import { ProductRoutes } from './productRoutes';
-
 import { FileRoutes } from './fileRoutes';
-
 import { validateToken } from '../util/validateToken';
+
+export * from './Status';
 
 export default (app: Application) => {
   // Create new router and setup API routes
