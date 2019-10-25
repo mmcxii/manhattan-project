@@ -9,6 +9,7 @@ export enum Status {
   Unauthorized = 401,
   Forbidden = 403,
   NotFound = 404,
+  Unprocessable = 422,
   ServerError = 500
 }
 
@@ -41,6 +42,11 @@ export const NotFound = (res: Response, message: string): Response => {
 export const ServerError = (res: Response, error: string | Error): Response => {
   const message = error instanceof Error ? error.message : error;
   return fillError(Status.ServerError, res, message);
+}
+
+export const Unprocessable = (res: Response, error: string | Error): Response => {
+  const message = error instanceof Error ? error.message : error;
+  return fillError(Status.Unprocessable, res, message);
 }
 
 const fillError = (status: Status, res: Response, message: string): Response => {
