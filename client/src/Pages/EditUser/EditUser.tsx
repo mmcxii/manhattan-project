@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { UserProps, UserContext } from 'Store';
+import { UserProps, UserContext, ProductProps } from 'Store';
 import { useForm } from 'Hooks';
 import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
 
@@ -15,12 +15,9 @@ const EditUser: React.FC<Props> = () => {
   //@ts-ignore
   const loginToken: string = localStorage.getItem('loginToken');
   const [values, handleChange] = useForm({
-    theme: '',
-    name: '',
-    age: '',
-    bio: '',
-    highlightedFavorite: '',
-    ...initialState,
+    name: initialState.name || '',
+    age: initialState.age || '',
+    bio: initialState.bio || '',
   });
   const [theme, setTheme] = useState(initialState.theme);
 
@@ -72,8 +69,20 @@ const EditUser: React.FC<Props> = () => {
             }}
           >
             <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
-            <Input name='age' value={values.age} onChange={handleChange} type='number' placeholder='Enter your age' />
-            <Input name='bio' value={values.bio} onChange={handleChange} type='textarea' placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?' />
+            <Input
+              name='age'
+              value={values.age}
+              onChange={handleChange}
+              type='number'
+              placeholder='Enter your age'
+            />
+            <Input
+              name='bio'
+              value={values.bio}
+              onChange={handleChange}
+              type='textarea'
+              placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?'
+            />
             <Toggle
               initialState={values.theme === 'dark'}
               trueCondition='dark'

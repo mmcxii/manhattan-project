@@ -1,12 +1,14 @@
 import React, { createContext, useReducer } from 'react';
 
+import { ProductProps } from './IProduct';
+
 export interface UserProps {
   username: string;
   theme: 'dark' | 'light';
   name?: string;
   age?: number;
   bio?: string;
-  highlightedFavorite?: string;
+  highlightedFavorite?: ProductProps;
   favorites?: string[];
   follows?: UserProps[];
   followers?: UserProps[];
