@@ -9,9 +9,9 @@ const Schema = mongoose.Schema;
 // //import path from 'path';
 var app = express();
 //port
-//process.env.MONGODB_URI ||
+
 var PORT = process.env.PORT || 6969;
-var DB_URI = 'mongodb://localhost:27017/manhattenDB';
+var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
 let BEER_KEY = process.env.BEER_KEY;
 let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
