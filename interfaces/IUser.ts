@@ -1,3 +1,5 @@
+import { IProduct } from "./IProduct";
+
 export interface IUser {
   username: string;
   admin: string;
@@ -8,4 +10,7 @@ export interface IUser {
   name?: string;
   age?: number;
   bio?: string;
+  theme?: string;
+  highlightedFavorite: IProduct;
+  favorites: IProduct[];
 }

@@ -7,6 +7,7 @@ import Home from './Home';
 import User from './User';
 import SearchForm from './SearchForm';
 import Login from './Login';
+import EditUser from './EditUser';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -21,6 +22,10 @@ const Router: React.FC = () => (
 
       <Route path='/user/:username'>
         <User />
+      </Route>
+
+      <Route path='/edit/:username'>
+        <EditUser />
       </Route>
 
       <Route path='/search/:type'>

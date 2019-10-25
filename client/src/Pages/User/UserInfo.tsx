@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { Button, Card, CardHeader, CardBody } from 'Elements';
+import { ButtonLink, Card, CardHeader, CardBody } from 'Elements';
 import { spacing } from 'Utilities';
 
 interface Props {
@@ -14,7 +14,9 @@ const UserInfo: React.FC<Props> = ({ isUsersProfile, profileInfo }) => (
   <Wrapper>
     <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
     <Info isUsersProfile={isUsersProfile}>
-      {isUsersProfile && <EditProfileButton>Edit information</EditProfileButton>}
+      {isUsersProfile && (
+        <EditProfileButton to={`/edit/${profileInfo.username}`}>Edit information</EditProfileButton>
+      )}
 
       <InfoContent>
         {profileInfo.age && <small>{profileInfo.age}</small>}
@@ -48,7 +50,7 @@ const Info = styled(CardBody)<{ isUsersProfile: boolean }>`
     `};
 `;
 
-const EditProfileButton = styled(Button)`
+const EditProfileButton = styled(ButtonLink)`
   grid-area: edit-profile-button;
 `;
 

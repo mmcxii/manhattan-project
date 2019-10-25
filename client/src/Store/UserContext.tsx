@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from 'react';
 
 export interface UserProps {
   username: string;
-  theme?: 'dark' | 'light';
+  theme: 'dark' | 'light';
   name?: string;
   age?: number;
   bio?: string;
@@ -17,7 +17,7 @@ interface ActionProps {
   payload: UserProps;
 }
 
-const initialState: UserProps = { username: '' };
+const initialState: UserProps = { username: '', theme: 'dark' };
 
 export const UserContext = createContext<UserProps | any>(initialState);
 

@@ -4,7 +4,9 @@ import { HtmlRoutes } from './htmlRoutes'
 import { UserRoutes } from './userRoutes';
 import { CommentRoutes } from './commentRoutes';
 import { ProductRoutes } from './productRoutes';
-import { SearchRoutes } from './searchRoutes';
+
+import { FileRoutes } from './fileRoutes';
+
 import { validateToken } from '../util/validateToken';
 
 export default (app: Application) => {
@@ -13,10 +15,10 @@ export default (app: Application) => {
   apiRoutes.use('/users', UserRoutes);
   apiRoutes.use('/comments', CommentRoutes);
   apiRoutes.use('/products', ProductRoutes);
+  apiRoutes.use('/files', FileRoutes);
 
   // Attach routers to Express app
   app.use('/auth', AuthRoutes);
-  app.use('/search', SearchRoutes);
   app.use('/api', validateToken, apiRoutes);
   app.use('/', HtmlRoutes);
 };
