@@ -9,12 +9,21 @@ interface Props {
 
 const ResultsItem: React.FC<Props> = ({ item }) => {
   console.log(item.details);
+  console.log(item.details);
 
   return (
     <>
-      <img src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl} height='25' width='25' alt='(image not found)'></img>
+      <img
+        src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl}
+        height="25"
+        width="25"
+        alt="(image not found)"
+      ></img>
       {item.name}
-      {/* {item.details} */}
+      {` ABV: ${item.details.ABV}%`}
+      <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
+      {item.upvotes.length - item.downvotes.length}
+
       <hr></hr>
     </>
   );

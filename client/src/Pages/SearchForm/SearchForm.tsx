@@ -16,15 +16,15 @@ interface ProductProps {
   type: number;
   extID: string;
   name: string;
-  upvote: string[];
-  downvote: string[];
+  upvotes: string[];
+  downvotes: string[];
   imgUrl: string;
-  details: BeerProps[];
+  details: BeerProps;
 }
 
 export interface BeerProps extends ProductProps {
   desc: string;
-  ABV: number;
+  ABV?: number;
   organic: boolean;
   subtype: string;
 }
@@ -70,7 +70,7 @@ const SearchForm: React.FC<Props> = () => {
   return (
     <>
       {beerResults.length === 0 ? (
-        <Card as='section'>
+        <Card as="section">
           <CardHeader>{type} search</CardHeader>
           <CardBody>
             <Form
@@ -82,9 +82,16 @@ const SearchForm: React.FC<Props> = () => {
                 }
               }}
             >
-              <Input name='query' value={values.query} onChange={handleChange} icon={`far ${icon}`} label={`What ${type} would you like?`} placeholder='Enter what you want here...' />
+              <Input
+                name="query"
+                value={values.query}
+                onChange={handleChange}
+                icon={`far ${icon}`}
+                label={`What ${type} would you like?`}
+                placeholder="Enter what you want here..."
+              />
 
-              <Button type='submit'>Search</Button>
+              <Button type="submit">Search</Button>
             </Form>
           </CardBody>
         </Card>
