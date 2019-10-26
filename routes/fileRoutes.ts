@@ -38,7 +38,7 @@ export const FileRoutes = Router().post('/images', async (req, res) => {
 
   let newFileName = file.name;
   if (!newFileName.endsWith('.png')) {
-    newFileName = file.name.replace(/\.{1}\w+{3,4}$/, '.png');
+    newFileName = file.name.replace(/\.{1}\w{3,4}$/, '.png');
   }
 
   const uploadPath = path.join(UPLOAD_DIR, newFileName);
