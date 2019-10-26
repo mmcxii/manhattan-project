@@ -30,7 +30,7 @@ describe('Comment Modal Tests', () => {
     );
   });
   //test modal
-  it('creates a comment', async () => {
+  it('creates a comment', async done => {
     const validComment: ICommentDocument = new Comment(commentData);
     const savedComment = await validComment.save();
 
@@ -38,10 +38,11 @@ describe('Comment Modal Tests', () => {
     expect(savedComment.text).toBe(savedComment.text);
     expect(savedComment.upvotes).toBe(savedComment.upvotes);
     expect(savedComment.downvotes).toBe(savedComment.downvotes);
+    done();
   });
 
   // Test Schema is working
-  it('insert comment but any undefined field in shema should result in undefined', async () => {
+  it('insert comment but any undefined field in shema should result in undefined', async done => {
     const commentWithInvalidField: ICommentDocument = new Comment({
       author: new ObjectID(),
       text: 'yummy yummy',
@@ -51,10 +52,11 @@ describe('Comment Modal Tests', () => {
     expect(savedCommentWithInvalidField._id).toBeDefined();
     //@ts-ignore
     expect(savedCommentWithInvalidField.time).toBeUndefined();
+    done();
   });
 
   // Test Validation is working
-  it('creating a comment without a required field should fail', async () => {
+  it('creating a comment without a required field should fail', async done => {
     const commentWithoutRequiredField = new Comment({ text: 'yum yum beer' });
     let err: any;
     try {
@@ -66,5 +68,6 @@ describe('Comment Modal Tests', () => {
     }
     expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(err.errors.author).toBeDefined();
+    done();
   });
 });

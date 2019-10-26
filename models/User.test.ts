@@ -11,8 +11,8 @@ declare global {
 const userData = {
   username: 'test1',
   admin: 'Not Admin',
-  follows: [],
-  followers: [],
+  follows: [new ObjectID()],
+  followers: [new ObjectID()],
   theme: 'light',
   highlightedFavorite: new ObjectID(),
   password: 'testpass',
@@ -35,7 +35,7 @@ describe('User Modal Test', () => {
     );
   });
   //test if model works
-  it('create & save a populated user', async () => {
+  it('create & save a populated user', async done => {
     const validUser: IUserDocument = new User(userData);
     const savedUser = await validUser.save();
     // Object Id should be defined when successfully saved to MongoDB.
@@ -50,9 +50,10 @@ describe('User Modal Test', () => {
     expect(savedUser.name).toBe(userData.name);
     expect(savedUser.age).toBe(userData.age);
     expect(savedUser.bio).toBe(userData.bio);
+    done();
   });
   // Test Schema is working
-  it('insert user but any undefined field in shema should result in undefined', async () => {
+  it('insert user but any undefined field in shema should result in undefined', async done => {
     const userWithInvalidField: IUserDocument = new User({
       username: 'Testman',
       password: 'meh',
@@ -63,10 +64,11 @@ describe('User Modal Test', () => {
     expect(savedUserWithInvalidField._id).toBeDefined();
     //@ts-ignore
     expect(savedUserWithInvalidField.nickkname).toBeUndefined();
+    done();
   });
 
   // Test Validation is working
-  it('creating a user without a required field should fail', async () => {
+  it('creating a user without a required field should fail', async done => {
     const userWithoutRequiredField = new User({ username: 'Testman' });
     let err;
     try {
@@ -78,9 +80,6 @@ describe('User Modal Test', () => {
     }
     expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(err.errors.password).toBeDefined();
-  });
-  afterAll(async done => {
-    mongoose.disconnect();
     done();
   });
 });
