@@ -23,12 +23,10 @@ interface ProductProps {
 }
 
 export interface BeerProps extends ProductProps {
-  details: {
-    desc: string;
-    ABV: number;
-    organic: boolean;
-    subtype: string;
-  };
+  desc: string;
+  ABV: number;
+  organic: boolean;
+  subtype: string;
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
 export interface CocktailProps extends ProductProps {

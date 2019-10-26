@@ -14,7 +14,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
     <>
       <img src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl} height='25' width='25' alt='(image not found)'></img>
       {item.name}
-      {item.details.ABV}
+      {/* {item.details} */}
       <hr></hr>
     </>
   );
