@@ -8,12 +8,17 @@ import User from './User';
 import SearchForm from './SearchForm';
 import Login from './Login';
 import EditUser from './EditUser';
+import CreateUser from './CreateUser';
 
 const Router: React.FC = () => (
   <PageContainer>
     <Switch>
       <Route exact path='/'>
         <Home />
+      </Route>
+
+      <Route path='/create'>
+        <CreateUser />
       </Route>
 
       <Route path='/login'>

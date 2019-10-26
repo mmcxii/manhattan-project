@@ -91,7 +91,7 @@ const Login: React.FC<Props> = () => {
             Forgot your password? Click <a href={/* TODO: Make reset password page */ ''}>here</a>.
           </small>
           <small>
-            Click <a href={/* TODO: Make create account page */ ''}>here</a> to create an account.
+            Click <a href='/create'>here</a> to create an account.
           </small>
 
           <Button type='submit'>Log In</Button>
