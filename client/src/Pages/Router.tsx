@@ -9,6 +9,7 @@ import SearchForm from './SearchForm';
 import Login from './Login';
 import EditUser from './EditUser';
 import CreateUser from './CreateUser';
+import ErrorPage from './ErrorPage';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -35,6 +36,10 @@ const Router: React.FC = () => (
 
       <Route path='/search/:type'>
         <SearchForm />
+      </Route>
+
+      <Route path='*'>
+        <ErrorPage />
       </Route>
     </Switch>
   </PageContainer>
