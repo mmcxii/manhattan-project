@@ -54,6 +54,12 @@
     "concurrently": "^4.1.2",
     "jest": "^24.9.0",
     "mongodb-memory-server-global": "^6.0.1",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "@typescript-eslint/eslint-plugin": "^2.5.0",
+    "@typescript-eslint/parser": "^2.5.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.18.2"
   }
 }
