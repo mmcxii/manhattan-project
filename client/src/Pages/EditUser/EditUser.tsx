@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { UserProps, UserContext, ProductProps } from 'Store';
 import { useForm } from 'Hooks';
 import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
-
+import { FileInput } from '../../Elements/Components/ImgUploader';
 interface Props {}
 
 const EditUser: React.FC<Props> = () => {
@@ -17,7 +17,7 @@ const EditUser: React.FC<Props> = () => {
   const [values, handleChange] = useForm({
     name: initialState.name || '',
     age: initialState.age || '',
-    bio: initialState.bio || '',
+    bio: initialState.bio || ''
   });
   const [theme, setTheme] = useState(initialState.theme);
 
@@ -27,9 +27,9 @@ const EditUser: React.FC<Props> = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${loginToken}`,
+          Authorization: `Bearer ${loginToken}`
         },
-        body: JSON.stringify({ ...values, theme }),
+        body: JSON.stringify({ ...values, theme })
       });
       const data: UserProps = await response.json();
 
@@ -37,7 +37,7 @@ const EditUser: React.FC<Props> = () => {
         username: data.username,
         theme: data.theme,
         follows: data.follows,
-        followers: data.followers,
+        followers: data.followers
       };
       if (data.name) {
         userData.name = data.name;
@@ -58,7 +58,7 @@ const EditUser: React.FC<Props> = () => {
 
   return (
     <>
-      <Card as='section'>
+      <Card as="section">
         <CardHeader>Edit Profile</CardHeader>
         <CardBody>
           <Form
@@ -68,30 +68,25 @@ const EditUser: React.FC<Props> = () => {
               saveDataToDataBase();
             }}
           >
-            <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
+            <Input name="name" value={values.name} onChange={handleChange} placeholder="Enter your name" />
+            <Input name="age" value={values.age} onChange={handleChange} type="number" placeholder="Enter your age" />
             <Input
-              name='age'
-              value={values.age}
-              onChange={handleChange}
-              type='number'
-              placeholder='Enter your age'
-            />
-            <Input
-              name='bio'
+              name="bio"
               value={values.bio}
               onChange={handleChange}
-              type='textarea'
-              placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?'
+              type="textarea"
+              placeholder="Enter a short bio about yourself. What are your favorite beverages, for example?"
             />
             <Toggle
               initialState={values.theme === 'dark'}
-              trueCondition='dark'
-              falseCondition='light'
-              name='theme'
+              trueCondition="dark"
+              falseCondition="light"
+              name="theme"
               setStateAction={setTheme}
             />
+            <FileInput />
 
-            <Button type='submit'>Save Changes</Button>
+            <Button type="submit">Save Changes</Button>
           </Form>
         </CardBody>
       </Card>
