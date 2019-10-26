@@ -9,6 +9,7 @@ export enum Status {
   Unauthorized = 401,
   Forbidden = 403,
   NotFound = 404,
+  Unprocessable = 422,
   ServerError = 500
 }
 
@@ -16,10 +17,10 @@ export const SendStatus = (res: Response, statusCode: Status): Response => {
   return res.status(statusCode).send(Status[statusCode]);
 }
 
-export const Ok = <T extends unknown>(res: Response, data: T): Response => {
+export const Ok = <T extends unknown>(res: Response, data: T, okStatus = Status.OK): Response => {
   const setMsg = typeof data === 'string';
   const resData = setMsg ? { message: data } : data;
-  return res.status(Status.OK).json(resData);
+  return res.status(okStatus).json(resData);
 }
 
 export const OkNoContent = (res: Response): Response => {
@@ -41,6 +42,11 @@ export const NotFound = (res: Response, message: string): Response => {
 export const ServerError = (res: Response, error: string | Error): Response => {
   const message = error instanceof Error ? error.message : error;
   return fillError(Status.ServerError, res, message);
+}
+
+export const Unprocessable = (res: Response, error: string | Error): Response => {
+  const message = error instanceof Error ? error.message : error;
+  return fillError(Status.Unprocessable, res, message);
 }
 
 const fillError = (status: Status, res: Response, message: string): Response => {
