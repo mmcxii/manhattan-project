@@ -17,7 +17,7 @@ const EditUser: React.FC<Props> = () => {
   const [values, handleChange] = useForm({
     name: initialState.name || '',
     age: initialState.age || '',
-    bio: initialState.bio || '',
+    bio: initialState.bio || ''
   });
   const [theme, setTheme] = useState(initialState.theme);
 
@@ -27,9 +27,9 @@ const EditUser: React.FC<Props> = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${loginToken}`,
+          Authorization: `Bearer ${loginToken}`
         },
-        body: JSON.stringify({ ...values, theme }),
+        body: JSON.stringify({ ...values, theme })
       });
       const data: UserProps = await response.json();
 
@@ -37,7 +37,7 @@ const EditUser: React.FC<Props> = () => {
         username: data.username,
         theme: data.theme,
         follows: data.follows,
-        followers: data.followers,
+        followers: data.followers
       };
       if (data.name) {
         userData.name = data.name;
@@ -69,13 +69,7 @@ const EditUser: React.FC<Props> = () => {
             }}
           >
             <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
-            <Input
-              name='age'
-              value={values.age}
-              onChange={handleChange}
-              type='number'
-              placeholder='Enter your age'
-            />
+            <Input name='age' value={values.age} onChange={handleChange} type='number' placeholder='Enter your age' />
             <Input
               name='bio'
               value={values.bio}
@@ -84,7 +78,7 @@ const EditUser: React.FC<Props> = () => {
               placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?'
             />
             <Toggle
-              initialState={values.theme === 'dark'}
+              initialState={theme === 'dark'}
               trueCondition='dark'
               falseCondition='light'
               name='theme'
