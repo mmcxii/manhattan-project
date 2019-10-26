@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
 import { useForm } from 'Hooks';
+import { red, white } from 'Utilities';
 import { Button, Card, CardHeader, CardBody, Form, Input } from 'Elements';
 
 interface Props {}
@@ -50,7 +52,12 @@ const CreateUser: React.FC<Props> = () => {
       <CardHeader>Create an Account</CardHeader>
       <CardBody>
         <p>Please enter a username and password for your account.</p>
-        {error && <p>{error}</p>}
+        {error && (
+          <ErrorMessage>
+            <CardHeader as='h3'>Error</CardHeader>
+            <CardBody>{error}</CardBody>
+          </ErrorMessage>
+        )}
         <Form
           onSubmit={e => {
             e.preventDefault();
@@ -91,3 +98,15 @@ const CreateUser: React.FC<Props> = () => {
 };
 
 export default CreateUser;
+
+const ErrorMessage = styled(Card)`
+  ${CardBody} {
+    background: ${red};
+    color: ${white};
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+`;
