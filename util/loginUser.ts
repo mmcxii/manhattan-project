@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import { Response } from 'express';
-import * as jwt from 'jsonwebtoken';
 import { IUserRequest } from '../interfaces';
 import { User, IUserDocument } from '../models';
 import { NotFound, ServerError, BadRequest, Unauthorized } from '../routes';
+import { CreateToken } from '../util/createToken';
 
 export const loginUser = async (req: IUserRequest, res: Response, next: () => void) => {
   if (!req.body) {
@@ -38,17 +38,9 @@ export const loginUser = async (req: IUserRequest, res: Response, next: () => vo
       return Unauthorized(res, 'Password incorrect.');
     }
 
-    // Create object with necessary JWT data
-    const payload = {
-      _id: user._id,
-      username: user.username,
-      admin: user.admin
-    };
+    // Create JWT and attach to request header
+    req.tokenString = CreateToken(user)
 
-    // Create JWT string and attach to request header
-    const token: string = jwt.sign(payload, 'privateKey');
-
-    req.tokenString = token;
     next();
   } catch (err) {
     return ServerError(res, `Error processing your request: ${err}`);
