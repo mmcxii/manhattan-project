@@ -9,10 +9,9 @@ interface Props {
 
 const ResultsItem: React.FC<Props> = ({ item }) => {
   console.log(item.details);
-  console.log(item.details);
 
   return (
-    <>
+    <article>
       <img
         src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl}
         height="25"
@@ -23,9 +22,8 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
       {` ABV: ${item.details.ABV}%`}
       <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
       {item.upvotes.length - item.downvotes.length}
-
-      <hr></hr>
-    </>
+      {item.details.organic === true && <i className="fas fa-seedling" />}
+    </article>
   );
 };
 
