@@ -1,6 +1,7 @@
 import mongoose, { Connection } from 'mongoose';
 
-const DB_URI: string = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
+const DB_URI: string =
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
 
 export default {
   connect: (): Promise<void | Connection> => {
@@ -11,6 +12,8 @@ export default {
         useUnifiedTopology: true,
         useFindAndModify: false
       })
-      .then(db => db.connection.on('error', error => console.log(`DB ERROR: ${error}`)));
-  },
+      .then(db =>
+        db.connection.on('error', error => console.log(`DB ERROR: ${error}`))
+      );
+  }
 };

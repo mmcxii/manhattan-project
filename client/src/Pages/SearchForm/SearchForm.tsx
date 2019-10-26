@@ -4,28 +4,41 @@ import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
+import ResultsItem from './ResultsItem';
+// import console = require('console');
 
 // TODO: Austin display search results
-// TODO: Define props for data returned from fetch call
 
 interface Props {}
 
 interface ProductProps {
   _id: string;
+  type: number;
+  extID: string;
   name: string;
+  upvotes: string[];
+  downvotes: string[];
+  imgUrl: string;
+  details: BeerProps;
 }
 
-interface BeerProps extends ProductProps {
-  // TODO: Define search result props here
+export interface BeerProps extends ProductProps {
+  desc: string;
+  ABV?: number;
+  organic: boolean;
+  subtype: string;
 }
-
-interface CocktailProps extends ProductProps {
-  // TODO: Define search result props here
+// abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
+export interface CocktailProps extends ProductProps {
+  glassType: string;
+  directions: string;
+  image: string[];
+  ingrediants: string;
 }
-
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
-  const [searchResults, setSearchResults] = useState<BeerProps[] | CocktailProps[]>([]);
+  const [beerResults, setBeerResults] = useState<BeerProps[]>([]);
+  const [cocktailResults, setCocktailResults] = useState<CocktailProps[]>([]);
   const [values, handleChange] = useForm({ query: '' });
   const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
 
@@ -33,12 +46,22 @@ const SearchForm: React.FC<Props> = () => {
     try {
       const params = queryString.stringify(values);
       const response: Response = await fetch(`/api/products?type=${mode}&${params}`, {
-        method: 'GET',
+        method: 'GET'
       });
 
-      const data: BeerProps[] | CocktailProps[] = await response.json();
+      if (mode === 'beer') {
+        const data: BeerProps[] = await response.json();
+        console.log(data);
 
-      setSearchResults(data);
+        return setBeerResults(data);
+      }
+
+      if (mode === 'cocktail') {
+        const data: CocktailProps[] = await response.json();
+        console.log(data);
+
+        return setCocktailResults(data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -46,8 +69,8 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
-      {searchResults.length === 0 ? (
-        <Card as='section'>
+      {beerResults.length === 0 ? (
+        <Card as="section">
           <CardHeader>{type} search</CardHeader>
           <CardBody>
             <Form
@@ -60,15 +83,15 @@ const SearchForm: React.FC<Props> = () => {
               }}
             >
               <Input
-                name='query'
+                name="query"
                 value={values.query}
                 onChange={handleChange}
                 icon={`far ${icon}`}
                 label={`What ${type} would you like?`}
-                placeholder='Enter what you want here...'
+                placeholder="Enter what you want here..."
               />
 
-              <Button type='submit'>Search</Button>
+              <Button type="submit">Search</Button>
             </Form>
           </CardBody>
         </Card>
@@ -76,9 +99,8 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
-            {searchResults.map(item => (
-              <p key={item._id}>{item.name}</p>
-            ))}
+            {beerResults.length > 0 && beerResults.map(item => <ResultsItem key={item._id} item={item} />)}
+            {cocktailResults.length > 0 && cocktailResults.map(item => <ResultsItem key={item._id} item={item} />)}
           </CardBody>
         </Card>
       )}
