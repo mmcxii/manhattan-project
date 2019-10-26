@@ -16,22 +16,19 @@ interface ProductProps {
   type: number;
   extID: string;
   name: string;
+  upvote: string[];
+  downvote: string[];
+  imgUrl: string;
   details: BeerProps[];
 }
 
 export interface BeerProps extends ProductProps {
-  desc: string;
-  image: {
-    contentAwareIcon: string;
-    contentAwareLarge: string;
-    contentAwareMedium: string;
-    icon: string;
-    large: string;
-    medium: string;
-  }[];
-  ABV: number;
-  organic: boolean;
-  subtype: string;
+  details: {
+    desc: string;
+    ABV: number;
+    organic: boolean;
+    subtype: string;
+  };
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
 export interface CocktailProps extends ProductProps {
