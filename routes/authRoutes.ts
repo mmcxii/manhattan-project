@@ -1,18 +1,15 @@
 import express, { Router } from 'express';
-import { User, UserData } from '../models';
+import { User, UserData, IUserDocument } from '../models';
 import { IUser, IUserRequest, IUserToken } from '../interfaces';
 import bcrypt from 'bcrypt';
 import { loginUser } from '../util/loginUser';
 import { validateToken } from '../util/validateToken';
 import { Status, NotFound, ServerError, BadRequest, Ok, Unprocessable, Unauthorized } from './Status';
+import { CreateToken } from '../util/createToken';
 
 const PW_LENGTH = 4;
 
-async function registerUser(
-  username: string,
-  password: string,
-  admin: string
-): Promise<IUser | Error> {
+async function registerUser(username: string, password: string, admin: string): Promise<IUser | Error> {
   try {
     // Encrypt user password
     const encrypted = await bcrypt.hash(password, 10);
@@ -60,8 +57,15 @@ export const AuthRoutes = Router()
       if (newUser instanceof Error) {
         throw newUser;
       }
+      //find the new users document
+      const newUserDocument: IUserDocument | null = await User.findOne({ username });
+      //create user data with new token
+      const userData = {
+        token: CreateToken(newUserDocument),
+        user: new UserData(newUser)
+      };
 
-      return Ok(res, new UserData(newUser), Status.Created);
+      return Ok(res, userData);
     } catch (err) {
       return ServerError(res, `Error creating user ${err}`);
     }
