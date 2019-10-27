@@ -12,6 +12,7 @@ export interface UserProps {
   favorites?: string[];
   follows?: UserProps[];
   followers?: UserProps[];
+  imgUrl?: string;
 }
 
 interface ActionProps {
