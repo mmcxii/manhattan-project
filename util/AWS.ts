@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import { BucketName } from 'aws-sdk/clients/iotanalytics';
 import { IUserRequest, IUserToken, IUser } from '../interfaces';
 import { User, IUserDocument, UserData } from '../models';
-import { BadRequest, ServerError, Status, SendStatus, Ok } from '../routes/Status';
+import { ServerError, NotFound, Ok } from '../routes/Status';
 import { Response } from 'express';
 
 const S3_BUCKET: BucketName = process.env.S3_BUCKET || '';
@@ -40,7 +40,7 @@ export const s3methods = {
         return Ok(res, userData);
       }
 
-      return ServerError(res, `Could not update image for ${username} because username does not exist.`);
+      return NotFound(res, `Could not update image for ${username} because username does not exist.`);
       
     } catch (err) {
       return ServerError(res, err);
