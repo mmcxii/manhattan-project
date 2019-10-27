@@ -88,7 +88,8 @@ const Login: React.FC<Props> = () => {
             icon='fas fa-lock'
           />
           <small>
-            Forgot your password? Click <a href={/* TODO: Make reset password page */ ''}>here</a>.
+            {/* * TODO: Make reset password page -> update anchor href */}
+            Forgot your password? Click <a href={window.location.href}>here</a>.
           </small>
           <small>
             Click <a href='/create'>here</a> to create an account.

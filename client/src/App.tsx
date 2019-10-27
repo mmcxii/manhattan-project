@@ -21,7 +21,7 @@ const App: React.FC = () => {
     if (user.theme !== theme) {
       toggleTheme();
     }
-  }, [user]);
+  }, [user, theme, toggleTheme]);
 
   return (
     <>
@@ -58,7 +58,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
   #root {
     display: flex;
     flex-direction: column;
-    
+
     background: ${props => (props.theme === 'dark' ? black : white)};
     color: ${props => (props.theme === 'dark' ? white : black)};
     ${props =>
@@ -77,13 +77,13 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
   h1,h2,h3,h4,h5,h6 {
     font-family: 'Cinzel', serif;
   }
-  
+
   a {
     color: inherit;
   }
-  
+
   header, footer {
-    background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};    
+    background: ${props => (props.theme === 'dark' ? blackDark : whiteLight)};
   }
 
   ${CardHeader} {
@@ -94,7 +94,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
     background: ${props => (props.theme === 'dark' ? grey : white)};
     border: 1px solid ${props => (props.theme === 'dark' ? blackDark : grey)};
   }
-  
+
   ${Button}, ${ButtonLink} {
     color: ${props => (props.theme === 'dark' ? black : white)};
     background: ${props => (props.theme === 'dark' ? white : grey)};
