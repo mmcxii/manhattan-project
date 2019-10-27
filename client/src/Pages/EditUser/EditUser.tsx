@@ -57,7 +57,7 @@ const EditUser: React.FC<Props> = () => {
 
   return (
     <>
-      <Card as="section">
+      <Card as='section'>
         <CardHeader>Edit Profile</CardHeader>
         <CardBody>
           <Form
@@ -70,11 +70,11 @@ const EditUser: React.FC<Props> = () => {
             <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
             <Input name='age' value={values.age} onChange={handleChange} type='number' placeholder='Enter your age' />
             <Input
-              name="bio"
+              name='bio'
               value={values.bio}
               onChange={handleChange}
-              type="textarea"
-              placeholder="Enter a short bio about yourself. What are your favorite beverages, for example?"
+              type='textarea'
+              placeholder='Enter a short bio about yourself. What are your favorite beverages, for example?'
             />
             <Toggle
               initialState={theme === 'dark'}
@@ -84,7 +84,7 @@ const EditUser: React.FC<Props> = () => {
               setStateAction={setTheme}
             />
 
-            <Button type="submit">Save Changes</Button>
+            <Button type='submit'>Save Changes</Button>
           </Form>
         </CardBody>
       </Card>
