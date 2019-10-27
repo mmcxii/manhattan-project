@@ -36,10 +36,11 @@ export const s3methods = {
 
       if (user) {
         const userData = new UserData(user);
-        return Ok(res, user);
+        console.log(userData);
+        return Ok(res, userData);
       }
 
-      return ServerError(res, `Could not update image for ${username}`);
+      return ServerError(res, `Could not update image for ${username} because username does not exist.`);
       
     } catch (err) {
       return ServerError(res, err);
