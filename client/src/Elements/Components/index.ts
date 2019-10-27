@@ -3,3 +3,5 @@ export * from './Card';
 export * from './Form';
 export * from './Icon';
 export * from './Toggle';
+export * from './Avatar';
+export * from './AvatarUpdater';
