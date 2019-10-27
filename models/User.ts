@@ -11,6 +11,7 @@ export class UserData {
   name?: string;
   age?: number;
   bio?: string;
+  imgUrl?: string;
 
   constructor(user: IUser) {
     this.username = user.username;
@@ -21,6 +22,7 @@ export class UserData {
     this.name = user.name;
     this.age = user.age;
     this.bio = user.bio;
+    this.imgUrl = user.imgUrl;
   }
 }
 
@@ -77,6 +79,9 @@ const userSchema = new Schema({
   highlightedFavorite: {
     type: Types.ObjectId,
     ref: 'Product'
+  },
+  imgUrl: {
+    Type: Types.String
   },
   theme: {
     type: Types.String,

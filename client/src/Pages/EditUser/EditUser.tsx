@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { UserProps, UserContext, ProductProps } from 'Store';
 import { useForm } from 'Hooks';
 import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
-
 interface Props {}
 
 const EditUser: React.FC<Props> = () => {
