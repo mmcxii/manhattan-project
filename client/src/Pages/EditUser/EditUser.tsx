@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { UserProps, UserContext, ProductProps } from 'Store';
 import { useForm } from 'Hooks';
 import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
-import { FileInput } from '../../Elements/Components/ImgUploader';
 interface Props {}
 
 const EditUser: React.FC<Props> = () => {
@@ -68,8 +67,8 @@ const EditUser: React.FC<Props> = () => {
               saveDataToDataBase();
             }}
           >
-            <Input name="name" value={values.name} onChange={handleChange} placeholder="Enter your name" />
-            <Input name="age" value={values.age} onChange={handleChange} type="number" placeholder="Enter your age" />
+            <Input name='name' value={values.name} onChange={handleChange} placeholder='Enter your name' />
+            <Input name='age' value={values.age} onChange={handleChange} type='number' placeholder='Enter your age' />
             <Input
               name="bio"
               value={values.bio}
@@ -78,10 +77,10 @@ const EditUser: React.FC<Props> = () => {
               placeholder="Enter a short bio about yourself. What are your favorite beverages, for example?"
             />
             <Toggle
-              initialState={values.theme === 'dark'}
-              trueCondition="dark"
-              falseCondition="light"
-              name="theme"
+              initialState={theme === 'dark'}
+              trueCondition='dark'
+              falseCondition='light'
+              name='theme'
               setStateAction={setTheme}
             />
 
