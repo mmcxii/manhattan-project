@@ -84,7 +84,6 @@ const EditUser: React.FC<Props> = () => {
               name="theme"
               setStateAction={setTheme}
             />
-            <FileInput />
 
             <Button type="submit">Save Changes</Button>
           </Form>
