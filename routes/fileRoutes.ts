@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import sharp from 'sharp';
-import { BadRequest, ServerError, Status, SendStatus } from './Status';
+import { BadRequest, ServerError, Status, SendStatus, Ok } from './Status';
 import { s3methods } from '../util/AWS';
+import { IUserRequest } from '../interfaces';
+import { Response } from 'express';
 // Define image resize width
 const IMG_WIDTH = 350;
 
 // File router
-export const FileRoutes = Router().post('/images', async (req, res) => {
+export const FileRoutes = Router().post('/images', async (req: IUserRequest, res: Response) => {
   if (!req.files) {
     return BadRequest(res, 'No files to upload.');
   }
@@ -29,12 +31,8 @@ export const FileRoutes = Router().post('/images', async (req, res) => {
       .png()
       .toBuffer();
 
-    const success = await s3methods.uploadImg('nich', resized);
-    if (success) {
-      return SendStatus(res, Status.Created);
-    } else {
-      return res.sendStatus(500);
-    }
+      return s3methods.uploadImg(req, res, resized);
+
   } catch (error) {
     return ServerError(res, error);
   }

@@ -1,5 +1,9 @@
 import AWS from 'aws-sdk';
 import { BucketName } from 'aws-sdk/clients/iotanalytics';
+import { IUserRequest, IUserToken, IUser } from '../interfaces';
+import { User, IUserDocument, UserData } from '../models';
+import { BadRequest, ServerError, Status, SendStatus, Ok } from '../routes/Status';
+import { Response } from 'express';
 
 const S3_BUCKET: BucketName = process.env.S3_BUCKET || '';
 
@@ -11,19 +15,34 @@ const s3 = new AWS.S3({
 });
 
 export const s3methods = {
-  uploadImg: async function(username: string, img: Buffer): Promise<boolean> {
+  uploadImg: async function(req: IUserRequest, res: Response, img: Buffer) {
+    
+    const { _id, username } = req.token as IUserToken;
+    
     try {
       const data = await s3.upload({
         Bucket: S3_BUCKET,
-        Key: `${username}/avatar.png`,
+        Key: `${_id}/avatar.png`,
         Body: img,
         ContentType: 'image/png',
         ACL: 'public-read'
       });
+      
       const success = await data.promise();
-      return true;
+      
+      const user: IUserDocument | null = await User.findOneAndUpdate({ _id }, {imgUrl: success.Location}, {
+        new: true
+      });
+
+      if (user) {
+        const userData = new UserData(user);
+        return Ok(res, user);
+      }
+
+      return ServerError(res, `Could not update image for ${username}`);
+      
     } catch (err) {
-      return false;
+      return ServerError(res, err);
     }
   }
 };
