@@ -10,7 +10,6 @@ interface Props {}
 
 const User: React.FC<Props> = () => {
   const { username } = useParams();
-  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInfo, setProfileInfo] = useState<UserProps | null>(null);
 
   useEffect(() => {
@@ -29,7 +28,6 @@ const User: React.FC<Props> = () => {
         }
 
         // Update state with returned information
-        setIsUsersProfile(profileCheck);
         setProfileInfo(data);
       } catch (err) {
         console.log(err);
@@ -43,7 +41,7 @@ const User: React.FC<Props> = () => {
     <>
       {profileInfo ? (
         <>
-          <UserInfo profileInfo={profileInfo} isUsersProfile={isUsersProfile} />
+          <UserInfo profileInfo={profileInfo} />
 
           <FavoritesSection profileInfo={profileInfo} />
 
