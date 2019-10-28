@@ -62,7 +62,7 @@ export const AvatarUpdater: React.FC<Props> = (props: Props) => {
         localStorage.setItem('userInfo', JSON.stringify(userData));
       }
     } catch (error) {
-      // Todo - handle upload error
+      alert(`Upload error: ${error.message}`);
     } finally {
       selectFile(null);
     }
