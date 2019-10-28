@@ -8,7 +8,6 @@ interface Props {
 }
 
 const ResultsItem: React.FC<Props> = ({ item }) => {
-  console.log(item.details);
 
   return (
     <article>
@@ -16,7 +15,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
         src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl}
         height="25"
         width="25"
-        alt="(image not found)"
+        alt="Search Result Item"
       ></img>
       {item.name}
       {` ABV: ${item.details.ABV}%`}
