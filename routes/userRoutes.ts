@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { User, IUserDocument, UserData } from '../models';
 import { NotFound, ServerError, BadRequest, Ok, OkNoContent, SendStatus } from './Status';
 import { IUserToken, IUserRequest } from '../interfaces';
+import { s3methods } from '../util/AWS';
 
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
@@ -62,6 +63,7 @@ export const UserRoutes = Router()
     const { _id } = req.token as IUserToken;
 
     try {
+      const deleted = await s3methods.deleteImg(_id)
       const response = await User.deleteOne({ username });
 
       if (!response.ok) {
@@ -70,6 +72,10 @@ export const UserRoutes = Router()
 
       if (!response.deletedCount || response.deletedCount === 0) {
         return OkNoContent(res);
+      }
+
+      if (deleted.Errors && deleted.Errors.length) {
+        return ServerError(res, 'Error deleting User Image.');
       }
 
       return Ok(res, `User ${username} deleted.`);
