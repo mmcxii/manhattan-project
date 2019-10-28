@@ -16,8 +16,15 @@ const Logo: React.FC<Props> = () => (
 export default Logo;
 
 const Wrapper = styled(Link)`
+  grid-area: logo;
+
   display: flex;
+  justify-content: center;
   text-decoration: none;
+
+  @media screen and (min-width: 768px) {
+    justify-self: flex-start;
+  }
 `;
 
 const Icon = styled.i`

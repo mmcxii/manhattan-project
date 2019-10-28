@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { ThemeContext, UserContext } from 'Store';
 import { white, spacing, transition, absolute, red, fadeIn, fadeOut, black } from 'Utilities';
 import NavItem from './NavItem';
-import NavDropdown from './NavDropdown';
 
 interface Props {}
 
@@ -38,7 +37,6 @@ const Nav: React.FC<Props> = () => {
         {navItems.map(item => (
           <NavItem key={item.page} {...item} hideNav={toggleNav} theme={theme} />
         ))}
-        <NavDropdown />
       </NavList>
     </Navbar>
   );
@@ -47,6 +45,8 @@ const Nav: React.FC<Props> = () => {
 export default Nav;
 
 const Navbar = styled.nav`
+  grid-area: nav;
+
   padding: ${spacing.md} 0;
   text-transform: capitalize;
 `;

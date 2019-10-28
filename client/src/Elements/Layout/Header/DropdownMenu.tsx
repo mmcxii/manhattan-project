@@ -6,31 +6,45 @@ import { white, spacing, black } from 'Utilities';
 
 interface Props {}
 
-const NavDropdown: React.FC<Props> = () => {
+const DropdownMenu: React.FC<Props> = () => {
   const { theme } = useContext(ThemeContext);
   const [dropdownIsOpen, setDropdownIsOpen] = useState<boolean>(false);
   const navDropdown: { closedIcon: 'fas fa-sort-down'; openedIcon: 'fas fa-sort-up'; options: [] } = {
     closedIcon: 'fas fa-sort-down',
     openedIcon: 'fas fa-sort-up',
-    options: []
+    options: [
+      // TODO: Edit User Info
+      // TODO: Log Out
+    ]
   };
 
   return (
     <Wrapper theme={theme}>
-      <i className={dropdownIsOpen ? navDropdown.openedIcon : navDropdown.closedIcon} />
+      <DropdownToggle>
+        <i className={dropdownIsOpen ? navDropdown.openedIcon : navDropdown.closedIcon} />
+      </DropdownToggle>
     </Wrapper>
   );
 };
 
-export default NavDropdown;
+export default DropdownMenu;
 
 const DropdownToggle = styled.button`
+  cursor: pointer;
   background: transparent;
   border: none;
 `;
 
-const Wrapper = styled.li<{ theme: 'dark' | 'light' }>`
-  color: ${white};
+const Wrapper = styled.div<{ theme: 'dark' | 'light' }>`
+  grid-area: dropdown;
+
+  > ${DropdownToggle} {
+    color: inherit;
+
+    > svg {
+      color: inherit;
+    }
+  }
 
   @media screen and (min-width: 768px) {
     padding: 0 ${spacing.md};
