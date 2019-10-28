@@ -21,10 +21,10 @@ const Wrapper = styled(Link)`
 `;
 
 const Icon = styled.i`
-  font-size: 25px;
-  line-height: 50px;
-  height: 50px;
-  width: 50px !important;
+  font-size: 15px;
+  line-height: 30px;
+  height: 30px;
+  width: 30px !important;
   border-radius: 50%;
   background: ${red};
 
@@ -35,7 +35,7 @@ const Icon = styled.i`
 
 const Text = styled.h1`
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
   display: none;
   letter-spacing: 2px;
 

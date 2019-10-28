@@ -32,9 +32,9 @@ const HeaderContainer = styled(Container)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: ${spacing.md} 0;
+  padding: ${spacing.xs} 0;
 
   @media screen and (min-width: 768px) {
-    flex-direction: column;
+    justify-content: space-between;
   }
 `;

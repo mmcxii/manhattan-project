@@ -48,7 +48,7 @@ const Router: React.FC = () => (
 export default Router;
 
 const PageContainer = styled(Container).attrs({ as: 'main' })`
-  --header-offset: 85px;
+  --header-offset: 45px;
 
   padding-top: var(--header-offset);
   min-height: 100vh;
@@ -56,6 +56,6 @@ const PageContainer = styled(Container).attrs({ as: 'main' })`
   flex-direction: column;
 
   @media screen and (min-width: 768px) {
-    --header-offset: 140px;
+    --header-offset: 65px;
   }
 `;
