@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { ButtonLink, Card, CardHeader, CardBody, AvatarLg } from 'Elements';
-import { spacing } from 'Utilities';
+import { Card, CardHeader, CardBody, AvatarLg } from 'Elements';
 
 interface Props {
   profileInfo: UserProps;

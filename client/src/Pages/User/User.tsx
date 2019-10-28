@@ -19,14 +19,6 @@ const User: React.FC<Props> = () => {
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
         const data: UserProps = await response.json();
 
-        // Compare current profile against current user info
-        // If the check passes the edit profile button will be rendered
-        const lsUserInfo = localStorage.getItem('userInfo');
-        let profileCheck: boolean = false;
-        if (lsUserInfo) {
-          profileCheck = username === JSON.parse(lsUserInfo).username;
-        }
-
         // Update state with returned information
         setProfileInfo(data);
       } catch (err) {
