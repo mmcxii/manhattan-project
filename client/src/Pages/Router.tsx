@@ -10,6 +10,7 @@ import Login from './Login';
 import EditUser from './EditUser';
 import CreateUser from './CreateUser';
 import ErrorPage from './ErrorPage';
+import Logout from './Logout';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -24,6 +25,10 @@ const Router: React.FC = () => (
 
       <Route path='/login'>
         <Login />
+      </Route>
+
+      <Route path='/logout'>
+        <Logout />
       </Route>
 
       <Route path='/user/:username'>
