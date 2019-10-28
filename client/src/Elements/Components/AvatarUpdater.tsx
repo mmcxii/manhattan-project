@@ -31,6 +31,7 @@ export const AvatarUpdater: React.FC<Props> = (props: Props) => {
   const uploadFile = async function(evt: React.MouseEvent<HTMLElement, MouseEvent>) {
     evt.preventDefault();
     if (file == null) {
+      alert('No file to upload. Select a file.');
       return;
     }
 
@@ -41,6 +42,8 @@ export const AvatarUpdater: React.FC<Props> = (props: Props) => {
     const token: string | null = localStorage.getItem('loginToken');
     if (token == null) {
       // No auth token
+      alert('Not authorized. Please log in.');
+      window.location.href = '/';
       return;
     }
 
