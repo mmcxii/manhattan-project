@@ -10,6 +10,7 @@ import Login from './Login';
 import EditUser from './EditUser';
 import CreateUser from './CreateUser';
 import ErrorPage from './ErrorPage';
+import ProductDetail from './ProductDetail';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -36,6 +37,10 @@ const Router: React.FC = () => (
 
       <Route path='/search/:type'>
         <SearchForm />
+      </Route>
+
+      <Route path='/:productId/detail'>
+        <ProductDetail />
       </Route>
 
       <Route path='*'>
