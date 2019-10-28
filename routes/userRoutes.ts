@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { User, IUserDocument, UserData } from '../models';
 import { NotFound, ServerError, BadRequest, Ok, OkNoContent, SendStatus } from './Status';
+import { IUserToken, IUserRequest } from '../interfaces';
 
 export const UserRoutes = Router()
   .get('/', async (req, res) => {
@@ -54,10 +55,11 @@ export const UserRoutes = Router()
       return ServerError(res, error);
     }
   })
-  .delete('/:username', async (req, res) => {
+  .delete('/:username', async (req: IUserRequest, res) => {
     // Delete a User
     // TODO - should be controlled via some Admin flag or equivalent
     const username = req.params.username.trim().toLowerCase();
+    const { _id } = req.token as IUserToken;
 
     try {
       const response = await User.deleteOne({ username });
