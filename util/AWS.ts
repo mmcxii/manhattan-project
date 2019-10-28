@@ -4,6 +4,7 @@ import { IUserRequest, IUserToken } from '../interfaces';
 import { User, IUserDocument, UserData } from '../models';
 import { NotFound, Ok } from '../routes/Status';
 import { Response } from 'express';
+import { Delete } from 'aws-sdk/clients/s3';
 
 const S3_BUCKET: BucketName = process.env.S3_BUCKET || '';
 
@@ -43,5 +44,16 @@ export const s3methods = {
     const userData = new UserData(user);
 
     return Ok(res, userData);
+  },
+  deleteImg: async function (_id: string) {
+
+    const data = await s3.deleteObjects({
+      Bucket: S3_BUCKET,
+      Delete: {
+        Objects: [{Key: `${_id}/avatar.png`,}]
+      } 
+    })
+
+    console.log(data);
   }
 };
