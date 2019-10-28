@@ -29,6 +29,7 @@ const Login: React.FC<Props> = () => {
           bio?: string;
           follows: UserProps[];
           followers: UserProps[];
+          imgUrl?: string
         };
       } = await response.json();
 
@@ -47,6 +48,9 @@ const Login: React.FC<Props> = () => {
       }
       if (data.user.bio) {
         userData.bio = data.user.bio;
+      }
+      if (data.user.imgUrl) {
+        userData.imgUrl = data.user.imgUrl;
       }
 
       localStorage.setItem('loginToken', loginToken);

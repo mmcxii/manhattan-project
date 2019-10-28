@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import { UserProps, UserContext } from 'Store';
 import { useForm } from 'Hooks';
-import { Card, Form, Input, Button, CardBody, CardHeader, Toggle } from 'Elements';
+import { Card, Form, Input, Button, CardBody, CardHeader, Toggle, AvatarUpdater } from 'Elements';
+
 interface Props {}
 
 const EditUser: React.FC<Props> = () => {
@@ -58,7 +59,13 @@ const EditUser: React.FC<Props> = () => {
   return (
     <>
       <Card as='section'>
-        <CardHeader>Edit Profile</CardHeader>
+        <CardHeader>Edit Avatar</CardHeader>
+        <CardBody>
+          <AvatarUpdater />
+        </CardBody>
+      </Card>
+      <Card as='section'>
+        <CardHeader>Edit Information</CardHeader>
         <CardBody>
           <Form
             onSubmit={e => {

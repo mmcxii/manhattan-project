@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ThemeContext } from 'Store';
-import { spacing, transition, white, red, black, elevation } from 'Utilities';
+import { spacing, transition, green, white, red, black, elevation, rounded } from 'Utilities';
 
 interface Props {
   icon: string;
+  onClick?: (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export const Icon: React.FC<Props> = ({ icon }) => {
@@ -15,6 +16,16 @@ export const Icon: React.FC<Props> = ({ icon }) => {
     <Wrapper theme={theme}>
       <I className={icon} />
     </Wrapper>
+  );
+};
+
+export const IconButton: React.FC<Props> = (props: Props) => {
+  const { theme } = useContext(ThemeContext);
+
+  return (
+    <ButtonWrapper theme={theme} onClick={props.onClick}>
+      <BtnI className={props.icon} /> Upload
+    </ButtonWrapper>
   );
 };
 
@@ -34,7 +45,33 @@ const Wrapper = styled.div<{ theme: string }>`
   }
 `;
 
+const ButtonWrapper = styled.button<{ theme: string }>`
+  ${transition({})};
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  border: none;
+  padding: ${spacing.sm} ${spacing.xl};
+  margin: ${spacing.sm} 0;
+  border-radius: ${rounded};
+  cursor: pointer;
+  color: ${black};
+  background-color: ${white};
+  outline: none;
+  :hover {
+    background-color: ${green};
+  }
+  :active {
+    background-color: ${white};
+    color: ${green};
+  }
+`;
+
 const I = styled.i`
   color: ${white};
   filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.7));
+`;
+
+const BtnI = styled.i`
+  color: ${black};
 `;

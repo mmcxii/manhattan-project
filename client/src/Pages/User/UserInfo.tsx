@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { ButtonLink, Card, CardHeader, CardBody } from 'Elements';
+import { ButtonLink, Card, CardHeader, CardBody, AvatarLg } from 'Elements';
 import { spacing } from 'Utilities';
 
 interface Props {
@@ -21,6 +21,7 @@ const UserInfo: React.FC<Props> = ({ isUsersProfile, profileInfo }) => (
       <InfoContent>
         {profileInfo.age && <small>{profileInfo.age}</small>}
         {profileInfo.bio && <p>{profileInfo.bio}</p>}
+        {profileInfo.imgUrl && <AvatarLg src={profileInfo.imgUrl} />}
       </InfoContent>
     </Info>
   </Wrapper>
@@ -38,7 +39,7 @@ const Info = styled(CardBody)<{ isUsersProfile: boolean }>`
     grid-template-rows: max-content 1fr;
     grid-template-areas: 'edit-profile-button' 'content';
     grid-gap: ${spacing.sm};
-    
+
     @media screen and (min-width: 768px) {
       grid-template-columns: 1fr max-content;
       grid-template-areas: 'content edit-profile-button' 'content .';
