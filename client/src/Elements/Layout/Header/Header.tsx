@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
+import { UserContext } from 'Store';
 import { spacing } from 'Utilities';
 import Container from '../Container';
 import Nav from './Nav';
@@ -10,12 +11,13 @@ import DropdownMenu from './DropdownMenu';
 interface Props {}
 
 const Header: React.FC<Props> = () => {
+  const { user } = useContext(UserContext);
   return (
     <Wrapper>
       <HeaderContainer>
         <Logo />
         <Nav />
-        <DropdownMenu />
+        {user.username !== '' && <DropdownMenu />}
       </HeaderContainer>
     </Wrapper>
   );
