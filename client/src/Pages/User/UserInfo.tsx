@@ -2,22 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
-import { ButtonLink, Card, CardHeader, CardBody, AvatarLg } from 'Elements';
-import { spacing } from 'Utilities';
+import { Card, CardHeader, CardBody, AvatarLg } from 'Elements';
 
 interface Props {
-  isUsersProfile: boolean;
   profileInfo: UserProps;
 }
 
-const UserInfo: React.FC<Props> = ({ isUsersProfile, profileInfo }) => (
+const UserInfo: React.FC<Props> = ({ profileInfo }) => (
   <Wrapper>
     <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
-    <Info isUsersProfile={isUsersProfile}>
-      {isUsersProfile && (
-        <EditProfileButton to={`/edit/${profileInfo.username}`}>Edit information</EditProfileButton>
-      )}
-
+    <Info>
       <InfoContent>
         {profileInfo.age && <small>{profileInfo.age}</small>}
         {profileInfo.bio && <p>{profileInfo.bio}</p>}
@@ -31,30 +25,6 @@ export default UserInfo;
 
 const Wrapper = styled(Card).attrs({ as: 'section' })``;
 
-const Info = styled(CardBody)<{ isUsersProfile: boolean }>`
-  display: grid;
-  ${props =>
-    props.isUsersProfile
-      ? `
-    grid-template-rows: max-content 1fr;
-    grid-template-areas: 'edit-profile-button' 'content';
-    grid-gap: ${spacing.sm};
+const Info = styled(CardBody)``;
 
-    @media screen and (min-width: 768px) {
-      grid-template-columns: 1fr max-content;
-      grid-template-areas: 'content edit-profile-button' 'content .';
-    }
-    `
-      : `
-    grid-template-rows: 1fr;
-    grid-template-areas: 'content';
-    `};
-`;
-
-const EditProfileButton = styled(ButtonLink)`
-  grid-area: edit-profile-button;
-`;
-
-const InfoContent = styled.div`
-  grid-area: content;
-`;
+const InfoContent = styled.div``;
