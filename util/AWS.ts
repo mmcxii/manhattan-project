@@ -4,6 +4,7 @@ import { IUserRequest, IUserToken } from '../interfaces';
 import { User, IUserDocument, UserData } from '../models';
 import { NotFound, Ok } from '../routes/Status';
 import { Response } from 'express';
+import { ObjectID } from "bson";
 
 const S3_BUCKET: BucketName = process.env.S3_BUCKET || '';
 
@@ -24,13 +25,12 @@ export const s3methods = {
       Body: img,
       ContentType: 'image/png',
       ACL: 'public-read'
-    });
-
-    const success = await data.promise();
+    })
+    .promise();
 
     const user: IUserDocument | null = await User.findOneAndUpdate(
       { _id },
-      { imgUrl: success.Location },
+      { imgUrl: data.Location },
       {
         new: true
       }
@@ -43,5 +43,16 @@ export const s3methods = {
     const userData = new UserData(user);
 
     return Ok(res, userData);
+  },
+  deleteImg: async function (_id: ObjectID ) {
+    const data = await s3.deleteObjects({
+      Bucket: S3_BUCKET,
+      Delete: {
+        Objects: [{Key: `${_id}/avatar.png`,}]
+      } 
+    })
+    .promise();
+
+    return data;
   }
 };
