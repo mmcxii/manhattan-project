@@ -12,7 +12,9 @@ var app = express();
 
 var PORT = process.env.PORT || 6969;
 var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
+console.log(process.env.MONGODB_URI);
 let BEER_KEY = process.env.BEER_KEY;
+console.log(process.env.TEST);
 let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
   useNewUrlParser: true
@@ -78,7 +80,12 @@ app.post('/seed/cocktail', function(req, res) {
 });
 
 app.delete('/deleteall/mixed', async (req, res) => {
-  const deleted = await product.deleteMany({'type': "MIXED"})
+  const deleted = await product.deleteMany({ type: 'MIXED' });
+  console.log(deleted);
+})
+
+app.delete('/deleteall/beer', async (req, res) => {
+  const deleted = await product.deleteMany({ type: 'BEER' });
   console.log(deleted);
 })
 
