@@ -77,6 +77,11 @@ app.post('/seed/cocktail', function(req, res) {
   dumpMixed();
 });
 
+app.delete('/deleteall/mixed', async (req, res) => {
+  const deleted = await product.deleteMany({'type': "MIXED"})
+  console.log(deleted);
+})
+
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
 });
