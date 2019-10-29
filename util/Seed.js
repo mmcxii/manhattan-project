@@ -230,7 +230,7 @@ const cocktaildb = async queryArray => {
       for (let j in ingredientNum) {
         if (ingredientNum[j] != null || ingredientNum[j] === '') {
           ingredients.push({
-            ingredient: ingredientNum[j],
+            name: ingredientNum[j],
             measurement: ingredientMeasure[j]
           });
         }
