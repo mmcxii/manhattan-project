@@ -10,7 +10,6 @@ interface Props {}
 
 const User: React.FC<Props> = () => {
   const { username } = useParams();
-  const [isUsersProfile, setIsUsersProfile] = useState<boolean>(false);
   const [profileInfo, setProfileInfo] = useState<UserProps | null>(null);
 
   useEffect(() => {
@@ -20,16 +19,7 @@ const User: React.FC<Props> = () => {
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
         const data: UserProps = await response.json();
 
-        // Compare current profile against current user info
-        // If the check passes the edit profile button will be rendered
-        const lsUserInfo = localStorage.getItem('userInfo');
-        let profileCheck: boolean = false;
-        if (lsUserInfo) {
-          profileCheck = username === JSON.parse(lsUserInfo).username;
-        }
-
         // Update state with returned information
-        setIsUsersProfile(profileCheck);
         setProfileInfo(data);
       } catch (err) {
         console.log(err);
@@ -43,7 +33,7 @@ const User: React.FC<Props> = () => {
     <>
       {profileInfo ? (
         <>
-          <UserInfo profileInfo={profileInfo} isUsersProfile={isUsersProfile} />
+          <UserInfo profileInfo={profileInfo} />
 
           <FavoritesSection profileInfo={profileInfo} />
 

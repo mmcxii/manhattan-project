@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { spacing, elevation, transition } from 'Utilities';
 
 export const Card = styled.div`
-  width: 100%;
+  min-width: 100%;
 
   &:not(:first-child) {
     margin: ${spacing.lg} 0;

@@ -10,6 +10,7 @@ import Login from './Login';
 import EditUser from './EditUser';
 import CreateUser from './CreateUser';
 import ErrorPage from './ErrorPage';
+import Logout from './Logout';
 
 const Router: React.FC = () => (
   <PageContainer>
@@ -24,6 +25,10 @@ const Router: React.FC = () => (
 
       <Route path='/login'>
         <Login />
+      </Route>
+
+      <Route path='/logout'>
+        <Logout />
       </Route>
 
       <Route path='/user/:username'>
@@ -48,7 +53,7 @@ const Router: React.FC = () => (
 export default Router;
 
 const PageContainer = styled(Container).attrs({ as: 'main' })`
-  --header-offset: 85px;
+  --header-offset: 45px;
 
   padding-top: var(--header-offset);
   min-height: 100vh;
@@ -56,6 +61,6 @@ const PageContainer = styled(Container).attrs({ as: 'main' })`
   flex-direction: column;
 
   @media screen and (min-width: 768px) {
-    --header-offset: 140px;
+    --header-offset: 65px;
   }
 `;
