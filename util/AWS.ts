@@ -28,8 +28,6 @@ export const s3methods = {
     })
     .promise();
 
-    console.log(data);
-
     const user: IUserDocument | null = await User.findOneAndUpdate(
       { _id },
       { imgUrl: data.Location },
@@ -50,7 +48,7 @@ export const s3methods = {
     const data = await s3.deleteObjects({
       Bucket: S3_BUCKET,
       Delete: {
-        Objects: [{Key: `username/avatar.png`,}]
+        Objects: [{Key: `${_id}/avatar.png`,}]
       } 
     })
     .promise();

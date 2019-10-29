@@ -63,18 +63,22 @@ export const UserRoutes = Router()
     const { _id } = req.token as IUserToken;
 
     try {
-      const deleted = await s3methods.deleteImg(_id)
-      const response = await User.deleteOne({ username });
 
-      if (!response.ok) {
+        
+        const response = User.deleteOne({ username });
+        const deleted = s3methods.deleteImg(_id)
+
+        const promises = await Promise.all([response, deleted]);
+        
+      if (!promises[0].ok) {
         return ServerError(res, 'Error deleting User.');
       }
 
-      if (!response.deletedCount || response.deletedCount === 0) {
+      if (!promises[0].deletedCount || promises[0].deletedCount === 0) {
         return OkNoContent(res);
       }
 
-      if (deleted.Errors && deleted.Errors.length) {
+      if (promises[1].Errors && promises[1].Errors.length) {
         return ServerError(res, 'Error deleting User Image.');
       }
 
