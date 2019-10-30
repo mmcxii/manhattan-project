@@ -1,7 +1,8 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useReturnToTop } from 'Hooks';
 import { Container } from 'Elements';
 import Home from './Home';
 import User from './User';
@@ -13,47 +14,54 @@ import ErrorPage from './ErrorPage';
 import Logout from './Logout';
 import ProductDetail from './ProductDetail';
 
-const Router: React.FC = () => (
-  <PageContainer>
-    <Switch>
-      <Route exact path='/'>
-        <Home />
-      </Route>
+const Router: React.FC = () => {
+  const params = useParams();
 
-      <Route path='/create'>
-        <CreateUser />
-      </Route>
+  // Whenever a new page is rendered (route params change), return to the top of the document
+  useReturnToTop(params);
 
-      <Route path='/login'>
-        <Login />
-      </Route>
+  return (
+    <PageContainer>
+      <Switch>
+        <Route exact path='/'>
+          <Home />
+        </Route>
 
-      <Route path='/logout'>
-        <Logout />
-      </Route>
+        <Route path='/create'>
+          <CreateUser />
+        </Route>
 
-      <Route path='/user/:username'>
-        <User />
-      </Route>
+        <Route path='/login'>
+          <Login />
+        </Route>
 
-      <Route path='/edit/:username'>
-        <EditUser />
-      </Route>
+        <Route path='/logout'>
+          <Logout />
+        </Route>
 
-      <Route path='/search/:type'>
-        <SearchForm />
-      </Route>
+        <Route path='/user/:username'>
+          <User />
+        </Route>
 
-      <Route path='/:productId/detail'>
-        <ProductDetail />
-      </Route>
+        <Route path='/edit/:username'>
+          <EditUser />
+        </Route>
 
-      <Route path='*'>
-        <ErrorPage />
-      </Route>
-    </Switch>
-  </PageContainer>
-);
+        <Route path='/search/:type'>
+          <SearchForm />
+        </Route>
+
+        <Route path='/:productId/detail'>
+          <ProductDetail />
+        </Route>
+
+        <Route path='*'>
+          <ErrorPage />
+        </Route>
+      </Switch>
+    </PageContainer>
+  );
+};
 
 export default Router;
 
