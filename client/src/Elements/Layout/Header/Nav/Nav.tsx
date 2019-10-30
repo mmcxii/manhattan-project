@@ -16,13 +16,13 @@ const Nav: React.FC<Props> = () => {
     {
       page: 'search',
       link: '/',
-      icon: 'far fa-search',
+      icon: 'far fa-search'
     },
     {
       page: user.username === '' ? 'log in' : user.username,
       link: user.username === '' ? '/login' : `/user/${user.username}`,
-      icon: 'far fa-user',
-    },
+      icon: 'far fa-user'
+    }
   ];
 
   const toggleNav = () => setNavIsOpen(!navIsOpen);
@@ -45,6 +45,8 @@ const Nav: React.FC<Props> = () => {
 export default Nav;
 
 const Navbar = styled.nav`
+  grid-area: nav;
+
   padding: ${spacing.md} 0;
   text-transform: capitalize;
 `;
@@ -75,7 +77,7 @@ const ToggleNavButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  padding: ${spacing.lg};
+  padding: ${spacing.md};
   ${absolute({ x: 'right' })};
   z-index: 2;
 `;

@@ -2,7 +2,9 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   --margin: 0.5rem;
+
   margin: 0 var(--margin);
+
   @media screen and (min-width: 576px) {
     --margin: 1rem;
   }
@@ -13,8 +15,7 @@ const Container = styled.div`
     --margin: 4rem;
   }
   @media screen and (min-width: 1200px) {
-    --margin: 20%;
-    max-width: 1200px;
+    --margin: 30%;
   }
 `;
 
