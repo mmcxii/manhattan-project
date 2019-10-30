@@ -55,7 +55,6 @@ const SearchForm: React.FC<Props> = () => {
 
       if (mode === 'cocktail') {
         const data: CocktailProps[] = await response.json();
-
         return setCocktailResults(data);
       }
     } catch (err) {
@@ -65,7 +64,7 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
-      {beerResults.length === 0 ? (
+      {beerResults.length === 0 && cocktailResults.length === 0 ? (
         <Card as="section">
           <CardHeader>{type} search</CardHeader>
           <CardBody>
@@ -95,6 +94,7 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
+            {console.log('This fired')}
             {beerResults.length > 0 && beerResults.map(item => <ResultsItem key={item._id} item={item} />)}
             {cocktailResults.length > 0 && cocktailResults.map(item => <ResultsItem key={item._id} item={item} />)}
           </CardBody>
