@@ -4,7 +4,7 @@ import { IUserRequest, IUserToken } from '../interfaces';
 import { User, IUserDocument, UserData } from '../models';
 import { NotFound, Ok } from '../routes/Status';
 import { Response } from 'express';
-import { ObjectID } from "bson";
+import { ObjectID } from 'bson';
 
 const S3_BUCKET: BucketName = process.env.S3_BUCKET || '';
 
@@ -19,14 +19,15 @@ export const s3methods = {
   uploadImg: async function(req: IUserRequest, res: Response, img: Buffer): Promise<Response> {
     const { _id, username } = req.token as IUserToken;
 
-    const data = await s3.upload({
-      Bucket: S3_BUCKET,
-      Key: `${_id}/avatar.png`,
-      Body: img,
-      ContentType: 'image/png',
-      ACL: 'public-read'
-    })
-    .promise();
+    const data = await s3
+      .upload({
+        Bucket: S3_BUCKET,
+        Key: `${_id}/avatar.png`,
+        Body: img,
+        ContentType: 'image/png',
+        ACL: 'public-read'
+      })
+      .promise();
 
     const user: IUserDocument | null = await User.findOneAndUpdate(
       { _id },
@@ -44,14 +45,15 @@ export const s3methods = {
 
     return Ok(res, userData);
   },
-  deleteImg: async function (_id: ObjectID ) {
-    const data = await s3.deleteObjects({
-      Bucket: S3_BUCKET,
-      Delete: {
-        Objects: [{Key: `${_id}/avatar.png`,}]
-      } 
-    })
-    .promise();
+  deleteImg: async function(_id: ObjectID) {
+    const data = await s3
+      .deleteObjects({
+        Bucket: S3_BUCKET,
+        Delete: {
+          Objects: [{ Key: `${_id}/avatar.png` }]
+        }
+      })
+      .promise();
 
     return data;
   }
