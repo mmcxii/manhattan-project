@@ -1,6 +1,6 @@
 import { IProductDetails } from './IProductDetails';
 import { IComment } from './IComment';
-import { IUser } from './IUser';
+import { IUserDocument } from '../models';
 
 export enum ProductType {
   BEER = 'BEER',
@@ -13,7 +13,7 @@ export interface IProduct {
   detail: IProductDetails;
   imageUrls: string[];
   comments: IComment[];
-  upvotes: IUser[];
-  downvotes: IUser[];
+  upvotes: IUserDocument[];
+  downvotes: IUserDocument[];
   rating: number;
 }
