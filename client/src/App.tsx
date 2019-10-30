@@ -65,7 +65,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
       props.location === '/'
         ? `
         background-image: url(${homebg});
-        background-color: rgba(0,0,0,0.25);
+        background-color: rgba(0,0,0,0.5);
         background-blend-mode: darken;
         background-size: cover;
         background-position: center;
