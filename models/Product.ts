@@ -4,7 +4,8 @@ import { IProduct } from '../interfaces';
 import { ObjectID } from 'bson';
 
 export interface IProductDocument extends IProduct, Document {
-  // TODO - define Product document methods
+  upvote(user: IUserDocument): Promise<IProductDocument | Error>;
+  downvote(user: IUserDocument): Promise<IProductDocument | Error>;
 }
 
 export interface IProductModel extends Model<IProductDocument> {
