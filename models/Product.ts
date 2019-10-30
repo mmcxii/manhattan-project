@@ -68,9 +68,6 @@ productSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvo
   return upvotes / (upvotes + downvotes);
 });
 
-// Export model
-export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
-
 // Updates a products's rating
 const updateVotes = async function(id: ObjectID, options: QueryUpdateOptions): Promise<IProductDocument> {
   let product: IProductDocument | null;
@@ -111,3 +108,6 @@ productSchema.methods.downvote = async function(
 
   return updateVotes(this._id, options);
 };
+
+// Export model
+export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
