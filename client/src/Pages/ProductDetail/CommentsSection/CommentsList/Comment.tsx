@@ -12,9 +12,10 @@ interface Props {
 
 const Comment: React.FC<Props> = ({ comment }) => {
   const { theme } = useContext(ThemeContext);
+
   return (
     <Wrapper theme={theme}>
-      <Rating upvotes={comment.upvotes.length} downvotes={comment.downvotes.length} type='comments' id={comment._id} />
+      <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} />
       <Author>
         <Link to={`/user/${comment.author.username}`}>{comment.author.name || comment.author.username}</Link>
       </Author>

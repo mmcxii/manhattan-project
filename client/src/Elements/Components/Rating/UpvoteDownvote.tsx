@@ -1,20 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { UserContext } from 'Store';
+import { UserContext, UserProps } from 'Store';
 import { transition, spacing, green, red } from 'Utilities';
 
 interface Props {
+  upvotes: UserProps[];
+  downvotes: UserProps[];
   type: 'products' | 'comments';
   id: string;
+  setRating: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const UpvoteDownvote: React.FC<Props> = ({ type, id }) => {
+const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRating }) => {
   const { user } = useContext(UserContext);
+  const [userVote, setUserVote] = useState<'upvote' | 'downvote' | null>(null);
 
-  if (user.username === '') {
-    return null;
-  }
+  useEffect(() => {
+    if (upvotes.includes(user.id)) {
+      setUserVote('upvote');
+    } else if (downvotes.includes(user.id)) {
+      setUserVote('downvote');
+    } else {
+      setUserVote(null);
+    }
+  }, []);
 
   const handleVote = async (action: 'upvotes' | 'downvotes') => {
     const lsLoginToken = localStorage.getItem('loginToken');
@@ -35,7 +45,15 @@ const UpvoteDownvote: React.FC<Props> = ({ type, id }) => {
 
         const data = await response.json();
 
-        window.location.reload();
+        if (userVote === null) {
+          // If the user is casting a vote on something they have not voted on return the data as is
+          action === 'upvotes' ? setRating(data - downvotes.length) : setRating(upvotes.length - data);
+        } else {
+          // If the user is modifying their vote on something offset the result by 1 to account for the change
+          action === 'upvotes' ? setRating(data - downvotes.length + 1) : setRating(upvotes.length - data - 1);
+        }
+
+        action === 'upvotes' ? setUserVote('upvote') : setUserVote('downvote');
       } catch (err) {
         // TODO: Handle errors
         console.log(err);
@@ -43,12 +61,18 @@ const UpvoteDownvote: React.FC<Props> = ({ type, id }) => {
     }
   };
 
+  // Buttons will not render if a user is not logged in
+  if (user.username === '') {
+    return null;
+  }
+
   return (
     <Wrapper>
-      <UpvoteButton onClick={() => handleVote('upvotes')}>
+      <UpvoteButton onClick={() => handleVote('upvotes')} userVote={userVote === 'upvote'}>
         <i className='fas fa-arrow-alt-up' />
       </UpvoteButton>
-      <DownvoteButton onClick={() => handleVote('downvotes')}>
+
+      <DownvoteButton onClick={() => handleVote('downvotes')} userVote={userVote === 'downvote'}>
         <i className='fas fa-arrow-alt-down' />
       </DownvoteButton>
     </Wrapper>
@@ -65,13 +89,15 @@ const OptionButton = styled.button`
   ${transition({ prop: 'color' })};
 `;
 
-const UpvoteButton = styled(OptionButton)`
+const UpvoteButton = styled(OptionButton)<{ userVote: boolean }>`
+  ${props => (props.userVote ? `color: ${green}` : null)};
   &:hover {
     color: ${green};
   }
 `;
 
-const DownvoteButton = styled(OptionButton)`
+const DownvoteButton = styled(OptionButton)<{ userVote: boolean }>`
+  ${props => (props.userVote ? `color: ${red}` : null)};
   &:hover {
     color: ${red};
   }

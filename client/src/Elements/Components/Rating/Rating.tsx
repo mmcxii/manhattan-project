@@ -1,25 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import UpvoteDownvote from './UpvoteDownvote';
+import { UserProps } from 'Store';
 import { spacing } from 'Utilities';
+import UpvoteDownvote from './UpvoteDownvote';
 
 interface Props {
-  upvotes: number;
-  downvotes: number;
+  upvotes: UserProps[];
+  downvotes: UserProps[];
   type: 'products' | 'comments';
   id: string;
 }
 
-export const Rating: React.FC<Props> = ({ upvotes, downvotes, type, id }) => (
-  <Wrapper>
-    <UpvoteDownvote type={type} id={id} />
-    <small>
-      <Icon className={`far fa-arrow-alt-circle-${upvotes - downvotes >= 0 ? 'up' : 'down'}`} />
-      {upvotes - downvotes}
-    </small>
-  </Wrapper>
-);
+export const Rating: React.FC<Props> = ({ upvotes, downvotes, type, id }) => {
+  const [rating, setRating] = useState<number>(upvotes.length - downvotes.length);
+
+  return (
+    <Wrapper>
+      <UpvoteDownvote type={type} id={id} setRating={setRating} upvotes={upvotes} downvotes={downvotes} />
+
+      <small>
+        <Icon className={`far fa-arrow-alt-circle-${rating >= 0 ? 'up' : 'down'}`} />
+        {rating}
+      </small>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   grid-area: rating;
