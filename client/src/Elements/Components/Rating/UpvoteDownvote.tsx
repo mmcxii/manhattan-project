@@ -4,21 +4,51 @@ import styled from 'styled-components';
 import { UserContext } from 'Store';
 import { transition, spacing, green, red } from 'Utilities';
 
-interface Props {}
+interface Props {
+  type: 'products' | 'comments';
+  id: string;
+}
 
-const UpvoteDownvote: React.FC<Props> = () => {
+const UpvoteDownvote: React.FC<Props> = ({ type, id }) => {
   const { user } = useContext(UserContext);
 
   if (user.username === '') {
     return null;
   }
 
+  const handleVote = async (action: 'upvotes' | 'downvotes') => {
+    const lsLoginToken = localStorage.getItem('loginToken');
+    const { username } = user;
+
+    if (lsLoginToken) {
+      try {
+        const queryURL = `/api/${type}/${id}/${action}`;
+
+        const response: Response = await fetch(queryURL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${lsLoginToken}`
+          },
+          body: JSON.stringify({ username })
+        });
+
+        const data = await response.json();
+
+        window.location.reload();
+      } catch (err) {
+        // TODO: Handle errors
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <Wrapper>
-      <UpvoteButton>
+      <UpvoteButton onClick={() => handleVote('upvotes')}>
         <i className='fas fa-arrow-alt-up' />
       </UpvoteButton>
-      <DownvoteButton>
+      <DownvoteButton onClick={() => handleVote('downvotes')}>
         <i className='fas fa-arrow-alt-down' />
       </DownvoteButton>
     </Wrapper>
