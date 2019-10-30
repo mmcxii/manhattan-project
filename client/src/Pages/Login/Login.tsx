@@ -29,6 +29,7 @@ const Login: React.FC<Props> = () => {
           bio?: string;
           follows: UserProps[];
           followers: UserProps[];
+          imgUrl?: string
         };
       } = await response.json();
 
@@ -47,6 +48,9 @@ const Login: React.FC<Props> = () => {
       }
       if (data.user.bio) {
         userData.bio = data.user.bio;
+      }
+      if (data.user.imgUrl) {
+        userData.imgUrl = data.user.imgUrl;
       }
 
       localStorage.setItem('loginToken', loginToken);
@@ -88,7 +92,8 @@ const Login: React.FC<Props> = () => {
             icon='fas fa-lock'
           />
           <small>
-            Forgot your password? Click <a href={/* TODO: Make reset password page */ ''}>here</a>.
+            {/* * TODO: Make reset password page -> update anchor href */}
+            Forgot your password? Click <a href={window.location.href}>here</a>.
           </small>
           <small>
             Click <a href='/create'>here</a> to create an account.

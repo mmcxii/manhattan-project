@@ -10,7 +10,6 @@ export interface IUser {
   name?: string;
   age?: number;
   bio?: string;
-  theme?: string;
-  highlightedFavorite: IProduct;
   favorites: IProduct[];
+  imgUrl?: string;
 }

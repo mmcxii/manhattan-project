@@ -18,5 +18,5 @@ export const useReadLSUserInfo = () => {
       localStorage.removeItem('loginToken');
       localStorage.removeItem('userInfo');
     }
-  }, []);
+  }, [dispatch]);
 };
