@@ -1,12 +1,23 @@
 import { Router } from 'express';
-import { IProduct, ProductType } from '../interfaces';
-import { IProductDocument, Product, Query, ICommentDocument, Comment } from '../models';
+import { IProduct, ProductType, IUser } from '../interfaces';
+import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 
 interface IProductFilters {
   query?: string;
   type?: string;
 }
+
+// Get votes of the specified type (upvotes or downvotes)
+const getVoters = async (id: string, type: 'upvotes' | 'downvotes'): Promise<IUser[] | null> => {
+  const votes = await Product.findById(id, { type }).populate(type);
+
+  if (votes == null) {
+    return votes;
+  }
+
+  return type === 'upvotes' ? votes.upvotes : votes.downvotes;
+};
 
 // Constructs and returns a query to find Product docs for the provided parms
 function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProductDocument[]> {
@@ -147,4 +158,106 @@ export const ProductRoutes = Router()
     } catch (error) {
       return ServerError(res, error);
     }
+  })
+  .get('/:id/upvotes', async (req, res) => {
+    // Get product upvotes
+    const { id } = req.params;
+
+    try {
+      const upvoters = await getVoters(id, 'upvotes');
+
+      return Ok(res, upvoters);
+    } catch (error) {
+      return ServerError(res, error);
+    }
+  })
+  .get('/:id/downvotes', async (req, res) => {
+    // Get product downvotes
+    const { id } = req.params;
+
+    try {
+      const downvoters = await getVoters(id, 'downvotes');
+
+      return Ok(res, downvoters);
+    } catch (error) {
+      return ServerError(res, error);
+    }
+  })
+  .put('/:id/upvotes', async (req, res) => {
+    // Add product upvoter
+    const { id } = req.params;
+    let { username } = req.body;
+
+    // Verify username is provided
+    username = username && username.trim().toLowerCase();
+
+    if (!username) {
+      return BadRequest(res, 'Username missing or empty.');
+    }
+
+    // Get Product document
+    const product: IProductDocument | null = await Product.findById(id);
+    if (product == null) {
+      return NotFound(res, `product ${id} not found.`);
+    }
+
+    // Get User document
+    const user: IUserDocument | null = await User.findOne({ username });
+    if (!user) {
+      return NotFound(res, `User ${username} not found.`);
+    }
+
+    // Perform upvote, then return updated rating data
+    const upvoted: IProductDocument | Error = await product.upvote(user);
+
+    if (upvoted instanceof Error) {
+      return ServerError(res, upvoted);
+    }
+
+    const productRatingData = {
+      rating: upvoted.rating,
+      upvotes: upvoted.upvotes,
+      downvotes: upvoted.downvotes
+    };
+
+    return Ok(res, productRatingData);
+  })
+  .put('/:id/downvotes', async (req, res) => {
+    // Add product downvoter
+    const { id } = req.params;
+    let { username } = req.body;
+
+    // Verify username is provided
+    username = username && username.trim().toLowerCase();
+
+    if (!username) {
+      return BadRequest(res, 'Username missing or empty.');
+    }
+
+    // Get Product document
+    const product: IProductDocument | null = await Product.findById(id);
+    if (product == null) {
+      return NotFound(res, `product ${id} not found.`);
+    }
+
+    // Get User document
+    const user: IUserDocument | null = await User.findOne({ username });
+    if (!user) {
+      return NotFound(res, `User ${username} not found.`);
+    }
+
+    // Perform downvote, then return updated rating data
+    const upvoted: IProductDocument | Error = await product.downvote(user);
+
+    if (upvoted instanceof Error) {
+      return ServerError(res, upvoted);
+    }
+
+    const productRatingData = {
+      rating: upvoted.rating,
+      upvotes: upvoted.upvotes,
+      downvotes: upvoted.downvotes
+    };
+
+    return Ok(res, productRatingData);
   });
