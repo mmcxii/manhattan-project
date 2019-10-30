@@ -49,14 +49,12 @@ const SearchForm: React.FC<Props> = () => {
 
       if (mode === 'beer') {
         const data: BeerProps[] = await response.json();
-        console.log(data);
 
         return setBeerResults(data);
       }
 
       if (mode === 'cocktail') {
         const data: CocktailProps[] = await response.json();
-        console.log(data);
 
         return setCocktailResults(data);
       }
