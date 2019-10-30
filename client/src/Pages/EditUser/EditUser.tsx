@@ -33,25 +33,8 @@ const EditUser: React.FC<Props> = () => {
       });
       const data: UserProps = await response.json();
 
-      const userData: UserProps = {
-        id: data.id,
-        username: data.username,
-        theme: data.theme,
-        follows: data.follows,
-        followers: data.followers
-      };
-      if (data.name) {
-        userData.name = data.name;
-      }
-      if (data.age) {
-        userData.age = data.age;
-      }
-      if (data.bio) {
-        userData.bio = data.bio;
-      }
-
-      localStorage.setItem('userInfo', JSON.stringify(userData));
-      dispatch({ type: 'LOG_USER_IN', payload: userData });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      dispatch({ type: 'LOG_USER_IN', payload: data });
     } catch (err) {
       console.log(err);
     }
