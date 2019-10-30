@@ -18,7 +18,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
           src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl}
           height='35'
           width='35'
-          alt='(image not found)'
+          alt={item.name}
         />
         {item.name}
         {item.details.organic === true && <OrganicIcon className='fas fa-seedling' />}
