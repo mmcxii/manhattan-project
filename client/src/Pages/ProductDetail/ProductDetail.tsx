@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import styled from 'styled-components';
 
 import { ProductProps } from 'Store';
+import { spacing } from 'Utilities';
 import { Card, CardHeader, CardBody } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
+import CommentsSection from './CommentsSection';
 
 interface Props {}
 
@@ -40,34 +43,28 @@ const ProductDetail: React.FC<Props> = () => {
     <>
       {product && (
         <>
-          <Card>
+          <Card as='section'>
             <CardHeader>{product.name}</CardHeader>
-            <CardBody>
-              {product.details.ABV && <small>ABV: {product.details.ABV}</small>}
-              {product.details.organic === true && (
-                <p>
-                  Organic: <i className='fas fa-seedling' />
-                </p>
-              )}
-              <img
+            <ProductInfo>
+              <Details>
+                {/* Beer Details */}
+                {product.details.ABV && <small>ABV: {product.details.ABV}</small>}
+                {product.details.organic === true && (
+                  <p>
+                    Organic: <i className='fas fa-seedling' />
+                  </p>
+                )}
+
+                {product.details.desc && <p>{product.details.desc}</p>}
+              </Details>
+              <Image
                 src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
                 alt={product.name}
               />
-
-              {product.details.desc && <p>{product.details.desc}</p>}
-            </CardBody>
+            </ProductInfo>
           </Card>
 
-          <Card>
-            <CardHeader>Comments</CardHeader>
-            <CardBody>
-              {product.comments.length === 0 ? (
-                <p>There are no comments for this {product.type === 'BEER' ? 'beer' : 'cocktail recipe'} yet.</p>
-              ) : (
-                product.comments.map(comment => <p>comment</p>)
-              )}
-            </CardBody>
-          </Card>
+          <CommentsSection type={product.type} comments={product.comments} />
         </>
       )}
     </>
@@ -75,3 +72,38 @@ const ProductDetail: React.FC<Props> = () => {
 };
 
 export default ProductDetail;
+
+const Image = styled.img`
+  grid-area: image;
+
+  max-width: 100%;
+  height: auto;
+  object-position: center;
+
+  @media screen and (min-width: 768px) {
+    max-width: 300px;
+    max-height: 50%;
+  }
+`;
+
+const Details = styled.div`
+  grid-area: details;
+
+  word-wrap: break-word;
+  overflow: hidden;
+`;
+
+const ProductInfo = styled(CardBody)`
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  grid-template-areas:
+    'image'
+    'details';
+  grid-gap: ${spacing.md};
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: initial;
+    grid-template-areas: 'image details';
+  }
+`;
