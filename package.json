@@ -4,7 +4,10 @@
   "description": "A MERN stack application for connection people with their poison",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node server.ts",
+    "start": "npm run serve",
+    "serve": "node dist/server.js",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
     "server": "nodemon -x ts-node server.ts",
     "client": "npm start --prefix client",
     "client-install": "npm install --prefix client",
