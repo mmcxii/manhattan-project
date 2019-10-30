@@ -11,7 +11,7 @@ interface Props {
 }
 
 const CommentsSection: React.FC<Props> = ({ type, comments }) => (
-  <Card>
+  <Card as='section'>
     <CardHeader>Comments</CardHeader>
     <CardBody>
       <AddCommentForm />
