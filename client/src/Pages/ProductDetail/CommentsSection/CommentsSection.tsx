@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardBody } from 'Elements';
 
 import { CommentProps } from 'Store';
+import AddCommentForm from './AddCommentForm';
 import CommentsList from './CommentsList';
 
 interface Props {
@@ -13,6 +14,7 @@ const CommentsSection: React.FC<Props> = ({ type, comments }) => (
   <Card>
     <CardHeader>Comments</CardHeader>
     <CardBody>
+      <AddCommentForm />
       <CommentsList type={type} comments={comments} />
     </CardBody>
   </Card>
