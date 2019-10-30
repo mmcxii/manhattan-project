@@ -3,6 +3,7 @@ import { IUser, IUpdateContext } from '../interfaces';
 
 // User DTO class
 export class UserData {
+  id: string;
   username: string;
   follows: number;
   followers: number;
@@ -13,7 +14,8 @@ export class UserData {
   bio?: string;
   imgUrl?: string;
 
-  constructor(user: IUser) {
+  constructor(user: IUserDocument) {
+    this.id = user._id;
     this.username = user.username;
     this.follows = user.follows.length;
     this.followers = user.followers.length;
@@ -40,10 +42,7 @@ export interface IUserDocument extends IUser, Document {
 
 // Create interface for User model
 export interface IUserModel extends Model<IUserDocument> {
-  getUserAndFollower: (
-    username: string,
-    followerName: string
-  ) => Promise<[IUserDocument, IUserDocument] | Error>;
+  getUserAndFollower: (username: string, followerName: string) => Promise<[IUserDocument, IUserDocument] | Error>;
 }
 
 const userSchema = new Schema({
@@ -102,12 +101,8 @@ userSchema.statics.getUserAndFollower = async function(
   });
 
   // Match user documents on username
-  const user: IUserDocument | undefined = users.find(
-    u => u.username === username
-  );
-  const follower: IUserDocument | undefined = users.find(
-    u => u.username === followerName
-  );
+  const user: IUserDocument | undefined = users.find(u => u.username === username);
+  const follower: IUserDocument | undefined = users.find(u => u.username === followerName);
 
   // Return error if one or both documents not found
   if (!follower || !user) {
@@ -122,13 +117,9 @@ userSchema.statics.getUserAndFollower = async function(
 // Document methods
 
 // Uses the provided IUpdateContext to perform User document updates
-const updateFollowers = async (
-  ...updateContext: IUpdateContext[]
-): Promise<number> => {
+const updateFollowers = async (...updateContext: IUpdateContext[]): Promise<number> => {
   // Get User/Follower update results and return appropriate status
-  const results = await Promise.all(
-    updateContext.map(u => User.updateOne(u.filter, u.options))
-  );
+  const results = await Promise.all(updateContext.map(u => User.updateOne(u.filter, u.options)));
 
   const allOk = results.every(result => result.ok === 1);
 
@@ -136,15 +127,12 @@ const updateFollowers = async (
 };
 
 // Transforms current User document into UserData instance
-userSchema.methods.toUserData = function(this: IUser): UserData {
+userSchema.methods.toUserData = function(this: IUserDocument): UserData {
   return new UserData(this);
 };
 
 // Adds a follower to the current user
-userSchema.methods.addFollower = async function(
-  this: IUserDocument,
-  follower: IUserDocument
-): Promise<number> {
+userSchema.methods.addFollower = async function(this: IUserDocument, follower: IUserDocument): Promise<number> {
   // Add follower to user
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
@@ -161,10 +149,7 @@ userSchema.methods.addFollower = async function(
 };
 
 // Removes a follower from current User
-userSchema.methods.removeFollower = async function(
-  this: IUserDocument,
-  follower: IUserDocument
-): Promise<number> {
+userSchema.methods.removeFollower = async function(this: IUserDocument, follower: IUserDocument): Promise<number> {
   // Remove follower from followers
   const userContext: IUpdateContext = {
     filter: { _id: this._id },
