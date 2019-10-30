@@ -79,9 +79,7 @@ const userSchema = new Schema({
     type: Types.ObjectId,
     ref: 'Product'
   },
-  imgUrl: {
-    Type: Types.String
-  },
+  imgUrl: Types.String,
   theme: {
     type: Types.String,
     required: true,
