@@ -91,7 +91,7 @@ const MenuItem = styled.li`
 `;
 
 const Menu = styled.ul<{ toggle: boolean; theme: 'dark' | 'light' }>`
-  width: 60vw;
+  width: 100vw;
   position: absolute;
   top: 40px;
   left: 0;
@@ -106,9 +106,11 @@ const Menu = styled.ul<{ toggle: boolean; theme: 'dark' | 'light' }>`
   ${transition({ prop: 'transform' })};
 
   @media screen and (min-width: 768px) {
+    width: 300px;
     opacity: initial;
-    width: 10vw;
     top: 210%;
+    right: 0;
+    left: initial;
   }
 `;
 
