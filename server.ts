@@ -26,9 +26,7 @@ const PORT = process.env.PORT || 6969;
 DB.connect()
   .then(() => {
     console.log('Successfully connected to DB.');
-    const httpServer = app.listen(PORT, () =>
-      console.log(`Listening for connections on port: ${PORT}`)
-    );
+    const httpServer = app.listen(PORT, () => console.log(`Listening for connections on port: ${PORT}`));
     // Attach socket server to http server to listen for socket events
     SocketServer(httpServer);
   })
