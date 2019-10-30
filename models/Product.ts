@@ -1,4 +1,5 @@
-import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
+import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
+import { IUserDocument } from './User';
 import { IProduct } from '../interfaces';
 import { ObjectID } from 'bson';
 
@@ -66,7 +67,48 @@ productSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvo
   return upvotes / (upvotes + downvotes);
 });
 
-export const Product = model<IProductDocument, IProductModel>(
-  'Product',
-  productSchema
-);
+// Updates a products's rating
+const updateVotes = async function(id: ObjectID, options: QueryUpdateOptions): Promise<IProductDocument | Error> {
+  let product: IProductDocument | null;
+  try {
+    product = await Product.findOneAndUpdate({ _id: id }, options, { new: true });
+
+    if (product == null) {
+      return new Error(`Product ${id} not found.`);
+    }
+  } catch (error) {
+    return new Error(`Could not update product votes: ${error}`);
+  }
+
+  return product;
+};
+
+// User upvoting product
+productSchema.methods.upvote = async function(
+  this: { _id: ObjectID },
+  user: IUserDocument
+): Promise<IProductDocument | Error> {
+  // Create query update uptions to add user id to upvotes and remove from downvotes
+  const options: QueryUpdateOptions = {
+    $pull: { downvotes: user._id },
+    $addToSet: { upvotes: user._id }
+  };
+
+  return updateVotes(this._id, options);
+};
+
+// User downvoting product
+productSchema.methods.downvote = async function(
+  this: { _id: ObjectID },
+  user: IUserDocument
+): Promise<IProductDocument | Error> {
+  // Create query update uptions to add user id to downvotes and remove from upvotes
+  const options: QueryUpdateOptions = {
+    $pull: { upvotes: user._id },
+    $addToSet: { downvotes: user._id }
+  };
+
+  return updateVotes(this._id, options);
+};
+
+export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
