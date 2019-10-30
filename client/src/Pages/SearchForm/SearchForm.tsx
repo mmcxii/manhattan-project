@@ -7,8 +7,6 @@ import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 import ResultsItem from './ResultsItem';
 // import console = require('console');
 
-// TODO: Austin display search results
-
 interface Props {}
 
 interface ProductProps {
