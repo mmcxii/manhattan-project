@@ -27,7 +27,7 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
       case 'beer':
         productQuery.where('type', ProductType.BEER);
         break;
-      case 'cocktail':
+      case 'mixed':
         productQuery.where('type', ProductType.MIXED);
         break;
     }
