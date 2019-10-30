@@ -12,7 +12,7 @@ interface Props {
 
 const CommentsSection: React.FC<Props> = ({ type, comments }) => (
   <Card as='section'>
-    <CardHeader>Comments</CardHeader>
+    <CardHeader as='h3'>Comments</CardHeader>
     <CardBody>
       <AddCommentForm />
       <CommentsList type={type} comments={comments} />
