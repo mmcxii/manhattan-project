@@ -4,8 +4,8 @@ import { IProduct } from '../interfaces';
 import { ObjectID } from 'bson';
 
 export interface IProductDocument extends IProduct, Document {
-  upvote(user: IUserDocument): Promise<IProductDocument | Error>;
-  downvote(user: IUserDocument): Promise<IProductDocument | Error>;
+  upvote(user: IUserDocument): Promise<IProductDocument>;
+  downvote(user: IUserDocument): Promise<IProductDocument>;
 }
 
 export interface IProductModel extends Model<IProductDocument> {
@@ -72,26 +72,23 @@ productSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvo
 export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
 
 // Updates a products's rating
-const updateVotes = async function(id: ObjectID, options: QueryUpdateOptions): Promise<IProductDocument | Error> {
+const updateVotes = async function(id: ObjectID, options: QueryUpdateOptions): Promise<IProductDocument> {
   let product: IProductDocument | null;
   try {
     product = await Product.findOneAndUpdate({ _id: id }, options, { new: true });
 
     if (product == null) {
-      return new Error(`Product ${id} not found.`);
+      throw new Error(`Product ${id} not found.`);
     }
   } catch (error) {
-    return new Error(`Could not update product votes: ${error}`);
+    throw new Error(`Could not update product votes: ${error}.`);
   }
 
   return product;
 };
 
 // User upvoting product
-productSchema.methods.upvote = async function(
-  this: { _id: ObjectID },
-  user: IUserDocument
-): Promise<IProductDocument | Error> {
+productSchema.methods.upvote = async function(this: { _id: ObjectID }, user: IUserDocument): Promise<IProductDocument> {
   // Create query update uptions to add user id to upvotes and remove from downvotes
   const options: QueryUpdateOptions = {
     $pull: { downvotes: user._id },
@@ -105,7 +102,7 @@ productSchema.methods.upvote = async function(
 productSchema.methods.downvote = async function(
   this: { _id: ObjectID },
   user: IUserDocument
-): Promise<IProductDocument | Error> {
+): Promise<IProductDocument> {
   // Create query update uptions to add user id to downvotes and remove from upvotes
   const options: QueryUpdateOptions = {
     $pull: { upvotes: user._id },

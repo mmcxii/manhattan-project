@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { IProduct, ProductType, IUser } from '../interfaces';
 import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
+import { Dictionary, Response } from 'express-serve-static-core';
 
 interface IProductFilters {
   query?: string;
@@ -57,6 +58,51 @@ function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProdu
   }
 
   return productQuery;
+}
+
+async function productVote(
+  req: { params: Dictionary<string>; body: Dictionary<string> },
+  res: Response,
+  voteType: 'upvote' | 'downvote'
+): Promise<Response> {
+  // Add product voter
+  const { id } = req.params;
+  let { username } = req.body;
+
+  // Verify username is provided
+  username = username && username.trim().toLowerCase();
+
+  if (!username) {
+    return BadRequest(res, 'Username missing or empty.');
+  }
+
+  try {
+    // Get Product document
+    const product: IProductDocument | null = await Product.findById(id);
+    if (product == null) {
+      return NotFound(res, `product ${id} not found.`);
+    }
+
+    // Get User document
+    const user: IUserDocument | null = await User.findOne({ username });
+    if (!user) {
+      return NotFound(res, `User ${username} not found.`);
+    }
+
+    // Perform vote, then return updated rating data
+    const voteFunc = voteType === 'upvote' ? product.upvote : product.downvote;
+    const upvoted: IProductDocument = await voteFunc(user);
+
+    const productRatingData = {
+      rating: upvoted.rating,
+      upvotes: upvoted.upvotes,
+      downvotes: upvoted.downvotes
+    };
+
+    return Ok(res, productRatingData);
+  } catch (error) {
+    return ServerError(res, `Product vote error: ${error}`);
+  }
 }
 
 export const ProductRoutes = Router()
@@ -184,80 +230,8 @@ export const ProductRoutes = Router()
     }
   })
   .put('/:id/upvotes', async (req, res) => {
-    // Add product upvoter
-    const { id } = req.params;
-    let { username } = req.body;
-
-    // Verify username is provided
-    username = username && username.trim().toLowerCase();
-
-    if (!username) {
-      return BadRequest(res, 'Username missing or empty.');
-    }
-
-    // Get Product document
-    const product: IProductDocument | null = await Product.findById(id);
-    if (product == null) {
-      return NotFound(res, `product ${id} not found.`);
-    }
-
-    // Get User document
-    const user: IUserDocument | null = await User.findOne({ username });
-    if (!user) {
-      return NotFound(res, `User ${username} not found.`);
-    }
-
-    // Perform upvote, then return updated rating data
-    const upvoted: IProductDocument | Error = await product.upvote(user);
-
-    if (upvoted instanceof Error) {
-      return ServerError(res, upvoted);
-    }
-
-    const productRatingData = {
-      rating: upvoted.rating,
-      upvotes: upvoted.upvotes,
-      downvotes: upvoted.downvotes
-    };
-
-    return Ok(res, productRatingData);
+    return await productVote(req, res, 'upvote');
   })
   .put('/:id/downvotes', async (req, res) => {
-    // Add product downvoter
-    const { id } = req.params;
-    let { username } = req.body;
-
-    // Verify username is provided
-    username = username && username.trim().toLowerCase();
-
-    if (!username) {
-      return BadRequest(res, 'Username missing or empty.');
-    }
-
-    // Get Product document
-    const product: IProductDocument | null = await Product.findById(id);
-    if (product == null) {
-      return NotFound(res, `product ${id} not found.`);
-    }
-
-    // Get User document
-    const user: IUserDocument | null = await User.findOne({ username });
-    if (!user) {
-      return NotFound(res, `User ${username} not found.`);
-    }
-
-    // Perform downvote, then return updated rating data
-    const upvoted: IProductDocument | Error = await product.downvote(user);
-
-    if (upvoted instanceof Error) {
-      return ServerError(res, upvoted);
-    }
-
-    const productRatingData = {
-      rating: upvoted.rating,
-      upvotes: upvoted.upvotes,
-      downvotes: upvoted.downvotes
-    };
-
-    return Ok(res, productRatingData);
+    return await productVote(req, res, 'downvote');
   });
