@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { IProduct, ProductType, IUser } from '../interfaces';
-import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User } from '../models';
+import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User, UserData } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 import { Dictionary, Response } from 'express-serve-static-core';
 
@@ -91,12 +91,12 @@ async function productVote(
 
     // Perform vote, then return updated rating data
     const voteFunc = voteType === 'upvote' ? product.upvote : product.downvote;
-    const upvoted: IProductDocument = await voteFunc(user);
+    const votedProduct: IProductDocument = await voteFunc(user);
 
     const productRatingData = {
-      rating: upvoted.rating,
-      upvotes: upvoted.upvotes,
-      downvotes: upvoted.downvotes
+      rating: votedProduct.rating,
+      upvotes: votedProduct.upvotes.map(u => new UserData(u)),
+      downvotes: votedProduct.downvotes.map(u => new UserData(u))
     };
 
     return Ok(res, productRatingData);
