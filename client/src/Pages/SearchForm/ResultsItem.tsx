@@ -23,7 +23,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
         {item.name}
         {item.details.organic === true && <OrganicIcon className='fas fa-seedling' />}
       </h2>
-      <p>{` ABV: ${item.details.ABV}%`}</p>
+      <p>ABV: ${item.details.ABV}%</p>
       <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
       {item.upvotes.length - item.downvotes.length}
       <hr></hr> <br></br>
