@@ -6,5 +6,4 @@ export interface CommentProps {
   text: string;
   upvotes: UserProps[];
   downvotes: UserProps[];
-  rating: number;
 }

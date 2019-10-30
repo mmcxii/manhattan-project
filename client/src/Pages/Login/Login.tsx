@@ -17,11 +17,12 @@ const Login: React.FC<Props> = () => {
       const response: Response = await fetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values }),
+        body: JSON.stringify({ ...values })
       });
       const data: {
         token: string;
         user: {
+          id: string;
           username: string;
           theme: 'dark' | 'light';
           name?: string;
@@ -29,16 +30,17 @@ const Login: React.FC<Props> = () => {
           bio?: string;
           follows: UserProps[];
           followers: UserProps[];
-          imgUrl?: string
+          imgUrl?: string;
         };
       } = await response.json();
 
       const loginToken: string = data.token;
       const userData: UserProps = {
+        id: data.user.id,
         username: data.user.username,
         theme: data.user.theme,
         follows: data.user.follows,
-        followers: data.user.followers,
+        followers: data.user.followers
       };
       if (data.user.name) {
         userData.name = data.user.name;
