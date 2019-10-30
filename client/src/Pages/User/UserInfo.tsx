@@ -15,7 +15,7 @@ const UserInfo: React.FC<Props> = ({ profileInfo }) => (
       <InfoContent>
         {profileInfo.age && <small>{profileInfo.age}</small>}
         {profileInfo.bio && <p>{profileInfo.bio}</p>}
-        {profileInfo.imgUrl && <AvatarLg src={profileInfo.imgUrl} />}
+        {profileInfo.imgUrl ? <AvatarLg src={profileInfo.imgUrl} /> : <AvatarLg src={''} />}
       </InfoContent>
     </Info>
   </Wrapper>
