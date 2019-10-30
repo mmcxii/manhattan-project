@@ -19,7 +19,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
           height='35'
           width='35'
           alt='(image not found)'
-        ></img>
+        />
         {item.name}
         {item.details.organic === true && <OrganicIcon className='fas fa-seedling' />}
       </h2>
