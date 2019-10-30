@@ -22,7 +22,7 @@ const AddCommentForm: React.FC<Props> = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: lsLoginToken
+            Authorization: `Bearer ${lsLoginToken}`
           },
           body: JSON.stringify(values)
         });
