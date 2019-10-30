@@ -34,6 +34,7 @@ const EditUser: React.FC<Props> = () => {
       const data: UserProps = await response.json();
 
       const userData: UserProps = {
+        id: data.id,
         username: data.username,
         theme: data.theme,
         follows: data.follows,
