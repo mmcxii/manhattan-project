@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { IProduct, ProductType } from '../interfaces';
-import { Product, Query } from '../models';
+import { IProductDocument, Product, Query, ICommentDocument, Comment } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 
 interface IProductFilters {
@@ -9,7 +9,7 @@ interface IProductFilters {
 }
 
 // Constructs and returns a query to find Product docs for the provided parms
-function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
+function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProductDocument[]> {
   // Create new query. Decorate as needed, determined by provided filters
   const productQuery = Product.find();
 
@@ -36,7 +36,13 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
   // Determine search name
   const queryString = query && query.trim();
   if (queryString) {
-    productQuery.where({ $text: { $search: queryString } });
+    if (fuzzy) {
+      const pattern = new RegExp(queryString);
+      productQuery.where({ name: { $regex: pattern, $options: 'i' } });
+    } else {
+      // Do text search by default
+      productQuery.where({ $text: { $search: queryString } });
+    }
   }
 
   return productQuery;
@@ -45,12 +51,18 @@ function buildProductsQuery(parms: IProductFilters): Query<IProduct[]> {
 export const ProductRoutes = Router()
   .get('/', async (req, res) => {
     const findProducts = buildProductsQuery(req.query);
+    const productFuzzySearch = buildProductsQuery(req.query, true);
 
     // Get all Product documents from DB
     try {
-      const products: IProduct[] = await findProducts.exec();
+      const results = await Promise.all([findProducts.exec(), productFuzzySearch.exec()]);
+      const [textResults, fuzzyResults] = results;
 
-      return Ok(res, products);
+      const productResults = new Map<string, IProductDocument>(
+        [...textResults, ...fuzzyResults].map(r => [`${r._id}`, r])
+      );
+
+      return Ok(res, Array.from(productResults.values()));
     } catch (error) {
       return ServerError(res, error);
     }
@@ -77,13 +89,61 @@ export const ProductRoutes = Router()
     }
 
     try {
-      const product: IProduct | null = await Product.findById(id);
+      const product: IProduct | null = await Product.findById(id).populate('comments');
 
       if (!product) {
         return NotFound(res, `Product ${id} not found.`);
       }
 
       return Ok(res, product);
+    } catch (error) {
+      return ServerError(res, error);
+    }
+  })
+  .get('/:id/comments', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const product: IProduct | null = await Product.findOne({ _id: id }, 'comments').populate('comments');
+      if (product == null) {
+        return NotFound(res, `Product ${id} not found.`);
+      }
+
+      return Ok(res, product.comments);
+    } catch (error) {
+      return ServerError(res, error);
+    }
+  })
+  .post('/:id/comments', async (req, res) => {
+    // Product id
+    const { id } = req.params;
+
+    // Create a new comment
+    const { text, author } = req.body;
+
+    if (!text) {
+      return BadRequest(res, 'Missing comment text.');
+    }
+    if (!author) {
+      return BadRequest(res, 'Missing comment author (user).');
+    }
+
+    try {
+      const newComment: ICommentDocument | Error = await Comment.createComment(author, text);
+
+      if (newComment instanceof Error) {
+        throw newComment;
+      }
+
+      const product: IProductDocument | null = await Product.findByIdAndUpdate(id, {
+        $addToSet: { comments: newComment._id }
+      });
+
+      if (product == null) {
+        return NotFound(res, `Product ${id} not found.`);
+      }
+
+      return Ok(res, newComment);
     } catch (error) {
       return ServerError(res, error);
     }
