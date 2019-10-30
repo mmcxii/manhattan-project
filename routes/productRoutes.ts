@@ -90,13 +90,15 @@ async function productVote(
     }
 
     // Perform vote, then return updated rating data
-    const voteFunc = voteType === 'upvote' ? product.upvote : product.downvote;
-    const votedProduct: IProductDocument = await voteFunc(user);
+    const votedProduct: IProductDocument = await (voteType === 'upvote'
+      ? product.upvote(user)
+      : product.downvote(user));
 
     const productRatingData = {
+      id: votedProduct._id,
       rating: votedProduct.rating,
-      upvotes: votedProduct.upvotes.map(u => new UserData(u)),
-      downvotes: votedProduct.downvotes.map(u => new UserData(u))
+      upvotes: votedProduct.upvotes,
+      downvotes: votedProduct.downvotes
     };
 
     return Ok(res, productRatingData);
