@@ -8,7 +8,7 @@ interface Props {
 
 const Comment: React.FC<Props> = ({ comment }) => (
   <article>
-    <h4>{comment.author}</h4>
+    <h4>{comment.author.name || comment.author.username}</h4>
     <small>
       {/* TODO: add upvote/ downvote icon */} {comment.rating}
     </small>
