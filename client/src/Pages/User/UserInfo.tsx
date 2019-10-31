@@ -13,9 +13,12 @@ const UserInfo: React.FC<Props> = ({ profileInfo }) => (
     <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
     <Info>
       <InfoContent>
-        {profileInfo.age && <small>{profileInfo.age}</small>}
-        {profileInfo.bio && <p>{profileInfo.bio}</p>}
         {profileInfo.imgUrl ? <AvatarLg src={profileInfo.imgUrl} /> : <AvatarLg src={''} />}
+        <p>Age: {profileInfo.age && profileInfo.age}</p>
+        <Card>
+        <CardHeader>A little about me:</CardHeader> 
+        <CardBody>{profileInfo.bio && <p>{profileInfo.bio}</p>}</CardBody>
+        </Card>        
       </InfoContent>
     </Info>
   </Wrapper>
@@ -27,4 +30,7 @@ const Wrapper = styled(Card).attrs({ as: 'section' })``;
 
 const Info = styled(CardBody)``;
 
-const InfoContent = styled.div``;
+const InfoContent = styled.div`
+display: flex;
+flex-direction: column;
+`;

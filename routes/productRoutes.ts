@@ -39,7 +39,7 @@ function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProdu
       case 'beer':
         productQuery.where('type', ProductType.BEER);
         break;
-      case 'mixed':
+      case 'cocktail':
         productQuery.where('type', ProductType.MIXED);
         break;
     }
