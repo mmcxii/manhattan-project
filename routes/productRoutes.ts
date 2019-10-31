@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { IProduct, ProductType, IUser } from '../interfaces';
-import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User, UserData } from '../models';
+import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User, CommentData } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 import { Dictionary, Response } from 'express-serve-static-core';
+
 
 interface IProductFilters {
   query?: string;
@@ -202,7 +203,9 @@ export const ProductRoutes = Router()
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      return Ok(res, newComment);
+      const commentDetails = new CommentData(newComment, newComment.author);
+
+      return Ok(res, commentDetails);
     } catch (error) {
       return ServerError(res, error);
     }
