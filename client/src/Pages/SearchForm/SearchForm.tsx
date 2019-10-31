@@ -94,7 +94,6 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
-            {console.log('This fired')}
             {beerResults.length > 0 && beerResults.map(item => <ResultsItem key={item._id} item={item} />)}
             {cocktailResults.length > 0 && cocktailResults.map(item => <ResultsItem key={item._id} item={item} />)}
           </CardBody>
