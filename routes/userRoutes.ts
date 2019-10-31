@@ -51,7 +51,8 @@ export const UserRoutes = Router()
         return NotFound(res, `Cannot update user: ${username} not found.`);
       }
 
-      return Ok(res, user);
+      console.log('DATA I\'M SENDING BACK TO LOCAL STORAGE: ', new UserData(user));
+      return Ok(res, new UserData(user));
     } catch (error) {
       return ServerError(res, error);
     }
