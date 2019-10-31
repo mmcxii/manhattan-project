@@ -24,16 +24,22 @@ export const CardBody = styled.div`
   &:hover {
     ${elevation[4]};
   }
+
+  /* Remove shadows from nested cards */
+  ${Card} {
+    > * {
+      box-shadow: none;
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
 `;
 
 export const ErrorCard = styled(Card)`
   ${CardBody} {
     background: ${red};
     color: ${white};
-    box-shadow: none;
-
-    &:hover {
-      box-shadow: none;
-    }
   }
 `;
