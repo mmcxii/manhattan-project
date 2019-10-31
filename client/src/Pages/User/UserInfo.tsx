@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
+import { spacing } from 'Utilities';
 import { Card, CardHeader, CardBody, AvatarLg } from 'Elements';
+import placeholder from 'Assets/img/placeholder.png';
 
 interface Props {
   profileInfo: UserProps;
@@ -12,13 +14,16 @@ const UserInfo: React.FC<Props> = ({ profileInfo }) => (
   <Wrapper>
     <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
     <Info>
+      <ProfilePicture src={profileInfo.imgUrl || placeholder} alt={profileInfo.name || profileInfo.username} />
+
       <InfoContent>
-        {profileInfo.imgUrl ? <AvatarLg src={profileInfo.imgUrl} /> : <AvatarLg src={''} />}
-        <p>Age: {profileInfo.age && profileInfo.age}</p>
         <Card>
-        <CardHeader>A little about me:</CardHeader> 
-        <CardBody>{profileInfo.bio && <p>{profileInfo.bio}</p>}</CardBody>
-        </Card>        
+          <CardHeader as='h3'>About {profileInfo.name || profileInfo.username}:</CardHeader>
+          <CardBody>
+            {profileInfo.age && <p>Age: {profileInfo.age}</p>}
+            {profileInfo.bio && <p>{profileInfo.bio}</p>}
+          </CardBody>
+        </Card>
       </InfoContent>
     </Info>
   </Wrapper>
@@ -28,9 +33,29 @@ export default UserInfo;
 
 const Wrapper = styled(Card).attrs({ as: 'section' })``;
 
-const Info = styled(CardBody)``;
+const Info = styled(CardBody)`
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  grid-template-areas:
+    'picture'
+    'info';
+  grid-gap: ${spacing.sm};
+
+  @media screen and (min-width: 768px) {
+    grid-template-rows: initial;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: 'picture info';
+    justify-content: center;
+  }
+`;
+
+const ProfilePicture = styled(AvatarLg)`
+  grid-area: 'picture';
+`;
 
 const InfoContent = styled.div`
-display: flex;
-flex-direction: column;
+  grid-area: 'info';
+
+  display: flex;
+  flex-direction: column;
 `;
