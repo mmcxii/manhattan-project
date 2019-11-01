@@ -6,8 +6,8 @@ import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 import { ResultsItem, MixedDetails, BeerDetails } from '../../Pages/SearchForm/ResultsItem/index';
 
-// import console = require('console');
 interface Props {}
+
 export interface ProductProps<T> {
   _id: string;
   type: number;
