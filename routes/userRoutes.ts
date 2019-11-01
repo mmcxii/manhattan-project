@@ -8,7 +8,7 @@ export const UserRoutes = Router()
   .get('/', async (req, res) => {
     // Get all users
     try {
-      const userDocs: IUserDocument[] = await User.find();
+      const userDocs: IUserDocument[] = await User.find().populate(['follows', 'followers']);
 
       const users: UserData[] = userDocs.map(user => user.toUserData());
 
