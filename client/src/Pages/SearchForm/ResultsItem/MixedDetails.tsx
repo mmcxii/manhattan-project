@@ -7,7 +7,7 @@ interface Props {
   item: MixedProps;
 }
 
-const ResultsItem: React.FC<Props> = ({ item }) => {
+const MixedDetails: React.FC<Props> = ({ item }) => {
   console.log(item);
   return (
     <>
@@ -16,4 +16,4 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
     </>
   );
 };
-export default ResultsItem;
+export default MixedDetails;

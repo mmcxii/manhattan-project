@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
-import ResultsItem from './ResultsItem/ResultsItem';
+import { ResultsItem, MixedDetails, BeerDetails } from '../../Pages/SearchForm/ResultsItem/index';
 
 // import console = require('console');
 interface Props {}
@@ -16,24 +16,21 @@ export interface ProductProps {
   upvotes: string[];
   downvotes: string[];
   imgUrl: string;
+  details: BeerProps | MixedProps;
 }
 
 export interface BeerProps extends ProductProps {
-  details: {
-    desc: string;
-    ABV?: number;
-    organic: boolean;
-    subtype: string;
-  };
+  desc: string;
+  ABV?: number;
+  organic: boolean;
+  subtype: string;
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
 export interface MixedProps extends ProductProps {
-  details: {
-    glassType: string;
-    directions: string;
-    image: string[];
-    ingrediants: string;
-  };
+  glassType: string;
+  directions: string;
+  image: string[];
+  ingrediants: string;
 }
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
@@ -55,17 +52,11 @@ const SearchForm: React.FC<Props> = () => {
         return setBeerResults(data);
       }
 
-<<<<<<< HEAD
       if (mode === 'mixed') {
         const data: MixedProps[] = await response.json();
         console.log(data);
 
         return setMixedResults(data);
-=======
-      if (mode === 'cocktail') {
-        const data: CocktailProps[] = await response.json();
-        return setCocktailResults(data);
->>>>>>> d5fdef76d2bdab8b35cb5699ab4ce1b3dc421358
       }
     } catch (err) {
       console.log(err);
@@ -74,13 +65,8 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
-<<<<<<< HEAD
       {beerResults.length === 0 && mixedResults.length === 0 ? (
         <Card as='section'>
-=======
-      {beerResults.length === 0 && cocktailResults.length === 0 ? (
-        <Card as="section">
->>>>>>> d5fdef76d2bdab8b35cb5699ab4ce1b3dc421358
           <CardHeader>{type} search</CardHeader>
           <CardBody>
             <Form
