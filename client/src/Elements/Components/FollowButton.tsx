@@ -20,13 +20,11 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   const [userIsFollowing, setUserIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
-    dispatch({ type: 'ADD_FOLLOW', payload: followTarget });
-
-    if (userInfo.follows) {
-      if (userInfo.follows.includes(followTarget)) {
-        setUserIsFollowing(true);
+    userInfo.follows.forEach(follow => {
+      if (follow.username === followTarget.username) {
+        return setUserIsFollowing(true);
       }
-    }
+    });
   }, []);
 
   const toggleFollow = async () => {

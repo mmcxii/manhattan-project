@@ -20,6 +20,8 @@ const User: React.FC<Props> = () => {
         const data: UserProps = await response.json();
 
         // Update state with returned information
+        console.log(data);
+
         setProfileInfo(data);
       } catch (err) {
         console.log(err);
