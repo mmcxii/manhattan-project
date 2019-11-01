@@ -1,16 +1,18 @@
 import React from 'react';
-import { BeerProps, CocktailProps } from './SearchForm';
-
-import placeholder from 'Assets/img/placeholder.png';
-import styled from 'styled-components';
-import { spacing, elevation } from 'Utilities';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { elevation } from 'Utilities';
+import { ProductProps, BeerProps, MixedProps } from '../SearchForm';
+import placeholder from 'Assets/img/placeholder.png';
 
 interface Props {
-  item: BeerProps | CocktailProps;
+  item: ProductProps<BeerProps | MixedProps>;
 }
 
-const ResultsItem: React.FC<Props> = ({ item }) => {
+const ResultsItem: React.FC<Props> = props => {
+  const { item, children } = props;
+
   return (
     <Wrapper to={`/${item._id}/detail`}>
       <h2>
@@ -21,9 +23,8 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
           alt={item.name}
         />
         {item.name}
-        {item.details.organic === true && <OrganicIcon className='fas fa-seedling' />}
       </h2>
-      <p>ABV: {item.details.ABV}%</p>
+      {children}
       <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
       {item.upvotes.length - item.downvotes.length}
       <hr></hr> <br></br>
@@ -32,10 +33,6 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
 };
 
 export default ResultsItem;
-
-const OrganicIcon = styled.i`
-  margin-left: ${spacing.sm};
-`;
 
 const Wrapper = styled(Link)`
   transition: all 0.1s ease-in;
