@@ -20,11 +20,13 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   const [userIsFollowing, setUserIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
-    userInfo.follows.forEach(follow => {
-      if (follow.username === followTarget.username) {
-        return setUserIsFollowing(true);
-      }
-    });
+    if (userInfo) {
+      userInfo.follows.forEach(follow => {
+        if (follow.username === followTarget.username) {
+          return setUserIsFollowing(true);
+        }
+      });
+    }
   }, []);
 
   const toggleFollow = async () => {
@@ -41,6 +43,7 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
           })
         });
 
+        // Handle errors by displaying the error message to the user in an alert
         const errorCodes: number[] = [400, 404, 500];
         if (errorCodes.includes(response.status)) {
           const errorData: { status: number; message: string } = await response.json();
@@ -48,11 +51,22 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
           return alert(errorData.message);
         }
 
-        const data = await response.json();
+        // Dispatch an action to UserContext reducer based on component state
+        dispatch({ type: userIsFollowing ? 'REMOVE_FOLLOW' : 'ADD_FOLLOW', payload: followTarget });
 
-        console.log(data);
+        // Update localstorage based on component state
+        if (userIsFollowing) {
+          localStorage.setItem(
+            'userInfo',
+            JSON.stringify({ ...userInfo, follows: [...userInfo.follows, followTarget] })
+          );
+        } else {
+          localStorage.setItem(
+            'userInfo',
+            JSON.stringify({ ...userInfo, follows: userInfo.follows.filter(item => item.id !== followTarget.id) })
+          );
+        }
         setUserIsFollowing(!userIsFollowing);
-        dispatch({ type: 'ADD_FOLLOWER', payload: followTarget });
       } catch (err) {
         console.log(err);
       }

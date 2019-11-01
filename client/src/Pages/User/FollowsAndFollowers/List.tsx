@@ -14,7 +14,6 @@ interface Props {
 const List: React.FC<Props> = ({ list }) => (
   <>
     <Title>{list.title}</Title>
-    {console.log(list.list)}
     {list.list.length > 0 ? (
       <ListWrapper>
         {list.list.map(follow => (

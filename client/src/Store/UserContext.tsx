@@ -17,7 +17,7 @@ export interface UserProps {
 }
 
 interface ActionProps {
-  type: 'LOG_USER_IN' | 'LOG_USER_OUT' | 'ADD_FOLLOW';
+  type: 'LOG_USER_IN' | 'LOG_USER_OUT' | 'ADD_FOLLOW' | 'REMOVE_FOLLOW';
   payload: UserProps;
 }
 
@@ -29,10 +29,15 @@ const reducer = (state: UserProps, action: ActionProps): UserProps => {
   switch (action.type) {
     case 'LOG_USER_IN':
       return { ...action.payload };
+
     case 'LOG_USER_OUT':
       return { ...initialState };
+
     case 'ADD_FOLLOW':
       return { ...state, follows: [...state.follows, action.payload] };
+
+    case 'REMOVE_FOLLOW':
+      return { ...state, follows: state.follows.filter(item => item.id !== action.payload.id) };
   }
 };
 
