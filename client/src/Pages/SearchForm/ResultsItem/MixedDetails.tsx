@@ -1,10 +1,8 @@
 import React from 'react';
-import { MixedProps } from '../SearchForm';
-import styled from 'styled-components';
-import { spacing } from 'Utilities';
+import { ProductProps, MixedProps } from '../SearchForm';
 
 interface Props {
-  item: MixedProps;
+  item: ProductProps<MixedProps>;
 }
 
 const MixedDetails: React.FC<Props> = ({ item }) => {

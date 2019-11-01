@@ -2,17 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { spacing, elevation } from 'Utilities';
-import { BeerProps, MixedProps } from '../SearchForm';
+import { elevation } from 'Utilities';
+import { ProductProps, BeerProps, MixedProps } from '../SearchForm';
 import placeholder from 'Assets/img/placeholder.png';
-import BeerDetails from './BeerDetails';
-import MixedDetails from './MixedDetails';
 
 interface Props {
-  item: BeerProps | MixedProps;
+  item: ProductProps<BeerProps | MixedProps>;
 }
 
-const ResultsItem: React.FC<Props> = ({ item }) => {
+const ResultsItem: React.FC<Props> = props => {
+  const { item, children } = props;
+
   return (
     <Wrapper to={`/${item._id}/detail`}>
       <h2>
@@ -24,6 +24,7 @@ const ResultsItem: React.FC<Props> = ({ item }) => {
         />
         {item.name}
       </h2>
+      {children}
       <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
       {item.upvotes.length - item.downvotes.length}
       <hr></hr> <br></br>
