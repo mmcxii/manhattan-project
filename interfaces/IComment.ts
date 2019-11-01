@@ -1,7 +1,8 @@
 import { IUser } from '../interfaces';
+import { IUserDocument } from '../models';
 
 export interface IComment {
-    author: IUser;
+    author: IUserDocument;
     text: string;
     upvotes: IUser[];
     downvotes: IUser[];

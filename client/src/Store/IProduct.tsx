@@ -1,11 +1,7 @@
 import { CommentProps } from './IComment';
 import { UserProps } from './UserContext';
-
-enum ProductType {
-  'BEER',
-  'WINE',
-  'MIXED',
-}
+//think this should be changed probably. Don't think we want an arrays of UserProps/the author to be UserProps. Probably fine if it's just the usernmae for author, and id for Up/Down 
+type ProductType = 'BEER' | 'WINE' | 'MIXED';
 
 interface ProductDetail {
   subtype?: string;
@@ -14,14 +10,15 @@ interface ProductDetail {
   glassType?: string;
   ABV?: string;
   desc?: string;
-  organic?: string;
+  organic?: boolean;
 }
 
 export interface ProductProps {
   extID: string;
   type: ProductType;
-  detail: ProductDetail;
-  imgUrls: string[];
+  details: ProductDetail;
+  imgUrl: string;
+  name: string;
   comments: CommentProps[];
   upvotes: UserProps[];
   downvotes: UserProps[];

@@ -7,8 +7,6 @@ import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 import ResultsItem from './ResultsItem';
 // import console = require('console');
 
-// TODO: Austin display search results
-
 interface Props {}
 
 interface ProductProps {
@@ -51,15 +49,12 @@ const SearchForm: React.FC<Props> = () => {
 
       if (mode === 'beer') {
         const data: BeerProps[] = await response.json();
-        console.log(data);
 
         return setBeerResults(data);
       }
 
       if (mode === 'cocktail') {
         const data: CocktailProps[] = await response.json();
-        console.log(data);
-
         return setCocktailResults(data);
       }
     } catch (err) {
@@ -69,7 +64,7 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
-      {beerResults.length === 0 ? (
+      {beerResults.length === 0 && cocktailResults.length === 0 ? (
         <Card as="section">
           <CardHeader>{type} search</CardHeader>
           <CardBody>

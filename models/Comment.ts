@@ -1,6 +1,6 @@
 import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
-import { IComment } from '../interfaces';
-import { User, IUserDocument } from '../models';
+import { IComment, IUser } from '../interfaces';
+import { User, IUserDocument, UserData } from '../models';
 import { ObjectID } from 'bson';
 
 // Create interface for Comment documents
@@ -12,6 +12,22 @@ export interface ICommentDocument extends IComment, Document {
 // Create interface for Comment model
 export interface ICommentModel extends Model<ICommentDocument> {
   createComment(username: string, comment: string): Promise<ICommentDocument | Error>;
+}
+
+//Comment DTO class
+
+export class CommentData {
+author: UserData;
+downvotes: IUser[];
+upvotes: IUser[];
+_id: string;
+
+constructor(comment: ICommentDocument, user: IUserDocument) {
+  this.author = new UserData(user);
+  this.downvotes = comment.downvotes;
+  this.upvotes = comment.upvotes;
+  this._id = comment._id
+}
 }
 
 const commentSchema = new Schema({
@@ -38,14 +54,22 @@ const commentSchema = new Schema({
   ]
 });
 
-commentSchema
-  .virtual('rating')
-  .get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
-    const upvotes: number = this.upvotes.length;
-    const downvotes: number = this.downvotes.length;
-    // Represent rating as a percentage (0.0 -> 1.0);
-    return upvotes / (upvotes + downvotes);
-  });
+commentSchema.pre('find', function(next: () => void) {
+  this.populate('author');
+  next();
+});
+
+commentSchema.pre('findOne', function(next: () => void) {
+  this.populate('author');
+  next();
+});
+
+commentSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
+  const upvotes: number = this.upvotes.length;
+  const downvotes: number = this.downvotes.length;
+  // Represent rating as a percentage (0.0 -> 1.0);
+  return upvotes / (upvotes + downvotes);
+});
 
 // Comment schema method to create a new comment
 commentSchema.statics.createComment = async function(
@@ -60,14 +84,13 @@ commentSchema.statics.createComment = async function(
 
   const text = comment.trim();
 
-  return Comment.create({ author: user._id, text });
+  const newComment = await this.create({ author: user._id, text });
+
+  return newComment.populate('author').execPopulate();
 };
 
 // User upvoting comment
-commentSchema.methods.upvote = async function(
-  this: { _id: ObjectID },
-  user: IUserDocument
-): Promise<number | Error> {
+commentSchema.methods.upvote = async function(this: { _id: ObjectID }, user: IUserDocument): Promise<number | Error> {
   // Create query update uptions to add user id to upvotes and remove from downvotes
   const options: QueryUpdateOptions = {
     $pull: { downvotes: user._id },
@@ -78,10 +101,7 @@ commentSchema.methods.upvote = async function(
 };
 
 // User downvoting comment
-commentSchema.methods.downvote = async function(
-  this: { _id: ObjectID },
-  user: IUserDocument
-): Promise<number | Error> {
+commentSchema.methods.downvote = async function(this: { _id: ObjectID }, user: IUserDocument): Promise<number | Error> {
   // Create query update uptions to add user id to downvotes and remove from upvotes
   const options: QueryUpdateOptions = {
     $pull: { upvotes: user._id },
