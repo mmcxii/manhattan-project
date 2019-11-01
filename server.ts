@@ -21,12 +21,13 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 routeConfig(app);
 
 const PORT = process.env.PORT || 6969;
-
+module.exports = app;
 // Listen for HTTP traffic once DB connection is established
 DB.connect()
   .then(() => {
     console.log('Successfully connected to DB.');
     const httpServer = app.listen(PORT, () => console.log(`Listening for connections on port: ${PORT}`));
+
     // Attach socket server to http server to listen for socket events
     SocketServer(httpServer);
   })
