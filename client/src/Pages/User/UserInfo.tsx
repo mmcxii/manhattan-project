@@ -14,7 +14,7 @@ const UserInfo: React.FC<Props> = ({ profileInfo }) => (
   <Wrapper>
     <CardHeader>{profileInfo.name || profileInfo.username}</CardHeader>
     <Info>
-      <FollowButton />
+      <FollowButton followTarget={profileInfo} />
 
       <ProfilePicture src={profileInfo.imgUrl || placeholder} alt={profileInfo.name || profileInfo.username} />
 
