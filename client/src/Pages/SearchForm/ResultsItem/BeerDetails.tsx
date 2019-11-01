@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import { BeerProps } from '../SearchForm';
 import styled from 'styled-components';
 import { spacing } from 'Utilities';
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const BeerDetails: React.FC<Props> = ({ item }) => {
-  if (ProductDetail instanceof BeerDetails)
+  if (item.details.glassType instanceof BeerDetails)
     return (
       <>
         <p>ABV: ${item.details.ABV}%</p>
