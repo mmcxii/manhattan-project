@@ -5,7 +5,7 @@ import { Ok, BadRequest, ServerError, NotFound, Status, SendStatus } from './Sta
 
 // Get votes of the specified type (upvotes or downvotes)
 const getVoters = async (id: string, type: 'upvotes' | 'downvotes'): Promise<IUser[] | null> => {
-  const votes = await Comment.findById(id, {type}).populate(type);
+  const votes = await Comment.findById(id, { type }).populate(type);
 
   if (!votes) {
     return votes;
