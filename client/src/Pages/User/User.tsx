@@ -19,7 +19,6 @@ const User: React.FC<Props> = () => {
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
         const data: UserProps = await response.json();
 
-        // Update state with returned information
         setProfileInfo(data);
       } catch (err) {
         console.log(err);

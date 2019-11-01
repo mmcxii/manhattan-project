@@ -4,12 +4,11 @@ import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
-import ResultsItem from './ResultsItem';
-// import console = require('console');
+import { ResultsItem, MixedDetails, BeerDetails } from '../../Pages/SearchForm/ResultsItem/index';
 
 interface Props {}
 
-interface ProductProps {
+export interface ProductProps<T> {
   _id: string;
   type: number;
   extID: string;
@@ -17,76 +16,91 @@ interface ProductProps {
   upvotes: string[];
   downvotes: string[];
   imgUrl: string;
-  details: BeerProps;
+  details: T;
 }
 
-export interface BeerProps extends ProductProps {
+export interface BeerProps {
   desc: string;
   ABV?: number;
   organic: boolean;
   subtype: string;
 }
+
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
-export interface CocktailProps extends ProductProps {
+export interface MixedProps {
   glassType: string;
   directions: string;
   image: string[];
   ingrediants: string;
 }
+
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
-  const [beerResults, setBeerResults] = useState<BeerProps[]>([]);
-  const [cocktailResults, setCocktailResults] = useState<CocktailProps[]>([]);
+  const [beerResults, setBeerResults] = useState<ProductProps<BeerProps>[]>([]);
+  const [mixedResults, setMixedResults] = useState<ProductProps<MixedProps>[]>([]);
   const [values, handleChange] = useForm({ query: '' });
   const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
 
-  const APISearch = async (mode: string) => {
+  const APISearch = async <T extends unknown>(mode: string): Promise<ProductProps<T>[]> => {
+    let data: ProductProps<T>[] = [];
+
     try {
       const params = queryString.stringify(values);
-      const response: Response = await fetch(`/api/products?type=${mode}&${params}`, {
-        method: 'GET'
-      });
 
-      if (mode === 'beer') {
-        const data: BeerProps[] = await response.json();
+      const response: Response = await fetch(`/api/products?type=${mode}&${params}`);
 
-        return setBeerResults(data);
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
 
-      if (mode === 'cocktail') {
-        const data: CocktailProps[] = await response.json();
-        return setCocktailResults(data);
-      }
+      data = await response.json();
     } catch (err) {
       console.log(err);
+    }
+
+    return data;
+  };
+
+  // Handle form submission for product searches
+  const onSearchSubmit = async (evt: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    // Prevent form submission
+    evt.preventDefault();
+    if (!type) {
+      return;
+    }
+
+    // Retrieve appropriate product type and update state
+    switch (type) {
+      case 'beer':
+        const beerData = await APISearch<BeerProps>(type);
+        setBeerResults(beerData);
+        break;
+      case 'cocktail':
+        const mixedData = await APISearch<MixedProps>('mixed');
+        setMixedResults(mixedData);
+        break;
+      default:
+        return;
     }
   };
 
   return (
     <>
-      {beerResults.length === 0 && cocktailResults.length === 0 ? (
-        <Card as="section">
+      {beerResults.length === 0 && mixedResults.length === 0 ? (
+        <Card as='section'>
           <CardHeader>{type} search</CardHeader>
           <CardBody>
-            <Form
-              onSubmit={e => {
-                e.preventDefault();
-
-                if (type) {
-                  APISearch(type);
-                }
-              }}
-            >
+            <Form onSubmit={e => onSearchSubmit(e)}>
               <Input
-                name="query"
+                name='query'
                 value={values.query}
                 onChange={handleChange}
                 icon={`far ${icon}`}
                 label={`What ${type} would you like?`}
-                placeholder="Enter what you want here..."
+                placeholder='Enter what you want here...'
               />
 
-              <Button type="submit">Search</Button>
+              <Button type='submit'>Search</Button>
             </Form>
           </CardBody>
         </Card>
@@ -94,8 +108,19 @@ const SearchForm: React.FC<Props> = () => {
         <Card>
           <CardHeader>{values.query}</CardHeader>
           <CardBody>
-            {beerResults.length > 0 && beerResults.map(item => <ResultsItem key={item._id} item={item} />)}
-            {cocktailResults.length > 0 && cocktailResults.map(item => <ResultsItem key={item._id} item={item} />)}
+            {beerResults.length > 0 &&
+              beerResults.map(item => (
+                <ResultsItem key={`ri-${item._id}`} item={item}>
+                  <BeerDetails key={`bd-${item._id}`} item={item} />
+                </ResultsItem>
+              ))}
+
+            {mixedResults.length > 0 &&
+              mixedResults.map(item => (
+                <ResultsItem key={`ri-${item._id}`} item={item}>
+                  <MixedDetails key={`md-${item._id}`} item={item} />
+                </ResultsItem>
+              ))}
           </CardBody>
         </Card>
       )}

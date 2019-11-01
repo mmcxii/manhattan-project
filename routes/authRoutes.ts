@@ -84,7 +84,7 @@ export const AuthRoutes = Router()
     }
 
     // Lookup associated User doc and return with token
-    const user: IUserDocument | null = await User.findOne({ username });
+    const user: IUserDocument | null = await User.findOne({ username }).populate('follows followers');
 
     if (!user) {
       return NotFound(res, `User ${username} not found.`);

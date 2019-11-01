@@ -5,8 +5,8 @@ import { IUser, IUpdateContext } from '../interfaces';
 export class UserData {
   id: string;
   username: string;
-  follows: number;
-  followers: number;
+  follows: UserData[];
+  followers: UserData[];
   theme?: 'dark' | 'light';
   highlightedFavorite?: string;
   name?: string;
@@ -14,17 +14,21 @@ export class UserData {
   bio?: string;
   imgUrl?: string;
 
-  constructor(user: IUserDocument) {
+  constructor(user: IUserDocument, fillFollowers = true) {
     this.id = user._id;
     this.username = user.username;
-    this.follows = user.follows.length;
-    this.followers = user.followers.length;
     this.theme = user.theme;
     this.highlightedFavorite = user.highlightedFavorite;
     this.name = user.name;
     this.age = user.age;
     this.bio = user.bio;
     this.imgUrl = user.imgUrl;
+    this.followers = [];
+    this.follows = [];
+    if (fillFollowers) {
+      this.follows = user.follows.map(f => new UserData(f, false));
+      this.followers = user.followers.map(f => new UserData(f, false));
+    }
   }
 }
 
