@@ -13,17 +13,17 @@ interface Props {
 const FollowsAndFollowers: React.FC<Props> = ({ profileInfo }) => {
   const [currentTab, setCurrentTab] = useState<string>('follows');
   const tabs: string[] = ['follows', 'followers'];
-  const lists: { title: string; list: UserProps[] | undefined; emptyListMessage: string }[] = [
+  const lists: { title: string; list: UserProps[]; emptyListMessage: string }[] = [
     {
       title: 'follows',
       list: profileInfo.follows,
-      emptyListMessage: 'This user is not following anyone yet.',
+      emptyListMessage: 'This user is not following anyone yet.'
     },
     {
       title: 'followers',
       list: profileInfo.followers,
-      emptyListMessage: 'This user is not followed by anyone yet.',
-    },
+      emptyListMessage: 'This user is not followed by anyone yet.'
+    }
   ];
 
   return (

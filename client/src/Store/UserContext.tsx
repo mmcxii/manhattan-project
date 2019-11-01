@@ -11,17 +11,17 @@ export interface UserProps {
   bio?: string;
   highlightedFavorite?: ProductProps;
   favorites?: string[];
-  follows?: UserProps[];
-  followers?: UserProps[];
+  follows: UserProps[];
+  followers: UserProps[];
   imgUrl?: string;
 }
 
 interface ActionProps {
-  type: 'LOG_USER_IN' | 'LOG_USER_OUT';
+  type: 'LOG_USER_IN' | 'LOG_USER_OUT' | 'ADD_FOLLOW' | 'REMOVE_FOLLOW';
   payload: UserProps;
 }
 
-const initialState: UserProps = { id: '', username: '', theme: 'dark' };
+const initialState: UserProps = { id: '', username: '', theme: 'dark', follows: [], followers: [] };
 
 export const UserContext = createContext<UserProps | any>(initialState);
 
@@ -29,8 +29,15 @@ const reducer = (state: UserProps, action: ActionProps): UserProps => {
   switch (action.type) {
     case 'LOG_USER_IN':
       return { ...action.payload };
+
     case 'LOG_USER_OUT':
       return { ...initialState };
+
+    case 'ADD_FOLLOW':
+      return { ...state, follows: [...state.follows, action.payload] };
+
+    case 'REMOVE_FOLLOW':
+      return { ...state, follows: state.follows.filter(item => item.id !== action.payload.id) };
   }
 };
 
