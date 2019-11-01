@@ -22,7 +22,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username });
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate(['followers', 'following']);
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -51,7 +51,6 @@ export const UserRoutes = Router()
         return NotFound(res, `Cannot update user: ${username} not found.`);
       }
 
-      console.log('DATA I\'M SENDING BACK TO LOCAL STORAGE: ', new UserData(user));
       return Ok(res, new UserData(user));
     } catch (error) {
       return ServerError(res, error);
@@ -64,13 +63,11 @@ export const UserRoutes = Router()
     const { _id } = req.token as IUserToken;
 
     try {
+      const response = User.deleteOne({ username });
+      const deleted = s3methods.deleteImg(_id);
 
-        
-        const response = User.deleteOne({ username });
-        const deleted = s3methods.deleteImg(_id)
+      const promises = await Promise.all([response, deleted]);
 
-        const promises = await Promise.all([response, deleted]);
-        
       if (!promises[0].ok) {
         return ServerError(res, 'Error deleting User.');
       }
@@ -93,9 +90,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username }, 'followers').populate(
-        'followers'
-      );
+      const userDoc: IUserDocument | null = await User.findOne({ username }, 'followers').populate('followers');
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -127,9 +122,7 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs:
-        | [IUserDocument, IUserDocument]
-        | Error = await User.getUserAndFollower(username, followerName);
+      const userDocs: [IUserDocument, IUserDocument] | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return NotFound(res, userDocs.message);
@@ -165,9 +158,7 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs:
-        | [IUserDocument, IUserDocument]
-        | Error = await User.getUserAndFollower(username, followerName);
+      const userDocs: [IUserDocument, IUserDocument] | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return NotFound(res, userDocs.message);
@@ -188,9 +179,7 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const user: IUserDocument | null = await User.findOne({ username }, 'follows').populate(
-        'follows'
-      );
+      const user: IUserDocument | null = await User.findOne({ username }, 'follows').populate('follows');
 
       if (!user) {
         return NotFound(res, `User ${username} not found.`);
@@ -234,7 +223,7 @@ export const UserRoutes = Router()
 
       return SendStatus(res, status);
     } catch (error) {
-        return ServerError(res, error);
+      return ServerError(res, error);
     }
   })
   .delete('/:username/follows', async (req, res) => {
@@ -257,9 +246,7 @@ export const UserRoutes = Router()
 
     try {
       // Lookup both user and follower User documents
-      const userDocs:
-        | [IUserDocument, IUserDocument]
-        | Error = await User.getUserAndFollower(username, followerName);
+      const userDocs: [IUserDocument, IUserDocument] | Error = await User.getUserAndFollower(username, followerName);
 
       if (userDocs instanceof Error) {
         return NotFound(res, userDocs.message);
