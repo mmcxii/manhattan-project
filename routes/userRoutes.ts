@@ -8,7 +8,7 @@ export const UserRoutes = Router()
   .get('/', async (req, res) => {
     // Get all users
     try {
-      const userDocs: IUserDocument[] = await User.find().populate(['follows', 'followers']);
+      const userDocs: IUserDocument[] = await User.find().populate('follows followers');
 
       const users: UserData[] = userDocs.map(user => user.toUserData());
 
@@ -22,13 +22,15 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username }).populate(['followers', 'following']);
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers');
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
       }
 
-      return Ok(res, userDoc.toUserData());
+      const userData = userDoc.toUserData();
+
+      return Ok(res, userData);
     } catch (error) {
       return ServerError(res, error);
     }
