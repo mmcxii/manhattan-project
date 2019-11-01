@@ -11,17 +11,13 @@ interface Props {}
 const ModeSelection: React.FC<Props> = () => {
   const { theme } = useContext(ThemeContext);
 
-  const options: { name: 'beer' | 'wine' | 'mixed'; icon: string }[] = [
+  const options: { name: 'beer' | 'cocktail'; icon: string }[] = [
     {
       name: 'beer',
       icon: 'fa-beer'
     },
     {
-      name: 'wine',
-      icon: 'fa-wine-glass-alt'
-    },
-    {
-      name: 'mixed',
+      name: 'cocktail',
       icon: 'fa-glass-martini-alt'
     }
   ];

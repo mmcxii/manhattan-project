@@ -4,7 +4,10 @@
   "description": "A MERN stack application for connection people with their poison",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node server.ts",
+    "start": "npm run serve",
+    "serve": "node dest/server.js",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
     "server": "nodemon -x ts-node server.ts",
     "client": "npm start --prefix client",
     "client-install": "npm install --prefix client",
@@ -45,7 +48,6 @@
     "sharp": "^0.23.1",
     "socket.io": "^2.3.0",
     "ts-mongoose": "0.0.19",
-    "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "devDependencies": {
@@ -56,6 +58,7 @@
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "nodemon": "^1.19.3",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "ts-node": "^8.4.1"
   }
 }

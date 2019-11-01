@@ -8,7 +8,7 @@ interface Props {}
 
 const Home: React.FC<Props> = () => (
   <WelcomeCard>
-    <CardHeader>the manhattan project</CardHeader>
+    <WelcomeCardHeader>the manhattan project</WelcomeCardHeader>
     <CardBody>
       <ModeSelection />
     </CardBody>
@@ -19,4 +19,8 @@ export default Home;
 
 const WelcomeCard = styled(Card).attrs({ as: 'section' })`
   margin: auto;
+`;
+
+const WelcomeCardHeader = styled(CardHeader)`
+  font-size: 2rem;
 `;

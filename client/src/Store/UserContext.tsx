@@ -3,6 +3,7 @@ import React, { createContext, useReducer } from 'react';
 import { ProductProps } from './IProduct';
 
 export interface UserProps {
+  id: string;
   username: string;
   theme: 'dark' | 'light';
   name?: string;
@@ -20,7 +21,7 @@ interface ActionProps {
   payload: UserProps;
 }
 
-const initialState: UserProps = { username: '', theme: 'dark' };
+const initialState: UserProps = { id: '', username: '', theme: 'dark' };
 
 export const UserContext = createContext<UserProps | any>(initialState);
 

@@ -4,12 +4,12 @@ import { IUser, IUserRequest, IUserToken } from '../interfaces';
 import bcrypt from 'bcrypt';
 import { loginUser } from '../util/loginUser';
 import { validateToken } from '../util/validateToken';
-import { Status, NotFound, ServerError, BadRequest, Ok, Unprocessable, Unauthorized } from './Status';
+import { NotFound, ServerError, BadRequest, Ok, Unprocessable, Unauthorized } from './Status';
 import { CreateToken } from '../util/createToken';
 
 const PW_LENGTH = 4;
 
-async function registerUser(username: string, password: string, admin: string): Promise<IUser | Error> {
+async function registerUser(username: string, password: string, admin: string): Promise<IUserDocument | Error> {
   try {
     // Encrypt user password
     const encrypted = await bcrypt.hash(password, 10);
@@ -52,7 +52,7 @@ export const AuthRoutes = Router()
         return Unprocessable(res, 'Username already exists!');
       }
 
-      const newUser: IUser | Error = await registerUser(username, password, admin);
+      const newUser: IUserDocument | Error = await registerUser(username, password, admin);
 
       if (newUser instanceof Error) {
         throw newUser;
@@ -84,7 +84,7 @@ export const AuthRoutes = Router()
     }
 
     // Lookup associated User doc and return with token
-    const user: IUser | null = await User.findOne({ username });
+    const user: IUserDocument | null = await User.findOne({ username });
 
     if (!user) {
       return NotFound(res, `User ${username} not found.`);

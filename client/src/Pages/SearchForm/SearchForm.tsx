@@ -51,16 +51,21 @@ const SearchForm: React.FC<Props> = () => {
 
       if (mode === 'beer') {
         const data: BeerProps[] = await response.json();
-        console.log(data);
 
         return setBeerResults(data);
       }
 
+<<<<<<< HEAD
       if (mode === 'mixed') {
         const data: MixedProps[] = await response.json();
         console.log(data);
 
         return setMixedResults(data);
+=======
+      if (mode === 'cocktail') {
+        const data: CocktailProps[] = await response.json();
+        return setCocktailResults(data);
+>>>>>>> d5fdef76d2bdab8b35cb5699ab4ce1b3dc421358
       }
     } catch (err) {
       console.log(err);
@@ -69,8 +74,13 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
+<<<<<<< HEAD
       {beerResults.length === 0 && mixedResults.length === 0 ? (
         <Card as='section'>
+=======
+      {beerResults.length === 0 && cocktailResults.length === 0 ? (
+        <Card as="section">
+>>>>>>> d5fdef76d2bdab8b35cb5699ab4ce1b3dc421358
           <CardHeader>{type} search</CardHeader>
           <CardBody>
             <Form
