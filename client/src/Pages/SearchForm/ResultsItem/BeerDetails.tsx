@@ -10,7 +10,7 @@ interface Props {
 const BeerDetails: React.FC<Props> = ({ item }) => {
   return (
     <>
-      <p>ABV: ${item.details.ABV}%</p>
+      <p>ABV: {item.details.ABV}%</p>
       <p>{item.details.organic === true && <OrganicIcon className='fas fa-seedling' />} </p>
     </>
   );
