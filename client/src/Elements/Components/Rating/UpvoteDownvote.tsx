@@ -15,16 +15,27 @@ interface Props {
 const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRating }) => {
   const { user } = useContext(UserContext);
   const [userVote, setUserVote] = useState<'upvote' | 'downvote' | null>(null);
+  const [existingVote, setExistingVote] = useState<'upvote' | 'downvote' | null>(null);
 
   useEffect(() => {
     if (upvotes.includes(user.id)) {
       setUserVote('upvote');
+      setExistingVote('upvote');
     } else if (downvotes.includes(user.id)) {
       setUserVote('downvote');
-    } else {
-      setUserVote(null);
+      setExistingVote('downvote');
     }
   }, []);
+
+  const handleUpvote = () => {
+    setUserVote('upvote');
+    handleVote('upvotes');
+  };
+
+  const handleDownvote = () => {
+    setUserVote('downvote');
+    handleVote('downvotes');
+  };
 
   const handleVote = async (action: 'upvotes' | 'downvotes') => {
     const lsLoginToken = localStorage.getItem('loginToken');
@@ -45,15 +56,13 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
 
         const data = await response.json();
 
-        if (userVote === null) {
+        if (existingVote === null || existingVote !== userVote) {
           // If the user is casting a vote on something they have not voted on return the data as is
           action === 'upvotes' ? setRating(data - downvotes.length) : setRating(upvotes.length - data);
         } else {
           // If the user is modifying their vote on something offset the result by 1 to account for the change
           action === 'upvotes' ? setRating(data - downvotes.length + 1) : setRating(upvotes.length - data - 1);
         }
-
-        action === 'upvotes' ? setUserVote('upvote') : setUserVote('downvote');
       } catch (err) {
         // TODO: Handle errors
         console.log(err);
@@ -68,11 +77,14 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
 
   return (
     <Wrapper>
-      <UpvoteButton onClick={() => handleVote('upvotes')} userVote={userVote === 'upvote'}>
+      <UpvoteButton onClick={() => (userVote !== 'upvote' ? handleUpvote() : null)} userVote={userVote === 'upvote'}>
         <i className='fas fa-arrow-alt-up' />
       </UpvoteButton>
 
-      <DownvoteButton onClick={() => handleVote('downvotes')} userVote={userVote === 'downvote'}>
+      <DownvoteButton
+        onClick={() => (userVote !== 'downvote' ? handleDownvote() : null)}
+        userVote={userVote === 'downvote'}
+      >
         <i className='fas fa-arrow-alt-down' />
       </DownvoteButton>
     </Wrapper>

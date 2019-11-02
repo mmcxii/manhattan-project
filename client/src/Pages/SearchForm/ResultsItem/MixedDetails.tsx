@@ -8,6 +8,9 @@ interface Props {
 
 const MixedDetails: React.FC<Props> = ({ item }) => {
   console.log(item);
+
+  const ingredientNames = item.details.ingredients.map(e => `${e.name}`).join(', ');
+
   return (
     <>
       <ItemGlassType>{'The Preferred way is with a' + '   ' + item.details.glassType + '.'}</ItemGlassType>
