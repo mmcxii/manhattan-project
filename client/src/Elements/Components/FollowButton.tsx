@@ -12,7 +12,7 @@ interface Props {
 
 export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   const { push } = useHistory();
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
   const lsLoginToken = localStorage.getItem('loginToken');
   const lsUserInfo = localStorage.getItem('userInfo');
   //@ts-ignore
@@ -76,13 +76,23 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   };
 
   return (
-    <Button onClick={toggleFollow} followed={userIsFollowing}>
-      {userIsFollowing ? 'Unfollow' : 'Follow'}
-    </Button>
+    <>
+      {user.username === followTarget.username ? (
+        <NoButton />
+      ) : (
+        <Button onClick={toggleFollow} followed={userIsFollowing}>
+          {userIsFollowing ? 'Unfollow' : 'Follow'}
+        </Button>
+      )}
+    </>
   );
 };
 
 export default FollowButton;
+
+const NoButton = styled.div`
+  grid-area: follow;
+`;
 
 const Button = styled(SrcButton)<{ followed: boolean }>`
   grid-area: follow;
