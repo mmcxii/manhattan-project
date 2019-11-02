@@ -25,7 +25,7 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
       setUserVote('downvote');
       setExistingVote('downvote');
     }
-  }, []);
+  }, [upvotes, downvotes, user._id]);
 
   const handleUpvote = () => {
     setUserVote('upvote');
