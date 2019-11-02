@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
 import { useForm } from 'Hooks';
-import { red, white } from 'Utilities';
 import { Button, Card, CardHeader, CardBody, Form, ErrorCard, Input } from 'Elements';
 
 interface Props {}

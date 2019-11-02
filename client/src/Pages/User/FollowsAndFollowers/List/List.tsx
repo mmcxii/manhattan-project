@@ -33,8 +33,6 @@ const Title = styled.h4`
   text-transform: capitalize;
 `;
 
-const ListWrapper = styled.ul``;
-
-const ListItem = styled.li``;
+const ListWrapper = styled.section``;
 
 const EmptyListMessage = styled.p``;
