@@ -27,7 +27,6 @@ const ProductDetail: React.FC<Props> = () => {
 
         if (response.status === 200) {
           const successData = await response.json();
-          console.log(successData);
           setProduct(successData);
         }
       } catch (err) {
