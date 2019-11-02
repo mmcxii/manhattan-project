@@ -27,7 +27,6 @@ const ProductDetail: React.FC<Props> = () => {
 
         if (response.status === 200) {
           const successData = await response.json();
-
           setProduct(successData);
         }
       } catch (err) {
@@ -40,14 +39,49 @@ const ProductDetail: React.FC<Props> = () => {
 
   return (
     <>
-      {product && (
+      {product === null ? (
+        <p> Product doesn't exist </p>
+      ) : product.type === 'MIXED' ? (
+        <>
+          <Card as='section'>
+            <CardHeader>{product.name}</CardHeader>
+            <ProductInfo>
+              <Details>
+                <p>
+                  <strong>Glass Type:</strong> {product.details.glassType}
+                </p>
+                <p>
+                  <strong>Directions:</strong> {product.details.directions}
+                </p>
+                <strong>Ingredients: </strong> <br />
+                <ul>
+                  {product.details.ingredients ? (
+                    product.details.ingredients.map(e => (
+                      <li>
+                        {e.name}: {e.measurement}
+                      </li>
+                    ))
+                  ) : (
+                    <span></span>
+                  )}
+                </ul>
+              </Details>
+              <Image
+                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
+                alt={product.name}
+              />
+            </ProductInfo>
+          </Card>
+          <CommentsSection type={product.type} comments={product.comments} />
+        </>
+      ) : (
         <>
           <Card as='section'>
             <CardHeader>{product.name}</CardHeader>
             <ProductInfo>
               <Details>
                 {/* Beer Details */}
-                {product.details.ABV && <small>ABV: %{product.details.ABV}</small>}
+                {product.details.ABV && `ABV: %${product.details.ABV}`}
                 {product.details.organic === true && (
                   <p>
                     Organic: <i className='fas fa-seedling' />
@@ -62,7 +96,6 @@ const ProductDetail: React.FC<Props> = () => {
               />
             </ProductInfo>
           </Card>
-
           <CommentsSection type={product.type} comments={product.comments} />
         </>
       )}
