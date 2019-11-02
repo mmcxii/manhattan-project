@@ -17,17 +17,17 @@ export interface ICommentModel extends Model<ICommentDocument> {
 //Comment DTO class
 
 export class CommentData {
-author: UserData;
-downvotes: IUser[];
-upvotes: IUser[];
-_id: string;
+  author: UserData;
+  downvotes: IUser[];
+  upvotes: IUser[];
+  _id: string;
 
-constructor(comment: ICommentDocument, user: IUserDocument) {
-  this.author = new UserData(user);
-  this.downvotes = comment.downvotes;
-  this.upvotes = comment.upvotes;
-  this._id = comment._id
-}
+  constructor(comment: ICommentDocument, user: IUserDocument) {
+    this.author = new UserData(user);
+    this.downvotes = comment.downvotes;
+    this.upvotes = comment.upvotes;
+    this._id = comment._id;
+  }
 }
 
 const commentSchema = new Schema({

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User, IUserDocument, UserData } from '../models';
+import { User, IUserDocument, UserData, Comment, ICommentDocument } from '../models';
 import { NotFound, ServerError, BadRequest, Ok, OkNoContent, SendStatus } from './Status';
 import { IUserToken, IUserRequest } from '../interfaces';
 import { s3methods } from '../util/AWS';
@@ -22,13 +22,15 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers');
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers favorites');
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
       }
 
-      const userData = userDoc.toUserData();
+      const comments: ICommentDocument[] = await Comment.find({ author: userDoc._id }, '-author');
+
+      const userData = new UserData(userDoc, true, comments);
 
       return Ok(res, userData);
     } catch (error) {
