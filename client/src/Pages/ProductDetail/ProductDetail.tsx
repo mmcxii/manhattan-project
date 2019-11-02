@@ -43,30 +43,62 @@ const ProductDetail: React.FC<Props> = () => {
       {product === null ? (
         <p> Product doesn't exist </p>
       ) : product.type === 'MIXED' ? (
-        {
-          /* Mixed Details */
-        }
-      ) : (
-        <Card as='section'>
-          <CardHeader>{product.name}</CardHeader>
-          <ProductInfo>
-            <Details>
-              {/* Beer Details */}
-              {product.details.ABV && `ABV: %${product.details.ABV}`}
-              {product.details.organic === true && (
+        <>
+          <Card as='section'>
+            <CardHeader>{product.name}</CardHeader>
+            <ProductInfo>
+              <Details>
                 <p>
-                  Organic: <i className='fas fa-seedling' />
+                  <strong>Glass Type:</strong> {product.details.glassType}
                 </p>
-              )}
+                <p>
+                  <strong>Directions:</strong> {product.details.directions}
+                </p>
+                <strong>Ingredients: </strong> <br />
+                <ul>
+                  {product.details.ingredients ? (
+                    product.details.ingredients.map(e => (
+                      <li>
+                        {e.name}: {e.measurement}
+                      </li>
+                    ))
+                  ) : (
+                    <span></span>
+                  )}
+                </ul>
+              </Details>
+              <Image
+                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
+                alt={product.name}
+              />
+            </ProductInfo>
+          </Card>
+          <CommentsSection type={product.type} comments={product.comments} />
+        </>
+      ) : (
+        <>
+          <Card as='section'>
+            <CardHeader>{product.name}</CardHeader>
+            <ProductInfo>
+              <Details>
+                {/* Beer Details */}
+                {product.details.ABV && `ABV: %${product.details.ABV}`}
+                {product.details.organic === true && (
+                  <p>
+                    Organic: <i className='fas fa-seedling' />
+                  </p>
+                )}
 
-              {product.details.desc && <p>{product.details.desc}</p>}
-            </Details>
-            <Image
-              src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
-              alt={product.name}
-            />
-          </ProductInfo>
-        </Card>
+                {product.details.desc && <p>{product.details.desc}</p>}
+              </Details>
+              <Image
+                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
+                alt={product.name}
+              />
+            </ProductInfo>
+          </Card>
+          <CommentsSection type={product.type} comments={product.comments} />
+        </>
       )}
     </>
   );
