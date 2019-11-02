@@ -27,7 +27,7 @@ const ProductDetail: React.FC<Props> = () => {
 
         if (response.status === 200) {
           const successData = await response.json();
-
+          console.log(successData);
           setProduct(successData);
         }
       } catch (err) {
@@ -40,31 +40,33 @@ const ProductDetail: React.FC<Props> = () => {
 
   return (
     <>
-      {product && (
-        <>
-          <Card as='section'>
-            <CardHeader>{product.name}</CardHeader>
-            <ProductInfo>
-              <Details>
-                {/* Beer Details */}
-                {product.details.ABV && <small>ABV: %{product.details.ABV}</small>}
-                {product.details.organic === true && (
-                  <p>
-                    Organic: <i className='fas fa-seedling' />
-                  </p>
-                )}
+      {product === null ? (
+        <p> Product doesn't exist </p>
+      ) : product.type === 'MIXED' ? (
+        {
+          /* Mixed Details */
+        }
+      ) : (
+        <Card as='section'>
+          <CardHeader>{product.name}</CardHeader>
+          <ProductInfo>
+            <Details>
+              {/* Beer Details */}
+              {product.details.ABV && `ABV: %${product.details.ABV}`}
+              {product.details.organic === true && (
+                <p>
+                  Organic: <i className='fas fa-seedling' />
+                </p>
+              )}
 
-                {product.details.desc && <p>{product.details.desc}</p>}
-              </Details>
-              <Image
-                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
-                alt={product.name}
-              />
-            </ProductInfo>
-          </Card>
-
-          <CommentsSection type={product.type} comments={product.comments} />
-        </>
+              {product.details.desc && <p>{product.details.desc}</p>}
+            </Details>
+            <Image
+              src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
+              alt={product.name}
+            />
+          </ProductInfo>
+        </Card>
       )}
     </>
   );
