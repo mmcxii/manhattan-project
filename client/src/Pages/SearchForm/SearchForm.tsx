@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
-import { ResultsItem, MixedDetails, BeerDetails } from '../../Pages/SearchForm/ResultsItem/index';
+import { ResultsItem, MixedDetails, BeerDetails } from './ResultsItem';
 
 interface Props {}
 
@@ -38,6 +38,8 @@ const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();
   const [beerResults, setBeerResults] = useState<ProductProps<BeerProps>[]>([]);
   const [mixedResults, setMixedResults] = useState<ProductProps<MixedProps>[]>([]);
+  const [displayResults, setDisplayResults] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [values, handleChange] = useForm({ query: '' });
   const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
 
@@ -58,6 +60,10 @@ const SearchForm: React.FC<Props> = () => {
       console.log(err);
     }
 
+    if (displayResults === false) {
+      setDisplayResults(true);
+    }
+    setSearchTerm(values.query);
     return data;
   };
 
@@ -86,27 +92,32 @@ const SearchForm: React.FC<Props> = () => {
 
   return (
     <>
-      {beerResults.length === 0 && mixedResults.length === 0 ? (
-        <Card as='section'>
-          <CardHeader>{type} search</CardHeader>
-          <CardBody>
-            <Form onSubmit={e => onSearchSubmit(e)}>
-              <Input
-                name='query'
-                value={values.query}
-                onChange={handleChange}
-                icon={`far ${icon}`}
-                label={`What ${type} would you like?`}
-                placeholder='Enter what you want here...'
-              />
+      <Card as='section'>
+        <CardHeader>{type} search</CardHeader>
+        <CardBody>
+          <small>
+            <Link to={`/search/${type === 'beer' ? 'cocktail' : 'beer'}`}>
+              Not feeling a {type}? How about a {type === 'beer' ? 'cocktail' : 'beer'} instead?
+            </Link>
+          </small>
+          <Form onSubmit={e => onSearchSubmit(e)}>
+            <Input
+              name='query'
+              value={values.query}
+              onChange={handleChange}
+              icon={`far ${icon}`}
+              label={`What ${type} would you like?`}
+              placeholder='Enter what you want here...'
+            />
 
-              <Button type='submit'>Search</Button>
-            </Form>
-          </CardBody>
-        </Card>
-      ) : (
+            <Button type='submit'>Search</Button>
+          </Form>
+        </CardBody>
+      </Card>
+
+      {displayResults && (
         <Card>
-          <CardHeader>{values.query}</CardHeader>
+          <CardHeader>{searchTerm}</CardHeader>
           <CardBody>
             {beerResults.length > 0 &&
               beerResults.map(item => (
