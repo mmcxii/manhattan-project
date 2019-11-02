@@ -7,10 +7,12 @@ interface Props {
 
 const MixedDetails: React.FC<Props> = ({ item }) => {
   console.log(item);
+
+  const ingredientNames = item.details.ingredients.map(e => `${e.name}`).join(', ');
+
   return (
     <>
-      <p>{item.details.glassType}</p>
-      <p>{item.details.directions}</p>
+      <p>{ingredientNames}</p>
     </>
   );
 };

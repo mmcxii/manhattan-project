@@ -31,7 +31,12 @@ export interface MixedProps {
   glassType: string;
   directions: string;
   image: string[];
-  ingrediants: string;
+  ingredients: [
+    {
+      name: string;
+      measurement: string;
+    }
+  ];
 }
 
 const SearchForm: React.FC<Props> = () => {
