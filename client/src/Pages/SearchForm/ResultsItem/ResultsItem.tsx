@@ -25,7 +25,9 @@ const ResultsItem: React.FC<Props> = props => {
         <ItemName>{item.name}</ItemName>
       </h2>
       {children}
-      <i className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`} />
+      <ItemVotes
+        className={`far fa-arrow-alt-circle-${item.upvotes.length - item.downvotes.length >= 0 ? 'up' : 'down'}`}
+      />
       {item.upvotes.length - item.downvotes.length}
       <hr></hr> <br></br>
     </Wrapper>
@@ -51,6 +53,9 @@ const Wrapper = styled(Link)`
 const ItemName = styled.i`
   float: right;
   position: absolute;
-  padding-top: 40px;
+  padding-top: 20px;
   margin: ${spacing.lg};
+`;
+const ItemVotes = styled.i`
+  margin: ${spacing.xs};
 `;

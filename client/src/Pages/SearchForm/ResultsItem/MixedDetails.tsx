@@ -10,8 +10,8 @@ const MixedDetails: React.FC<Props> = ({ item }) => {
   console.log(item);
   return (
     <>
-      <ItemGlassType>{item.details.glassType}</ItemGlassType>
-      <p>{item.details.directions}</p>
+      <ItemGlassType>{'The Preferred way is with a' + '   ' + item.details.glassType + '.'}</ItemGlassType>
+      <ItemDirections>{item.details.directions}</ItemDirections>
     </>
   );
 };
@@ -19,4 +19,7 @@ export default MixedDetails;
 
 const ItemGlassType = styled.i`
   margin: ${spacing.lg};
+`;
+const ItemDirections = styled.i`
+  text-align: left;
 `;
