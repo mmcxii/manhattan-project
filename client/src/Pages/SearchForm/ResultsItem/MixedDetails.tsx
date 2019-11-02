@@ -1,19 +1,22 @@
 import React from 'react';
-import { MixedProps } from '../SearchForm';
+import { ProductProps, MixedProps } from '../SearchForm';
 import styled from 'styled-components';
 import { spacing } from 'Utilities';
-
 interface Props {
-  item: MixedProps;
+  item: ProductProps<MixedProps>;
 }
 
 const MixedDetails: React.FC<Props> = ({ item }) => {
   console.log(item);
   return (
     <>
-      <p>{item.details.glassType}</p>
+      <ItemGlassType>{item.details.glassType}</ItemGlassType>
       <p>{item.details.directions}</p>
     </>
   );
 };
 export default MixedDetails;
+
+const ItemGlassType = styled.i`
+  margin: ${spacing.lg};
+`;

@@ -12,7 +12,6 @@ const Logout: React.FC<Props> = () => {
   const { push } = useHistory();
 
   const logUserOut = () => {
-    // Remove user info from localstorage and UserContext
     localStorage.removeItem('loginToken');
     localStorage.removeItem('userInfo');
     dispatch({ type: 'LOG_USER_OUT' });

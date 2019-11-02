@@ -6,7 +6,7 @@ import { UserProps } from 'Store';
 interface Props {
   list: {
     title: string;
-    list: UserProps[] | undefined;
+    list: UserProps[];
     emptyListMessage: string;
   };
 }
@@ -14,7 +14,7 @@ interface Props {
 const List: React.FC<Props> = ({ list }) => (
   <>
     <Title>{list.title}</Title>
-    {list.list ? (
+    {list.list.length > 0 ? (
       <ListWrapper>
         {list.list.map(follow => (
           <ListItem key={follow.username}>{follow.name || follow.username}</ListItem>
