@@ -57,7 +57,7 @@ const ProductDetail: React.FC<Props> = () => {
                 <ul>
                   {product.details.ingredients ? (
                     product.details.ingredients.map(e => (
-                      <li>
+                      <li key={e._id}>
                         {e.name}: {e.measurement}
                       </li>
                     ))

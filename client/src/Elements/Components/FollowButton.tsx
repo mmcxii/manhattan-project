@@ -25,9 +25,11 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
         if (follow.username === followTarget.username) {
           return setUserIsFollowing(true);
         }
+
+        return setUserIsFollowing(false);
       });
     }
-  }, []);
+  }, [followTarget]);
 
   const toggleFollow = async () => {
     if (lsLoginToken && lsUserInfo) {
@@ -55,7 +57,7 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
         dispatch({ type: userIsFollowing ? 'REMOVE_FOLLOW' : 'ADD_FOLLOW', payload: followTarget });
 
         // Update localstorage based on component state
-        if (userIsFollowing) {
+        if (!userIsFollowing) {
           localStorage.setItem(
             'userInfo',
             JSON.stringify({ ...userInfo, follows: [...userInfo.follows, followTarget] })

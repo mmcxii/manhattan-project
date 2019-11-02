@@ -5,7 +5,7 @@ type ProductType = 'BEER' | 'WINE' | 'MIXED';
 
 interface ProductDetail {
   subtype?: string;
-  ingredients?: { name: string; measurement: string }[];
+  ingredients?: { _id: string; name: string; measurement: string }[];
   directions?: string;
   glassType?: string;
   ABV?: string;
