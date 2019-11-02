@@ -16,21 +16,24 @@ export interface ProductProps {
   upvotes: string[];
   downvotes: string[];
   imgUrl: string;
-  details: BeerProps | MixedProps;
 }
 
 export interface BeerProps extends ProductProps {
-  desc: string;
-  ABV?: number;
-  organic: boolean;
-  subtype: string;
+  details: {
+    desc: string;
+    ABV?: number;
+    organic: boolean;
+    subtype: string;
+  };
 }
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
 export interface MixedProps extends ProductProps {
-  glassType: string;
-  directions: string;
-  image: string[];
-  ingrediants: string;
+  details: {
+    glassType: string;
+    directions: string;
+    image: string[];
+    ingrediants: string;
+  };
 }
 const SearchForm: React.FC<Props> = () => {
   const { type } = useParams();

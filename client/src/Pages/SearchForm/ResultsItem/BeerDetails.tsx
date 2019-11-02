@@ -8,8 +8,8 @@ interface Props {
   item: BeerProps;
 }
 
-const BeerDetails: React.FC<Props> = ({ item }) => {
-  if (item.details.glassType instanceof BeerDetails)
+const BeerDetails: React.FC<BeerProps> = ({ item }) => {
+  if (item.details instanceof BeerDetails)
     return (
       <>
         <p>ABV: ${item.details.ABV}%</p>
