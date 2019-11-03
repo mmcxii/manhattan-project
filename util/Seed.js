@@ -1,31 +1,31 @@
-var express = require('express');
-var mongoose = require('mongoose');
-let axios = require('axios');
+const express = require('express');
+const mongoose = require('mongoose');
+const axios = require('axios');
 require('dotenv').config();
 
 const Types = mongoose.SchemaTypes;
 const Schema = mongoose.Schema;
 
 // //import path from 'path';
-var app = express();
+const app = express();
 //port
 
-var PORT = process.env.PORT || 6969;
-var DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
+const PORT = process.env.PORT || 6969;
+const DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/manhattenDB';
 console.log(process.env.MONGODB_URI);
-let BEER_KEY = process.env.BEER_KEY;
+const BEER_KEY = process.env.BEER_KEY;
 console.log(process.env.TEST);
-let COCKTAIL_KEY = process.env.COCKTAIL_KEY;
+const COCKTAIL_KEY = process.env.COCKTAIL_KEY;
 mongoose.connect(DB_URI, {
   useNewUrlParser: true
 });
 
-var ingredientsSchema = new Schema({
+const ingredientsSchema = new Schema({
   name: Types.String,
   measurement: Types.String
 });
 
-var productDetailsSchema = new Schema({
+const productDetailsSchema = new Schema({
   subType: Types.String,
   ingredients: [ingredientsSchema],
   directions: Types.String,
@@ -69,65 +69,31 @@ productSchema = new Schema({
   details: productDetailsSchema
 });
 
-let product = mongoose.model('Product', productSchema);
-//routes
-app.post('/seed/beer', function(req, res) {
-  dumpBeer();
-});
+const product = mongoose.model('Product', productSchema);
 
-app.post('/seed/cocktail', function(req, res) {
-  dumpMixed();
-});
-
-app.delete('/deleteall/mixed', async (req, res) => {
-  const deleted = await product.deleteMany({ type: 'MIXED' });
-  console.log(deleted);
-})
-
-app.delete('/deleteall/beer', async (req, res) => {
-  const deleted = await product.deleteMany({ type: 'BEER' });
-  console.log(deleted);
-})
-
-app.listen(PORT, function() {
-  console.log('Listening on port ' + PORT);
-});
-//awaits the api call and then pushes data into db
-const dumpMixed = async () => {
-  const data = await cocktaildbId();
-  product.create(data, function(err, products) {
-    if (err) {
-      throw err;
-    }
-  });
-};
-//awaits the api call and then pushes data into db
-const dumpBeer = async () => {
-  const data = await brewerydb();
-  product.create(data, function(err, products) {
-    if (err) {
-      throw err;
-    }
-  });
-};
 //hits brewery API and stores data in beersArray
 const brewerydb = async () => {
-  const beersArray = [];
+  const beersMap = new Map();
 
   for (let i = 0; i < 24; i++) {
     try {
-      const response = await axios.get(
-        `https://sandbox-api.brewerydb.com/v2/beers/?key=${BEER_KEY}&p=${i}`
-      );
+      const response = await axios.get(`https://sandbox-api.brewerydb.com/v2/beers/?key=${BEER_KEY}&p=${i}`);
       const data = response.data.data;
 
-      for (let i in data) {
+      for (const i in data) {
         //check if data exists
         if (data === undefined) {
           continue;
         }
+
+        // Verify valid ID
+        const beerId = data[i].id;
+        if (!beerId || beersMap.has(beerId)) {
+          continue;
+        }
+
         //check and set image, if no image set to an empty img src
-        let imageLink = data[i].labels;
+        const imageLink = data[i].labels;
         let image;
         if (imageLink === undefined) {
           image = '//:0';
@@ -135,75 +101,77 @@ const brewerydb = async () => {
           image = imageLink.contentAwareLarge;
         }
         //check to see if desc exists, sets default
-        let descValue = data[i].description;
+        const descValue = data[i].description;
         let desc;
         if (descValue === undefined) {
           desc = 'No description';
         } else {
           desc = descValue;
         }
+
         //checks if there is a subtype, if not set to N/A
-        let subName = data[i].style;
+        const subName = data[i].style;
         let beerType;
         if (subName === undefined) {
           beerType = 'N/A';
         } else {
           beerType = data[i].style.shortName;
         }
+
         //changes organic to boolean
         let organic = false;
         if (data[i].isOrganic == 'Y') {
           organic = true;
         }
+
         //create object array
-        beersArray.push({
-          extID: data[i].id,
+
+        const newBeer = {
+          extID: beerId,
           type: 'BEER',
           name: data[i].name,
           imgUrl: image,
           details: {
             desc: desc,
             ABV: data[i].abv,
-            subtype: beerType,
+            subType: beerType,
             organic: organic
           }
-        });
+        };
+
+        // Verify required fields set
+        if (!newBeer.extID || !newBeer.name) {
+          continue;
+        }
+
+        beersMap.set(beerId, newBeer);
       }
     } catch (error) {
-      console.log(error);
+      console.log('BEER map error:', error);
     }
   }
-  return await beersArray;
-};
-//gets all cocktails in db and stores their id in cocktailID
-const cocktaildbId = async () => {
-  const cocktailID = [];
-  try {
-    const response = await axios.get(
-      `https://www.thecocktaildb.com/api/json/v2/${COCKTAIL_KEY}/filter.php?a=Alcoholic`
-    );
-    const data = response.data.drinks;
 
-    for (let i in data) {
-      cocktailID.push({
-        id: data[i].idDrink
-      });
-    }
-    return await cocktaildb(cocktailID);
-  } catch (error) {
-    console.log(error);
-  }
+  return [...beersMap.values()];
 };
+
 //awaits cocktailID and searches for all cocktails by IDs in array
-const cocktaildb = async queryArray => {
-  const cocktail = [];
-  for (let i in queryArray) {
+const cocktaildb = async drinkIds => {
+  const cocktailMap = new Map();
+
+  for (let i = 0; i < drinkIds.length; i++) {
+    const drinkId = drinkIds[i];
+
+    // Verify valid cocktail id
+    if (!drinkId || cocktailMap.has(drinkId)) {
+      continue;
+    }
+
     try {
-      const response = await axios.get(
-        `https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=${queryArray[i].id}`
-      );
+      const response = await axios.get(`https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=${drinkId}`);
+
       const data = response.data.drinks;
-      let ingredients = [];
+      const ingredients = [];
+
       //set up ingredient objects
       const ingredientNum = [
         data[0].strIngredient1,
@@ -239,7 +207,8 @@ const cocktaildb = async queryArray => {
         data[0].strMeasure14,
         data[0].strMeasure15
       ];
-      for (let j in ingredientNum) {
+
+      for (const j in ingredientNum) {
         if (ingredientNum[j] != null || ingredientNum[j] === '') {
           ingredients.push({
             name: ingredientNum[j],
@@ -247,9 +216,11 @@ const cocktaildb = async queryArray => {
           });
         }
       }
+
       //set up for cocktail object
-      cocktail.push({
-        extID: data[0].idDrink,
+
+      const newCocktail = {
+        extID: drinkId,
         type: 'MIXED',
         name: data[0].strDrink,
         imgUrl: data[0].strDrinkThumb,
@@ -258,10 +229,150 @@ const cocktaildb = async queryArray => {
           directions: data[0].strInstructions,
           glassType: data[0].strGlass
         }
-      });
+      };
+
+      // Make sure required fields are set
+      if (!newCocktail.extID || !newCocktail.name) {
+        continue;
+      }
+
+      cocktailMap.set(drinkId, newCocktail);
     } catch (error) {
-      console.log(error);
+      console.log('COCKTAIL map error:', error);
     }
   }
-  return await cocktail;
+
+  return [...cocktailMap.values()];
 };
+
+//gets all cocktails in db and stores their id in cocktailID
+const cocktaildbId = async () => {
+  let cocktails = [];
+  try {
+    const drinkTypesUri = `https://www.thecocktaildb.com/api/json/v2/${COCKTAIL_KEY}/filter.php?a=Alcoholic`;
+    const response = await axios.get(drinkTypesUri);
+
+    const drinkData = response.data.drinks;
+
+    const cocktailIDs = drinkData.map(drink => drink.idDrink);
+
+    cocktails = await cocktaildb(cocktailIDs);
+  } catch (error) {
+    console.log(error);
+  }
+
+  return cocktails;
+};
+
+//awaits the api call and then pushes data into db
+const dumpMixed = async () => {
+  console.log('Begin dumping cocktail data...');
+  let cocktails = [];
+  try {
+    cocktails = await cocktaildbId();
+    if (cocktails.length === 0) {
+      return;
+    }
+  } catch (error) {
+    console.log('COCKTAIL DUMP ERROR:', error);
+    throw error;
+  }
+
+  console.log(`${cocktails.length} cocktails found. Saving to DB...`);
+
+  return await product.create(cocktails);
+};
+
+//awaits the api call and then pushes data into db
+const dumpBeer = async () => {
+  console.log('Begin dumping beer data...');
+  let beers = [];
+  try {
+    beers = await brewerydb();
+    if (beers.length === 0) {
+      return;
+    }
+  } catch (error) {
+    console.log('BEER DUMP ERROR:', error);
+    throw error;
+  }
+
+  console.log(`${beers.length} beers found. Saving to DB...`);
+
+  return await product.create(beers);
+};
+
+// Dump & delete helper functions
+const dumpData = async (res, dumpFunc, type) => {
+  try {
+    await dumpFunc();
+  } catch (error) {
+    res.status(500).json(error);
+  }
+
+  res.status(201).send(`${type} data dump complete.`);
+};
+
+const deleteData = async (res, type) => {
+  let deleteCount = 0;
+  try {
+    console.log(`Begin delete ${type} product data...`);
+
+    const docType = type === 'ALL' ? {} : { type: type };
+    const response = await product.deleteMany(docType);
+    if (!response.ok) {
+      throw response;
+    }
+
+    deleteCount = response.deletedCount || 0;
+    console.log(`Deleted ${deleteCount} product(s).`);
+  } catch (error) {
+    console.log(`${type} delete error: ${error}`);
+    return res.status(500).send(error);
+  }
+
+  return res.status(200).send(`Deleted ${deleteCount} product(s).`);
+};
+
+//routes
+app.post('/seed', (req, res) => {
+  // Seed all data
+  console.log('Begin dumping all data...');
+
+  const beerDump = dumpBeer();
+  const mixedDump = dumpMixed();
+
+  Promise.all(beerDump, mixedDump)
+    .then(() => {
+      console.log('All data dump complete.');
+      return res.status(201).send('Data dump complete.');
+    })
+    .catch(err => {
+      console.log('Error seeding all data: ', err.message || err);
+      return res.status(500).send(error);
+    });
+});
+
+app.post('/seed/beer', async function(req, res) {
+  return dumpData(res, dumpBeer, 'Beer');
+});
+
+app.post('/seed/cocktail', async function(req, res) {
+  return dumpData(res, dumpMixed, 'Cocktail');
+});
+
+app.delete('/deleteall', async (req, res) => {
+  return deleteData(res, 'ALL');
+});
+
+app.delete('/deleteall/mixed', async (req, res) => {
+  return deleteData(res, 'MIXED');
+});
+
+app.delete('/deleteall/beer', async (req, res) => {
+  return deleteData(res, 'BEER');
+});
+
+app.listen(PORT, function() {
+  console.log('Seed server listening on port ' + PORT);
+});
