@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { ProductProps } from 'Store';
 import { spacing } from 'Utilities';
-import { Card, CardHeader, CardBody } from 'Elements';
+import { Card, CardHeader, CardBody, GoBackButton } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
 
@@ -39,6 +39,8 @@ const ProductDetail: React.FC<Props> = () => {
 
   return (
     <>
+      <GoBackButton />
+
       {product === null ? (
         <p> Product doesn't exist </p>
       ) : product.type === 'MIXED' ? (
@@ -81,7 +83,7 @@ const ProductDetail: React.FC<Props> = () => {
             <ProductInfo>
               <Details>
                 {/* Beer Details */}
-                {product.details.ABV && `ABV: %${product.details.ABV}`}
+                {product.details.ABV && `ABV: ${product.details.ABV}%`}
                 {product.details.organic === true && (
                   <p>
                     Organic: <i className='fas fa-seedling' />

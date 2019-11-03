@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
 import { red, white } from 'Utilities';
-import { Button as SrcButton } from './Button';
+import { Button as B } from './Button';
 
 interface Props {
   followTarget: UserProps;
@@ -25,6 +25,8 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
         return setUserIsFollowing(true);
       }
     }
+
+    return setUserIsFollowing(false);
   }, [followTarget, userInfo]);
 
   const toggleFollow = async () => {
@@ -92,7 +94,7 @@ const NoButton = styled.div`
   grid-area: follow;
 `;
 
-const Button = styled(SrcButton)<{ followed: boolean }>`
+const Button = styled(B)<{ followed: boolean }>`
   grid-area: follow;
   ${props => (props.followed ? `background: ${red} !important; color: ${white} !important;` : null)}
 `;

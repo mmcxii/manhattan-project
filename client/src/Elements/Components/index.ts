@@ -4,6 +4,7 @@ export * from './Button';
 export * from './Card';
 export * from './FollowButton';
 export * from './Form';
+export * from './GoBackButton';
 export * from './Icon';
 export * from './Rating';
 export * from './Toggle';

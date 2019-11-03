@@ -47,7 +47,7 @@ const Router: React.FC = () => {
           <EditUser />
         </Route>
 
-        <Route path='/search/:type'>
+        <Route path='/search/:type/:query?'>
           <SearchForm />
         </Route>
 
