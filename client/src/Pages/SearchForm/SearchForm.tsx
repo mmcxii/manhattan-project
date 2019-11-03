@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 
 import { useForm } from 'Hooks';
@@ -40,7 +40,8 @@ export interface MixedProps {
 }
 
 const SearchForm: React.FC<Props> = () => {
-  const { type } = useParams();
+  const { type, query } = useParams();
+  const { push } = useHistory();
   const [beerResults, setBeerResults] = useState<ProductProps<BeerProps>[]>([]);
   const [mixedResults, setMixedResults] = useState<ProductProps<MixedProps>[]>([]);
   const [displayResults, setDisplayResults] = useState<boolean>(false);
@@ -52,7 +53,22 @@ const SearchForm: React.FC<Props> = () => {
     let data: ProductProps<T>[] = [];
 
     try {
-      const params = queryString.stringify(values);
+      let params: string;
+
+      /* If the user is brought to this page with an existing query,
+         such as if they were linked to it or if they are returning to the page
+         from visiting a specific item returned from the search */
+      if (query && values.query === '') {
+        const previousSearch: string = query.split('=')[1];
+        setSearchTerm(previousSearch);
+        params = query;
+
+        /* Otherwise overwrite the current route params */
+      } else {
+        params = queryString.stringify(values);
+        push(`/search/${type}/${params}`);
+        setSearchTerm(values.query);
+      }
 
       const response: Response = await fetch(`/api/products?type=${mode}&${params}`);
 
@@ -68,7 +84,7 @@ const SearchForm: React.FC<Props> = () => {
     if (displayResults === false) {
       setDisplayResults(true);
     }
-    setSearchTerm(values.query);
+
     return data;
   };
 
@@ -94,6 +110,27 @@ const SearchForm: React.FC<Props> = () => {
         return;
     }
   };
+
+  useEffect(() => {
+    const onLoadSearch = async () => {
+      switch (type) {
+        case 'beer':
+          const beerData = await APISearch<BeerProps>(type);
+          setBeerResults(beerData);
+          break;
+        case 'cocktail':
+          const mixedData = await APISearch<MixedProps>('mixed');
+          setMixedResults(mixedData);
+          break;
+        default:
+          return;
+      }
+    };
+
+    if (query) {
+      onLoadSearch();
+    }
+  }, []);
 
   return (
     <>

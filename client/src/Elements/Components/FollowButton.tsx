@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
 import { red, white } from 'Utilities';
-import { Button as SrcButton } from './Button';
+import { Button as B } from './Button';
 
 interface Props {
   followTarget: UserProps;
@@ -94,7 +94,7 @@ const NoButton = styled.div`
   grid-area: follow;
 `;
 
-const Button = styled(SrcButton)<{ followed: boolean }>`
+const Button = styled(B)<{ followed: boolean }>`
   grid-area: follow;
   ${props => (props.followed ? `background: ${red} !important; color: ${white} !important;` : null)}
 `;
