@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
+import styled from 'styled-components';
 
 import { useForm } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 import { ResultsItem, MixedDetails, BeerDetails } from './ResultsItem';
+import { spacing, greyLight } from '../../Utilities';
 
 interface Props {}
 
@@ -23,7 +25,7 @@ export interface BeerProps {
   desc: string;
   ABV?: number;
   organic: boolean;
-  subtype: string;
+  subType: string;
 }
 
 // abv number | Subtype string | ingrediants = [{}] | directions string | glass string | desc string | organic boolean | --> product.details
@@ -38,6 +40,12 @@ export interface MixedProps {
     }
   ];
 }
+
+const Spacer = styled.hr`
+  margin: ${spacing.md} 0;
+  border-color: ${greyLight};
+  opacity: 0.5;
+`;
 
 const SearchForm: React.FC<Props> = () => {
   const { type, query } = useParams();
@@ -163,16 +171,22 @@ const SearchForm: React.FC<Props> = () => {
           <CardBody>
             {beerResults.length > 0 &&
               beerResults.map(item => (
-                <ResultsItem key={`ri-${item._id}`} item={item}>
-                  <BeerDetails key={`bd-${item._id}`} item={item} />
-                </ResultsItem>
+                <div key={item._id}>
+                  <ResultsItem item={item}>
+                    <BeerDetails item={item} />
+                  </ResultsItem>
+                  <Spacer />
+                </div>
               ))}
-
+            ​
             {mixedResults.length > 0 &&
               mixedResults.map(item => (
-                <ResultsItem key={`ri-${item._id}`} item={item}>
-                  <MixedDetails key={`md-${item._id}`} item={item} />
-                </ResultsItem>
+                <div key={item._id}>
+                  <ResultsItem item={item}>
+                    <MixedDetails item={item} />
+                  </ResultsItem>
+                  <Spacer />
+                </div>
               ))}
           </CardBody>
         </Card>

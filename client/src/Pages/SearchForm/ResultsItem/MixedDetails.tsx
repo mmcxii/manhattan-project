@@ -1,28 +1,25 @@
 import React from 'react';
 import { ProductProps, MixedProps } from '../SearchForm';
-import styled from 'styled-components';
-import { spacing } from 'Utilities';
+import { ResultType, ResultDetails } from './ResultsItem';
+
 interface Props {
   item: ProductProps<MixedProps>;
 }
 
-const MixedDetails: React.FC<Props> = ({ item }) => {
-  console.log(item);
-
-  const ingredientNames = item.details.ingredients.map(e => `${e.name}`).join(', ');
+export const MixedDetails: React.FC<Props> = ({ item }) => {
+  const glassType = item.details.glassType || 'any';
+  const ingrediants = item.details.ingredients.map(i => i.name).join(', ');
 
   return (
     <>
-      <ItemGlassType>{'The Preferred way is with a' + '   ' + item.details.glassType + '.'}</ItemGlassType>
-      <ItemDirections>{item.details.directions}</ItemDirections>
+      <ResultType>
+        <strong>Served in: </strong>
+        {glassType}
+      </ResultType>
+      <ResultDetails>
+        <strong>Ingrediants: </strong>
+        {ingrediants}
+      </ResultDetails>
     </>
   );
 };
-export default MixedDetails;
-
-const ItemGlassType = styled.i`
-  margin: ${spacing.lg};
-`;
-const ItemDirections = styled.i`
-  text-align: left;
-`;
