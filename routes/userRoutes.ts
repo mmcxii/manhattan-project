@@ -28,7 +28,7 @@ export const UserRoutes = Router()
         return NotFound(res, `User ${username} not found.`);
       }
 
-      const comments: ICommentDocument[] = await Comment.find({ author: userDoc._id }, '-author');
+      const comments: ICommentDocument[] = await Comment.find({ author: userDoc._id }, '-author').populate('product');
 
       const userData = new UserData(userDoc, true, comments);
 
