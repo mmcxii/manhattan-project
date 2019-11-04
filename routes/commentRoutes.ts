@@ -26,7 +26,7 @@ export const CommentRoutes = Router()
   })
   .post('/', async (req, res) => {
     // Create a new comment
-    const { text, author } = req.body;
+    const { text, author, product } = req.body;
 
     if (!text) {
       return BadRequest(res, 'Missing comment text.');
@@ -36,7 +36,7 @@ export const CommentRoutes = Router()
     }
 
     try {
-      const newComment: ICommentDocument | Error = await Comment.createComment(author, text);
+      const newComment: ICommentDocument | Error = await Comment.createComment(author, text, product);
 
       if (newComment instanceof Error) {
         throw newComment;
