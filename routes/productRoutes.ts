@@ -189,7 +189,7 @@ export const ProductRoutes = Router()
     }
 
     try {
-      const newComment: ICommentDocument | Error = await Comment.createComment(author, text);
+      const newComment: ICommentDocument | Error = await Comment.createComment(author, text, id);
 
       if (newComment instanceof Error) {
         throw newComment;
