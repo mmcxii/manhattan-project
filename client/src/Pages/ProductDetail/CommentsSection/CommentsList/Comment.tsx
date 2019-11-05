@@ -13,6 +13,8 @@ interface Props {
 const Comment: React.FC<Props> = ({ comment }) => {
   const { theme } = useContext(ThemeContext);
 
+  console.log(comment.author);
+
   return (
     <Wrapper theme={theme}>
       <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} />
