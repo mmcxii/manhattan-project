@@ -275,10 +275,11 @@ export const UserRoutes = Router()
       if (!user) {
         return NotFound(res, `Cannot find username: ${ req.params.username }`);
       }
+
+      const userData = new UserData(user);
+
+      return Ok(res, userData);
     } catch (err) {
-
+      return ServerError(res, err);
     }
-    
-
-
   });
