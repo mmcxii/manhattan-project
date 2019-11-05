@@ -12,9 +12,9 @@ interface Props {
 
 const User: React.FC<Props> = ({ user }) => (
   <Wrapper>
+    <UserIcon user={user} withMargin />
     <Link to={`/user/${user.username}`}>
       <h4>{user.name || user.username}</h4>
-      <UserIcon user={user.name || user.username} imgSrc={user.imgUrl} withMargin />
     </Link>
   </Wrapper>
 );
@@ -22,13 +22,11 @@ const User: React.FC<Props> = ({ user }) => (
 export default User;
 
 const Wrapper = styled.article`
+  display: flex;
+  align-items: center;
   margin: ${spacing.sm} 0;
 
   > a {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    align-items: center;
     text-decoration: none;
   }
 `;
