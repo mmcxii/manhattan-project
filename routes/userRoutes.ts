@@ -295,15 +295,12 @@ export const UserRoutes = Router()
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
         { $addToSet: { favorites: product }, new: true }
-      ).populate({
-        path: 'favorites',
-        model: 'Product'
-      });
+      ).exec();
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
-
+      console.log(user);
       return Ok(res, user.favorites);
     } catch (err) {
       return ServerError(res, err);
