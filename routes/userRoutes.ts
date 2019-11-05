@@ -346,13 +346,13 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .put('/:username/favorites', async (req: IUserRequest, res) => {
+  .put('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     const { product } = req.body;
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { $push: { favorites: product }, new: true }
+        { highlightedFavorite: product, new: true }
       ).exec();
 
       if (!user) {
@@ -366,14 +366,10 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .delete('/:username/favorites', async (req: IUserRequest, res) => {
+  .delete('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
-    const { product } = req.body;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate(
-        { _id },
-        { $pull: { favorites: product }, new: true }
-      ).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate({ _id }, { favorites: null, new: true }).exec();
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
