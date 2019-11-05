@@ -298,7 +298,7 @@ export const UserRoutes = Router()
 
       const userData = new UserData(user);
 
-      return Ok(res, userData);
+      return Ok(res, userData.favorites);
     } catch (err) {
       return ServerError(res, err);
     }
@@ -307,12 +307,13 @@ export const UserRoutes = Router()
     const { _id } = req.token as IUserToken;
     const { product } = req.body;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate({_id },  {$pull: { favorites: product}, new: true}).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate({_id },  { $pull: { favorites: product}, new: true}).exec();
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${ req.params.username }`);
       }
 
+      console.log(user)
       const userData = new UserData(user);
 
       return Ok(res, userData);
