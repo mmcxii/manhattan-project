@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { ProductProps } from 'Store';
 import { spacing } from 'Utilities';
-import { Card, CardHeader, CardBody, GoBackButton } from 'Elements';
+import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
 
@@ -48,6 +48,12 @@ const ProductDetail: React.FC<Props> = () => {
           <Card as='section'>
             <CardHeader>{product.name}</CardHeader>
             <ProductInfo>
+              <Rating
+                upvotes={product.upvotes}
+                downvotes={product.downvotes}
+                id={productId || 'error: product not found'}
+                type='products'
+              />
               <Details>
                 <p>
                   <strong>Glass Type:</strong> {product.details.glassType}
@@ -81,6 +87,12 @@ const ProductDetail: React.FC<Props> = () => {
           <Card as='section'>
             <CardHeader>{product.name}</CardHeader>
             <ProductInfo>
+              <Rating
+                upvotes={product.upvotes}
+                downvotes={product.downvotes}
+                id={productId || 'error: product not found'}
+                type='products'
+              />
               <Details>
                 {/* Beer Details */}
                 {product.details.ABV && `ABV: ${product.details.ABV}%`}
@@ -130,14 +142,15 @@ const Details = styled.div`
 const ProductInfo = styled(CardBody)`
   display: grid;
   grid-template-rows: max-content 1fr;
+  grid-template-columns: max-content 1fr;
   grid-template-areas:
-    'image'
-    'details';
+    'rating image'
+    '. details';
   grid-gap: ${spacing.md};
 
   @media screen and (min-width: 768px) {
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: repeat(2, max-content) 1fr;
     grid-template-rows: initial;
-    grid-template-areas: 'image details';
+    grid-template-areas: 'rating image details';
   }
 `;
