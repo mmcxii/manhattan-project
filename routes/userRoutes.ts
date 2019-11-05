@@ -22,9 +22,10 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-
       //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
-      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers').populate({ path: 'favorites', model: 'Product' });
+      const userDoc: IUserDocument | null = await User.findOne({ username })
+        .populate('follows followers')
+        .populate({ path: 'favorites', model: 'Product' });
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -268,34 +269,94 @@ export const UserRoutes = Router()
       return ServerError(res, error);
     }
   })
-  .get('/:username/favorites', async(req: IUserRequest, res) => {
+  .get('/:username/favorites', async (req: IUserRequest, res) => {
     const { username } = req.params;
 
     try {
       //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
-      const user: IUserDocument | null = await User.findOne({username}).populate({path: 'favorites', model: 'Product'});
+      const user: IUserDocument | null = await User.findOne({ username }).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
 
       if (!user) {
-        return NotFound(res, `Cannot find username: ${ req.params.username }`);
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
 
-      const userData = new UserData(user);
-
-      return Ok(res, userData);
+      return Ok(res, user.favorites);
     } catch (err) {
       return ServerError(res, err);
     }
-
-
   })
-  .put('/:username/favorites', async(req: IUserRequest, res) => {
+  .put('/:username/favorites', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     const { product } = req.body;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate({_id },  {$push: { favorites: product}, new: true}).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $addToSet: { favorites: product }, new: true }
+      ).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
 
       if (!user) {
-        return NotFound(res, `Cannot find username: ${ req.params.username }`);
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.favorites);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .delete('/:username/favorites', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $pull: { favorites: product }, new: true }
+      ).exec();
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.favorites);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .get('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
+    const { username } = req.params;
+
+    try {
+      //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
+      const user: IUserDocument | null = await User.findOne({ username }).populate({
+        path: 'highlightedFavorite',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.highlightedFavorite);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .put('/:username/favorites', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $push: { favorites: product }, new: true }
+      ).exec();
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
 
       const userData = new UserData(user);
@@ -305,14 +366,17 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .delete('/:username/favorites', async(req: IUserRequest, res) => {
+  .delete('/:username/favorites', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     const { product } = req.body;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate({_id },  { $pull: { favorites: product}, new: true}).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $pull: { favorites: product }, new: true }
+      ).exec();
 
       if (!user) {
-        return NotFound(res, `Cannot find username: ${ req.params.username }`);
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
       const userData = new UserData(user);
 
