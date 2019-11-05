@@ -265,4 +265,20 @@ export const UserRoutes = Router()
     } catch (error) {
       return ServerError(res, error);
     }
+  })
+  .put('/:username/favorites', async(req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate({_id },  {$push: { favorites: product}, new: true}).exec();
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${ req.params.username }`);
+      }
+    } catch (err) {
+
+    }
+    
+
+
   });
