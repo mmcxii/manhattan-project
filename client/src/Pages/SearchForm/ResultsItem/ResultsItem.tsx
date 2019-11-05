@@ -45,37 +45,55 @@ const ResultTitle = styled.h3`
 
 const ResultImage = styled.img`
   grid-area: image;
-  max-height: 10rem;
+  max-width: 100%;
+  height: auto;
+  object-position: center;
+
+  @media screen and (min-width: 768px) {
+    max-height: 10rem;
+    max-width: 160px;
+  }
 `;
 
 const ItemVotes = styled.span`
   grid-area: score;
-  font-weight: bold:
-  font-size: 30px;
+  font-weight: bold;
 `;
 
 const Wrapper = styled(Link)`
   width: 100%;
   padding: ${spacing.sm};
   display: grid;
-  grid-template-columns: max-content 1fr max-content;
-  grid-template-rows: repeat(2, max-content) 1fr;
-  grid-column-gap: ${spacing.lg};
-  // grid-row-gap: ${spacing.lg};
+  grid-template-columns: 1fr max-content;
+  grid-template-rows: repeat(3, max-content) 1fr;
   grid-template-areas:
-    'image title score'
-    'image type organic'
-    'image details .';
+    'title score'
+    'image image'
+    'type organic'
+    'details details';
+  grid-column-gap: ${spacing.lg};
+  grid-row-gap: ${spacing.lg};
   text-decoration: none;
   cursor: pointer;
   border: 1px solid ${grey};
   ${transition({ speed: '100ms' })}
-  :hover {
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: max-content 1fr max-content;
+    grid-template-rows: repeat(2, max-content) 1fr;
+    grid-template-areas:
+      'image title score'
+      'image type organic'
+      'image details .';
+  }
+
+  &:hover {
     transform: scale(1.01);
     border-color: ${greyLight};
     ${elevation[5]};
   }
-  :active {
+
+  &:active {
     background-color: ${greyLight};
   }
 `;
