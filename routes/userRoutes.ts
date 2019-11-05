@@ -22,7 +22,9 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers favorites');
+
+      //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers').populate({ path: 'favorites', model: 'Product' });
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -312,8 +314,6 @@ export const UserRoutes = Router()
       if (!user) {
         return NotFound(res, `Cannot find username: ${ req.params.username }`);
       }
-
-      console.log(user)
       const userData = new UserData(user);
 
       return Ok(res, userData);
