@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import { CommentProps, ThemeContext } from 'Store';
 import { Rating, UserIcon } from 'Elements';
@@ -12,7 +13,7 @@ interface Props {
 
 const Comment: React.FC<Props> = ({ comment }) => {
   const { theme } = useContext(ThemeContext);
-  const { author } = comment;
+  const { author, dateCreated } = comment;
 
   return (
     <Wrapper theme={theme}>
@@ -20,6 +21,8 @@ const Comment: React.FC<Props> = ({ comment }) => {
       <UserIcon user={author} />
       <Author>
         <Link to={`/user/${author.username}`}>{author.name || author.username}</Link>
+        <Interpunct>{'\u00B7'}</Interpunct>
+        <Date>{moment(dateCreated).fromNow()}</Date>
       </Author>
       <Text>{comment.text}</Text>
     </Wrapper>
@@ -53,6 +56,14 @@ const Author = styled.h4`
       text-decoration: underline;
     }
   }
+`;
+
+const Interpunct = styled.span`
+  margin: 0 ${spacing.sm};
+`;
+
+const Date = styled.span`
+  font-size: 0.7em;
 `;
 
 const Text = styled.p`
