@@ -55,6 +55,7 @@ const ProductDetail: React.FC<Props> = () => {
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
                 type='products'
+                ratingValue={product.rating}
               />
               <Details>
                 <DetailWrapper>
@@ -103,6 +104,7 @@ const ProductDetail: React.FC<Props> = () => {
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
                 type='products'
+                ratingValue={product.rating}
               />
 
               <Details>

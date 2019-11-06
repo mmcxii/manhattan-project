@@ -16,7 +16,7 @@ const Comment: React.FC<Props> = ({ comment }) => {
 
   return (
     <Wrapper theme={theme}>
-      <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} />
+      <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} ratingValue={comment.rating} />
       <UserIcon user={author} />
       <Author>
         <Link to={`/user/${author.username}`}>{author.name || author.username}</Link>
