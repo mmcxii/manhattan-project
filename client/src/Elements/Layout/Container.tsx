@@ -15,7 +15,7 @@ const Container = styled.div`
     --margin: 4rem;
   }
   @media screen and (min-width: 1200px) {
-    --margin: 30%;
+    --margin: 20%;
   }
 `;
 

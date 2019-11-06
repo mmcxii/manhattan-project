@@ -8,3 +8,4 @@ export * from './GoBackButton';
 export * from './Icon';
 export * from './Rating';
 export * from './Toggle';
+export * from './UserIcon';

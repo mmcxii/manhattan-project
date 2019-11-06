@@ -22,7 +22,11 @@ export const UserRoutes = Router()
     const username = req.params.username.trim().toLowerCase();
 
     try {
-      const userDoc: IUserDocument | null = await User.findOne({ username }).populate('follows followers favorites');
+      //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
+      const userDoc: IUserDocument | null = await User.findOne({ username })
+        .populate('follows followers')
+        .populate({ path: 'favorites', model: 'Product' })
+        .populate({ path: 'highlightedFavorite', model: 'Product' });
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -264,5 +268,127 @@ export const UserRoutes = Router()
       return SendStatus(res, status);
     } catch (error) {
       return ServerError(res, error);
+    }
+  })
+  .get('/:username/favorites', async (req: IUserRequest, res) => {
+    const { username } = req.params;
+
+    try {
+      //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
+      const user: IUserDocument | null = await User.findOne({ username }).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.favorites);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .put('/:username/favorites', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $addToSet: { favorites: product } },
+        { new: true }
+      ).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.favorites);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .delete('/:username/favorites', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $pull: { favorites: product } },
+        { new: true }
+      ).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.favorites);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .get('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
+    const { username } = req.params;
+
+    try {
+      //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
+      const user: IUserDocument | null = await User.findOne({ username }).populate({
+        path: 'highlightedFavorite',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.highlightedFavorite);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .put('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    const { product } = req.body;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { highlightedFavorite: product },
+        { new: true }
+      ).populate({
+        path: 'highlightedFavorite',
+        model: 'Product'
+      });
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, user.highlightedFavorite);
+    } catch (err) {
+      return ServerError(res, err);
+    }
+  })
+  .delete('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
+    const { _id } = req.token as IUserToken;
+    try {
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $unset: { highlightedFavorite: null } },
+        { new: true }
+      ).exec();
+
+      if (!user) {
+        return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      return Ok(res, `Deleted highlighted favorite for ${req.params.username}`);
+    } catch (err) {
+      return ServerError(res, err);
     }
   });
