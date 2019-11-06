@@ -39,7 +39,7 @@ const Wrapper = styled(Link)`
 `;
 
 const Icon = styled.i`
-  font-size: 15px;
+  font-size: 30px;
   line-height: 30px;
   height: 30px;
   width: 30px !important;

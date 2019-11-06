@@ -38,7 +38,7 @@ const App: React.FC = () => {
 export default App;
 
 const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: string }>`
-  @import url('https://fonts.googleapis.com/css?family=Cinzel|Open+Sans&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=Roboto|Open+Sans&display=swap');
 
   // Reset
   * {
@@ -75,7 +75,7 @@ const GlobalStyles = createGlobalStyle<{ theme: 'dark' | 'light'; location: stri
   }
 
   h1,h2,h3,h4,h5,h6 {
-    font-family: 'Cinzel', serif;
+    font-family: 'Roboto', sans-serif;
   }
 
   a {

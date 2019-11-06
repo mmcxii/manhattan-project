@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ProductProps } from 'Store';
 import { useTitle } from 'Hooks';
 import { spacing } from 'Utilities';
-import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
+import { Card, CardHeader, CardBody, GoBackButton, Rating, FavoriteButton } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
 import { CocktailIngredients } from './CocktailIngredients';
@@ -30,6 +30,8 @@ const ProductDetail: React.FC<Props> = () => {
 
         if (response.status === 200) {
           const successData = await response.json();
+          console.log(successData);
+
           setProduct(successData);
         }
       } catch (err) {
@@ -58,6 +60,7 @@ const ProductDetail: React.FC<Props> = () => {
                 type='products'
                 ratingValue={product.rating}
               />
+              <FavoriteButton itemId={productId} />
               <Details>
                 <DetailWrapper>
                   <strong>Glass Type:</strong>
@@ -97,7 +100,7 @@ const ProductDetail: React.FC<Props> = () => {
                 type='products'
                 ratingValue={product.rating}
               />
-
+              <FavoriteButton itemId={productId} />
               <Details>
                 <DetailWrapper>
                   <strong>Type: </strong>
@@ -172,16 +175,18 @@ const DetailWrapper = styled.div`
 
 const ProductInfo = styled(CardBody)`
   display: grid;
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: repeat(2, max-content) 1fr;
   grid-template-columns: max-content 1fr;
   grid-template-areas:
+    '. favBtn'
     'rating image'
     '. details';
   grid-gap: ${spacing.md};
 
   @media screen and (min-width: 768px) {
+    grid-template-rows: max-content 1fr;
     grid-template-columns: repeat(2, max-content) 1fr;
     grid-template-rows: initial;
-    grid-template-areas: 'rating image details';
+    grid-template-areas: '. . favBtn' 'rating image details';
   }
 `;
