@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { CommentProps, ThemeContext } from 'Store';
 import { Rating, UserIcon } from 'Elements';
-import { spacing, white, black } from 'Utilities';
+import { spacing, white, black, fadeIn } from 'Utilities';
 
 interface Props {
   comment: CommentProps;
@@ -40,6 +40,7 @@ const Wrapper = styled.article<{ theme: 'dark' | 'light' }>`
   align-items: center;
   border-bottom: 1px solid ${props => (props.theme === 'dark' ? white : black)};
   padding: ${spacing.sm};
+  animation: ${fadeIn} 200ms linear;
 `;
 
 const Author = styled.h4`
