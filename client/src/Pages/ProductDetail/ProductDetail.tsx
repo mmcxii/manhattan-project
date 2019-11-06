@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ProductProps } from 'Store';
 import { useTitle } from 'Hooks';
 import { spacing } from 'Utilities';
-import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
+import { Card, CardHeader, CardBody, GoBackButton, Rating, FavoriteButton } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
 
@@ -56,6 +56,7 @@ const ProductDetail: React.FC<Props> = () => {
                 id={productId || 'error: product not found'}
                 type='products'
               />
+              <FavoriteButton item={product} />
               <Details>
                 <p>
                   <strong>Glass Type:</strong> {product.details.glassType}
@@ -95,6 +96,7 @@ const ProductDetail: React.FC<Props> = () => {
                 id={productId || 'error: product not found'}
                 type='products'
               />
+              <FavoriteButton item={product} />
               <Details>
                 {/* Beer Details */}
                 {product.details.ABV && `ABV: ${product.details.ABV}%`}
@@ -143,16 +145,18 @@ const Details = styled.div`
 
 const ProductInfo = styled(CardBody)`
   display: grid;
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: repeat(2, max-content) 1fr;
   grid-template-columns: max-content 1fr;
   grid-template-areas:
+    '. favBtn'
     'rating image'
     '. details';
   grid-gap: ${spacing.md};
 
   @media screen and (min-width: 768px) {
+    grid-template-rows: max-content 1fr;
     grid-template-columns: repeat(2, max-content) 1fr;
     grid-template-rows: initial;
-    grid-template-areas: 'rating image details';
+    grid-template-areas: '. . favBtn' 'rating image details';
   }
 `;

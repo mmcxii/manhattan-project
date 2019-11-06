@@ -9,8 +9,8 @@ export interface UserProps {
   name?: string;
   age?: number;
   bio?: string;
-  highlightedFavorite?: ProductProps;
-  favorites: ProductProps[];
+  highlightedFavorite?: string;
+  favorites: string[];
   follows: UserProps[];
   followers: UserProps[];
   imgUrl?: string;
