@@ -91,7 +91,7 @@ const ProductDetail: React.FC<Props> = () => {
               />
             </ProductInfo>
           </Card>
-          <CommentsSection type={product.type} comments={product.comments} />
+          <CommentsSection type={product.type} productId={productId} />
         </>
       ) : (
         <>
@@ -140,7 +140,7 @@ const ProductDetail: React.FC<Props> = () => {
               />
             </ProductInfo>
           </Card>
-          <CommentsSection type={product.type} comments={product.comments} />
+          <CommentsSection type={product.type} productId={productId} />
         </>
       )}
     </>
