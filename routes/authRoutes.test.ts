@@ -1,7 +1,7 @@
 const app = require('../server');
 import mongoose from 'mongoose';
 import request from 'supertest';
-import { User } from '../models';
+import { User, IUserDocument } from '../models';
 
 declare global {
   namespace NodeJS {
@@ -31,6 +31,9 @@ describe('auth routes', () => {
       .send({ username: 'Johns the best', password: 'testPass', admin: 'No admin' });
     expect(response.status).toBe(200);
     token = response.body.token;
+
+    const userData: IUserDocument[] = await User.find({ username: 'johns the best' });
+    expect(userData).toBeDefined();
     done();
   });
 
@@ -56,6 +59,23 @@ describe('auth routes', () => {
     const response = await server.post('/auth/register').send({ username: '', password: 'bob', admin: 'No admin' });
     expect(response.status).toBe(400);
     expect(response.text).toBe('{"message":"Username is missing or empty.","status":400}');
+    done();
+  });
+
+  it('should return 422 if username is already used', async done => {
+    const response = await server
+      .post('/auth/register')
+      .send({ username: 'Johns the best', password: 'testPass', admin: 'No admin' });
+    expect(response.status).toBe(422);
+    expect(response.text).toBe('{"message":"Username already exists!","status":422}');
+    done();
+  });
+
+  //login tests
+
+  it('should log a user in', async done => {
+    const response = await server.post('/auth/login').send({ username: 'test', password: 'test' });
+    expect(response.status).toBe(200);
     done();
   });
 });
