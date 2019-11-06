@@ -2,10 +2,12 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Card, CardHeader, CardBody } from 'Elements';
+import { useDocumentTitle } from 'Hooks';
 
 interface Props {}
 
 const ErrorPage: React.FC<Props> = () => {
+  useDocumentTitle('404 Page Not Found');
   const { goBack } = useHistory();
 
   return (
@@ -13,8 +15,7 @@ const ErrorPage: React.FC<Props> = () => {
       <CardHeader>404</CardHeader>
       <CardBody>
         <p>
-          Whoops! That page doesn't exist... Please click <Link to='/'>here</Link> to go back to the home
-          page, or{' '}
+          Whoops! That page doesn't exist... Please click <Link to='/'>here</Link> to go back to the home page, or{' '}
           <span onClick={() => goBack()} style={{ textDecoration: 'underline', cursor: 'pointer' }}>
             here
           </span>{' '}

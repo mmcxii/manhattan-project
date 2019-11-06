@@ -3,7 +3,7 @@ import { useParams, Link, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 
-import { useForm } from 'Hooks';
+import { useForm, useDocumentTitle } from 'Hooks';
 import { Button, Card, CardBody, CardHeader, Form, Input } from 'Elements';
 import { ResultsItem, MixedDetails, BeerDetails } from './ResultsItem';
 import { spacing, greyLight } from '../../Utilities';
@@ -54,6 +54,7 @@ const SearchForm: React.FC<Props> = () => {
   const [mixedResults, setMixedResults] = useState<ProductProps<MixedProps>[]>([]);
   const [displayResults, setDisplayResults] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  useDocumentTitle(`Search: ${type === 'beer' ? 'Beer' : 'Cocktail'}`);
   const [values, handleChange] = useForm({ query: '' });
   const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
 
