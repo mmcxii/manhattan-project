@@ -171,7 +171,9 @@ export const ProductRoutes = Router()
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      const productComments = product.comments.map(c => new CommentData(c, c.author));
+      const productComments = product.comments
+        .sort((c1, c2) => c2.rating - c1.rating)
+        .map(c => new CommentData(c, c.author));
 
       return Ok(res, productComments);
     } catch (error) {
