@@ -8,6 +8,7 @@ import { spacing } from 'Utilities';
 import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
+import { ProductIngredients } from './ProductIngredients';
 
 interface Props {}
 
@@ -73,17 +74,7 @@ const ProductDetail: React.FC<Props> = () => {
                 <DetailWrapper>
                   <strong>Ingredients: </strong>
                   <br />
-                  <ul>
-                    {product.details.ingredients ? (
-                      product.details.ingredients.map(e => (
-                        <li key={e._id}>
-                          {e.measurement}: {e.name}
-                        </li>
-                      ))
-                    ) : (
-                      <></>
-                    )}
-                  </ul>
+                  <ProductIngredients ingredients={product.details.ingredients} />
                 </DetailWrapper>
               </Details>
               <Image
