@@ -10,7 +10,7 @@ export class UserData {
   favorites: IProduct[];
   comments: IComment[];
   theme?: 'dark' | 'light';
-  highlightedFavorite?: string;
+  highlightedFavorite?: IProduct;
   name?: string;
   age?: number;
   bio?: string;
@@ -71,18 +71,24 @@ const userSchema = new Schema({
   name: Types.String,
   age: Types.Number,
   bio: Types.String,
-  follows: {
-    type: [Types.ObjectId],
-    ref: 'User'
-  },
-  followers: {
-    type: [Types.ObjectId],
-    ref: 'User'
-  },
-  favorites: {
-    type: [Types.ObjectId],
-    ref: 'Product'
-  },
+  follows: [
+    {
+      type: Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  followers: [
+    {
+      type: Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  favorites: [
+    {
+      type: Types.ObjectId,
+      ref: 'Product'
+    }
+  ],
   highlightedFavorite: {
     type: Types.ObjectId,
     ref: 'Product'
