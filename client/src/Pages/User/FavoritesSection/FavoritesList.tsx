@@ -6,12 +6,19 @@ import FavItem from './FavItem';
 
 interface Props {
   favorites: ProductProps[];
+  highlightedFavorite: ProductProps | null;
+  setNewHighlighted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FavoritesList: React.FC<Props> = ({ favorites }) => (
+const FavoritesList: React.FC<Props> = ({ favorites, highlightedFavorite, setNewHighlighted }) => (
   <Wrapper>
     {favorites.map(item => (
-      <FavItem product={item} key={item._id} />
+      <FavItem
+        product={item}
+        key={item._id}
+        highlightedFavorite={highlightedFavorite}
+        setNewHighlighted={setNewHighlighted}
+      />
     ))}
   </Wrapper>
 );

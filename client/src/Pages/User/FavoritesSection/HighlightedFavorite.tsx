@@ -7,12 +7,14 @@ import FavItem from './FavItem';
 
 interface Props {
   product: ProductProps;
+  highlightedFavorite: ProductProps | null;
+  setNewHighlighted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HighlightedFavorite: React.FC<Props> = ({ product }) => {
+const HighlightedFavorite: React.FC<Props> = ({ product, highlightedFavorite, setNewHighlighted }) => {
   return (
     <Wrapper>
-      <FavItem product={product} />
+      <FavItem product={product} highlightedFavorite={highlightedFavorite} setNewHighlighted={setNewHighlighted} />
     </Wrapper>
   );
 };

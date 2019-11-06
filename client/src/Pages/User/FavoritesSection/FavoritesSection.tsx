@@ -13,6 +13,7 @@ interface Props {
 const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
   const [favorites, setFavorites] = useState<ProductProps[]>([]);
   const [highlightedFavorite, setHighlightedFavorite] = useState<ProductProps | null>(null);
+  const [newHighlighted, setNewHighlighted] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -21,6 +22,7 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
           method: 'GET'
         });
         const data = await response.json();
+
         setFavorites(data);
       } catch (err) {
         console.log(err);
@@ -28,39 +30,56 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
     };
 
     fetchFavorites();
+    setNewHighlighted(true);
   }, [profileInfo.username]);
 
   useLayoutEffect(() => {
-    setHighlightedFavorite(null);
-
     const fetchHighlightedFavorite = async () => {
       try {
         const response: Response = await fetch(`/api/users/${profileInfo.username}/favorites/highlighted`, {
           method: 'GET'
         });
-        const data = await response.json();
 
         const errorCodes: number[] = [400, 404, 500];
-        if (errorCodes.includes(data.status)) {
+        if (errorCodes.includes(response.status)) {
           return;
         }
 
+        const data = await response.json();
         setHighlightedFavorite(data);
       } catch (err) {
         console.log(err);
       }
     };
 
-    fetchHighlightedFavorite();
-  }, [profileInfo]);
+    if (newHighlighted) {
+      setHighlightedFavorite(null);
+
+      fetchHighlightedFavorite().then(() => {
+        setNewHighlighted(false);
+      });
+    }
+  }, [profileInfo, newHighlighted]);
 
   return (
     <Wrapper>
       <CardHeader as='h3'>{`${profileInfo.name || profileInfo.username}'s cellar`}</CardHeader>
       <CardBody>
-        {highlightedFavorite && <HighlightedFavorite product={highlightedFavorite} />}
-        {favorites.length > 0 ? (
-          <FavoritesList favorites={favorites} />
+        {favorites ? (
+          <>
+            {highlightedFavorite && (
+              <HighlightedFavorite
+                product={highlightedFavorite}
+                highlightedFavorite={highlightedFavorite}
+                setNewHighlighted={setNewHighlighted}
+              />
+            )}
+            <FavoritesList
+              favorites={favorites}
+              highlightedFavorite={highlightedFavorite}
+              setNewHighlighted={setNewHighlighted}
+            />
+          </>
         ) : (
           <NoFavsMessage>This user does not have any favorites yet</NoFavsMessage>
         )}
