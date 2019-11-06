@@ -41,7 +41,7 @@ const commentSchema = new Schema({
   product: {
     type: Types.ObjectId,
     ref: 'Product',
-    required: true,
+    required: true
   },
   text: {
     type: Types.String,
@@ -59,6 +59,12 @@ const commentSchema = new Schema({
       ref: 'User'
     }
   ]
+});
+
+commentSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
+  const upvotes: number = this.upvotes.length;
+  const downvotes: number = this.downvotes.length;
+  return upvotes - downvotes;
 });
 
 commentSchema.pre('find', function(next: () => void) {
@@ -92,7 +98,7 @@ commentSchema.statics.createComment = async function(
 
   const text = comment.trim();
 
-  const newComment = await this.create({ author: user._id, text,  product: product });
+  const newComment = await this.create({ author: user._id, text, product: product });
 
   return newComment.populate('author').execPopulate();
 };
