@@ -57,7 +57,7 @@ const SearchForm: React.FC<Props> = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   useTitle(`Search: ${type === 'beer' ? 'Beer' : 'Cocktail'}`);
   const [values, handleChange] = useForm({ query: '' });
-  const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
+  const icon = type === 'beer' ? 'fa-beer' : 'fa-glass-martini-alt';
 
   const APISearch = async <T extends unknown>(mode: string): Promise<ProductProps<T>[]> => {
     setDisplayResults(false);
@@ -99,6 +99,25 @@ const SearchForm: React.FC<Props> = () => {
     return data;
   };
 
+  // Perform product search
+  const productSearch = async (): Promise<void> => {
+    // Retrieve appropriate product type and update state
+    switch (type) {
+      case 'beer':
+        const beerData = await APISearch<BeerProps>(type);
+        setBeerResults(beerData);
+        setMixedResults([]);
+        break;
+      case 'cocktail':
+        const mixedData = await APISearch<MixedProps>('mixed');
+        setMixedResults(mixedData);
+        setBeerResults([]);
+        break;
+      default:
+        return;
+    }
+  };
+
   // Handle form submission for product searches
   const onSearchSubmit = async (evt: React.FormEvent<HTMLFormElement>): Promise<void> => {
     // Prevent form submission
@@ -107,36 +126,11 @@ const SearchForm: React.FC<Props> = () => {
       return;
     }
 
-    // Retrieve appropriate product type and update state
-    switch (type) {
-      case 'beer':
-        const beerData = await APISearch<BeerProps>(type);
-        setBeerResults(beerData);
-        break;
-      case 'cocktail':
-        const mixedData = await APISearch<MixedProps>('mixed');
-        setMixedResults(mixedData);
-        break;
-      default:
-        return;
-    }
+    await productSearch();
   };
 
   useEffect(() => {
-    const onLoadSearch = async () => {
-      switch (type) {
-        case 'beer':
-          const beerData = await APISearch<BeerProps>(type);
-          setBeerResults(beerData);
-          break;
-        case 'cocktail':
-          const mixedData = await APISearch<MixedProps>('mixed');
-          setMixedResults(mixedData);
-          break;
-        default:
-          return;
-      }
-    };
+    const onLoadSearch = async () => await productSearch();
 
     if (query) {
       onLoadSearch();
