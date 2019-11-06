@@ -22,6 +22,7 @@ export class CommentData {
   upvotes: IUser[];
   _id: string;
   product: IProduct;
+  rating: number;
 
   constructor(comment: ICommentDocument, user: IUserDocument) {
     this.author = new UserData(user);
@@ -29,6 +30,7 @@ export class CommentData {
     this.upvotes = comment.upvotes;
     this._id = comment._id;
     this.product = comment.product;
+    this.rating = comment.rating || 0;
   }
 }
 
