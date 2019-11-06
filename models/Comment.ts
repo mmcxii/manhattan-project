@@ -142,7 +142,7 @@ const updateVotes = async function(
     return new Error(`Could not update comment votes: ${error}`);
   }
 
-  return type === 'upvote' ? comment.upvotes.length : comment.downvotes.length;
+  return comment.rating;
 };
 
 export const Comment = model<ICommentDocument, ICommentModel>('Comment', commentSchema);

@@ -1,9 +1,17 @@
 import { Router } from 'express';
 import { IProduct, ProductType, IUser } from '../interfaces';
-import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User, CommentData } from '../models';
+import {
+  IProductDocument,
+  Product,
+  Query,
+  ICommentDocument,
+  Comment,
+  IUserDocument,
+  User,
+  CommentData
+} from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 import { Dictionary, Response } from 'express-serve-static-core';
-
 
 interface IProductFilters {
   query?: string;
@@ -95,16 +103,7 @@ async function productVote(
       ? product.upvote(user)
       : product.downvote(user));
 
-    //Leaving commented out for now incase we decided to return this object later, but I'm not sure why we would. Numbers should be OK?
-
-    // const productRatingData = {
-    //   id: votedProduct._id,
-    //   rating: votedProduct.rating,
-    //   upvotes: votedProduct.upvotes,
-    //   downvotes: votedProduct.downvotes
-    // };
-
-    return Ok(res, votedProduct.rating);
+    return Ok(res, { rating: votedProduct.rating });
   } catch (error) {
     return ServerError(res, `Product vote error: ${error}`);
   }
