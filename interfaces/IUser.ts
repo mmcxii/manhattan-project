@@ -1,4 +1,4 @@
-import { IProduct } from "./IProduct";
+import { IProduct } from './IProduct';
 
 export interface IUser {
   username: string;
@@ -6,7 +6,7 @@ export interface IUser {
   follows: IUser[];
   followers: IUser[];
   theme?: 'dark' | 'light';
-  highlightedFavorite?: string;
+  highlightedFavorite?: IProduct;
   name?: string;
   age?: number;
   bio?: string;
