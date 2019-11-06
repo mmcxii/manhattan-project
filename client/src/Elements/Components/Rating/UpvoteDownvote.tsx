@@ -56,8 +56,6 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
 
         const data = await response.json();
 
-        console.log(data)
-
         if (existingVote === null || existingVote !== userVote) {
           // If the user is casting a vote on something they have not voted on return the data as is
           action === 'upvotes' ? setRating(data - downvotes.length) : setRating(upvotes.length - data);
