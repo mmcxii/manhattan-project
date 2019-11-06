@@ -25,7 +25,8 @@ export const UserRoutes = Router()
       //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
       const userDoc: IUserDocument | null = await User.findOne({ username })
         .populate('follows followers')
-        .populate({ path: 'favorites', model: 'Product' });
+        .populate({ path: 'favorites', model: 'Product' })
+        .populate({ path: 'highlightedFavorite', model: 'Product' });
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -357,16 +358,18 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { highlightedFavorite: product, new: true }
-      ).exec();
+        { highlightedFavorite: product },
+        { new: true }
+      ).populate({
+        path: 'highlightedFavorite',
+        model: 'Product'
+      });
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
 
-      const userData = new UserData(user);
-
-      return Ok(res, userData.favorites);
+      return Ok(res, user.highlightedFavorite);
     } catch (err) {
       return ServerError(res, err);
     }
@@ -374,14 +377,17 @@ export const UserRoutes = Router()
   .delete('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate({ _id }, { favorites: null, new: true }).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $unset: { highlightedFavorite: null } },
+        { new: true }
+      ).exec();
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
-      const userData = new UserData(user);
 
-      return Ok(res, userData);
+      return Ok(res, `Deleted highlighted favorite for ${req.params.username}`);
     } catch (err) {
       return ServerError(res, err);
     }
