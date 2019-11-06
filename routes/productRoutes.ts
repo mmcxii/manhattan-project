@@ -95,14 +95,16 @@ async function productVote(
       ? product.upvote(user)
       : product.downvote(user));
 
-    const productRatingData = {
-      id: votedProduct._id,
-      rating: votedProduct.rating,
-      upvotes: votedProduct.upvotes,
-      downvotes: votedProduct.downvotes
-    };
+    //Leaving commented out for now incase we decided to return this object later, but I'm not sure why we would. Numbers should be OK?
 
-    return Ok(res, productRatingData);
+    // const productRatingData = {
+    //   id: votedProduct._id,
+    //   rating: votedProduct.rating,
+    //   upvotes: votedProduct.upvotes,
+    //   downvotes: votedProduct.downvotes
+    // };
+
+    return Ok(res, votedProduct.rating);
   } catch (error) {
     return ServerError(res, `Product vote error: ${error}`);
   }
