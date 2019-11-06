@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-import { spacing, elevation, transition, red, white } from 'Utilities';
+import { spacing, elevation, transition, red, white, fadeIn } from 'Utilities';
 
 export const Card = styled.div`
   min-width: 100%;
-
+  animation: ${fadeIn} 200ms linear;
   &:not(:first-child) {
     margin: ${spacing.lg} 0;
   }

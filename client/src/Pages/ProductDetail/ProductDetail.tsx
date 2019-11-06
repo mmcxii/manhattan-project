@@ -8,6 +8,7 @@ import { spacing } from 'Utilities';
 import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
 import CommentsSection from './CommentsSection';
+import { CocktailIngredients } from './CocktailIngredients';
 
 interface Props {}
 
@@ -55,26 +56,26 @@ const ProductDetail: React.FC<Props> = () => {
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
                 type='products'
+                ratingValue={product.rating}
               />
               <Details>
-                <p>
-                  <strong>Glass Type:</strong> {product.details.glassType}
-                </p>
-                <p>
-                  <strong>Directions:</strong> {product.details.directions}
-                </p>
-                <strong>Ingredients: </strong> <br />
-                <ul>
-                  {product.details.ingredients ? (
-                    product.details.ingredients.map(e => (
-                      <li key={e._id}>
-                        {e.name}: {e.measurement}
-                      </li>
-                    ))
-                  ) : (
-                    <span></span>
-                  )}
-                </ul>
+                <DetailWrapper>
+                  <strong>Glass Type:</strong>
+                  <br />
+                  <p>{product.details.glassType}</p>
+                </DetailWrapper>
+
+                <DetailWrapper>
+                  <strong>Directions:</strong>
+                  <br />
+                  <p>{product.details.directions}</p>
+                </DetailWrapper>
+
+                <DetailWrapper>
+                  <strong>Ingredients: </strong>
+                  <br />
+                  <CocktailIngredients ingredients={product.details.ingredients} />
+                </DetailWrapper>
               </Details>
               <Image
                 src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
@@ -94,18 +95,38 @@ const ProductDetail: React.FC<Props> = () => {
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
                 type='products'
+                ratingValue={product.rating}
               />
+
               <Details>
-                {/* Beer Details */}
-                {product.details.ABV && `ABV: ${product.details.ABV}%`}
+                <DetailWrapper>
+                  <strong>Type: </strong>
+                  <br />
+                  <p>{product.details.subType || 'Not specified'}</p>
+                </DetailWrapper>
+
+                <DetailWrapper>
+                  <strong>ABV: </strong>
+                  <br />
+                  <p>{product.details.ABV ? `${product.details.ABV}%` : 'Not available'}</p>
+                </DetailWrapper>
+
                 {product.details.organic === true && (
-                  <p>
-                    Organic: <i className='fas fa-seedling' />
-                  </p>
+                  <DetailWrapper>
+                    <p>
+                      <strong>Organic: </strong>
+                      <i className='fas fa-seedling' />
+                    </p>
+                  </DetailWrapper>
                 )}
 
-                {product.details.desc && <p>{product.details.desc}</p>}
+                <DetailWrapper>
+                  <strong>Description: </strong>
+                  <br />
+                  <p>{product.details.desc || 'Not available'}</p>
+                </DetailWrapper>
               </Details>
+
               <Image
                 src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
                 alt={product.name}
@@ -139,6 +160,14 @@ const Details = styled.div`
 
   word-wrap: break-word;
   overflow: hidden;
+`;
+
+const DetailWrapper = styled.div`
+  margin-bottom: ${spacing.md};
+  p,
+  ul {
+    margin: ${spacing.xs} 0;
+  }
 `;
 
 const ProductInfo = styled(CardBody)`

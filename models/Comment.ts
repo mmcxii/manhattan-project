@@ -21,6 +21,7 @@ export interface ICommentModel extends Model<ICommentDocument> {
 
 export class CommentData {
   _id: string;
+  dateCreated: Date;
   author: UserData;
   text: string;
   downvotes: IUser[];
@@ -30,6 +31,7 @@ export class CommentData {
 
   constructor(comment: ICommentDocument, user: IUserDocument) {
     this._id = comment._id;
+    this.dateCreated = comment.dateCreated;
     this.author = new UserData(user);
     this.text = comment.text;
     this.downvotes = comment.downvotes;
@@ -40,6 +42,10 @@ export class CommentData {
 }
 
 const commentSchema = new Schema({
+  dateCreated: {
+    type: Types.Date,
+    default: Date.now()
+  },
   author: {
     type: Types.ObjectId,
     ref: 'User',

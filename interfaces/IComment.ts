@@ -3,6 +3,7 @@ import { IUserDocument } from '../models';
 import { IProduct } from './IProduct';
 
 export interface IComment {
+  dateCreated: Date;
   author: IUserDocument;
   text: string;
   upvotes: IUser[];
