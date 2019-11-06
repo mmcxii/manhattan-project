@@ -12,6 +12,9 @@ export interface ICommentDocument extends IComment, Document {
 // Create interface for Comment model
 export interface ICommentModel extends Model<ICommentDocument> {
   createComment(username: string, comment: string, product: string): Promise<ICommentDocument | Error>;
+  author: IUserDocument;
+  downvotes: IUserDocument[];
+  upvotes: IUserDocument[];
 }
 
 //Comment DTO class
