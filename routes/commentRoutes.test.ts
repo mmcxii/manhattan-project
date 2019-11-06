@@ -14,7 +14,7 @@ declare global {
 }
 
 let server = request.agent(app);
-let token: any;
+let token: string;
 let productID: any;
 describe('comment routes', () => {
   beforeAll(async () => {
@@ -220,9 +220,5 @@ describe('comment routes', () => {
       .set('Authorization', 'bearer ' + token);
     expect(response.status).toBe(404);
     done();
-  });
-
-  afterAll(() => {
-    mongoose.disconnect();
   });
 });
