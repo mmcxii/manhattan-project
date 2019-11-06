@@ -1,7 +1,7 @@
 let app = require('../server');
 import mongoose from 'mongoose';
 import request from 'supertest';
-import { Comment, ICommentDocument, User, IUserDocument, Product } from '../models';
+import { Comment, Product } from '../models';
 
 import { ObjectID } from 'bson';
 //adding mongo uri to be a global type
@@ -14,8 +14,7 @@ declare global {
 }
 
 let server = request.agent(app);
-export let token: any;
-export let userID: any;
+let token: any;
 let productID: any;
 describe('comment routes', () => {
   beforeAll(async () => {
@@ -29,7 +28,6 @@ describe('comment routes', () => {
       .post('/auth/register')
       .send({ username: 'test', password: 'test', admin: 'Not admin' });
     token = response.body.token;
-    userID = response.body.user.id;
 
     productID = await Product.find({});
   });
