@@ -7,14 +7,14 @@ import { spacing, red } from 'Utilities';
 import { ButtonTrans } from './Button';
 
 interface Props {
-  item: ProductProps;
+  itemId?: string;
 }
 
-export const FavoriteButton: React.FC<Props> = ({ item }) => {
+export const FavoriteButton: React.FC<Props> = ({ itemId }) => {
   const { user, dispatch } = useContext(UserContext);
   const { push } = useHistory();
   const [icon, setIcon] = useState<string>('fal fa-star');
-  const [isFavorited, setIsFavorited] = useState(user.favorites.includes(item._id));
+  const [isFavorited, setIsFavorited] = useState(user.favorites.includes(itemId));
 
   useLayoutEffect(() => {
     setIcon(isFavorited ? 'fas fa-star' : 'fal fa-star');
@@ -40,7 +40,7 @@ export const FavoriteButton: React.FC<Props> = ({ item }) => {
           Authorization: `Bearer ${loginToken}`
         },
         body: JSON.stringify({
-          product: item._id
+          product: itemId
         })
       });
 
@@ -50,12 +50,12 @@ export const FavoriteButton: React.FC<Props> = ({ item }) => {
           ...user,
           favorites: isFavorited
             ? // If toggleFavorite is being ran on an item that is currently a favorite, delete it
-              user.favorites.filter((fav: string) => fav !== item._id)
+              user.favorites.filter((fav: string) => fav !== itemId)
             : // If toggleFavorite is being ran on an item that is not a favorite, save it
-              [...user.favorites, item._id]
+              [...user.favorites, itemId]
         })
       );
-      dispatch({ type: isFavorited ? 'DELETE_FAVORITE' : 'ADD_FAVORITE', payload: item._id });
+      dispatch({ type: isFavorited ? 'DELETE_FAVORITE' : 'ADD_FAVORITE', payload: itemId });
 
       setIsFavorited(!isFavorited);
     } catch (error) {}

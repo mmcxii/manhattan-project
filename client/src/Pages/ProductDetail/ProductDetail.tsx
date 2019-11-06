@@ -30,6 +30,8 @@ const ProductDetail: React.FC<Props> = () => {
 
         if (response.status === 200) {
           const successData = await response.json();
+          console.log(successData);
+
           setProduct(successData);
         }
       } catch (err) {
@@ -58,7 +60,7 @@ const ProductDetail: React.FC<Props> = () => {
                 type='products'
                 ratingValue={product.rating}
               />
-              <FavoriteButton item={product} />
+              <FavoriteButton itemId={productId} />
               <Details>
                 <DetailWrapper>
                   <strong>Glass Type:</strong>
@@ -98,7 +100,7 @@ const ProductDetail: React.FC<Props> = () => {
                 type='products'
                 ratingValue={product.rating}
               />
-              <FavoriteButton item={product} />
+              <FavoriteButton itemId={productId} />
               <Details>
                 <DetailWrapper>
                   <strong>Type: </strong>
