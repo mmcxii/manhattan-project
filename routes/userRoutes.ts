@@ -294,8 +294,12 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { $addToSet: { favorites: product }, new: true }
-      ).exec();
+        { $addToSet: { favorites: product } },
+        { new: true }
+      ).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -312,8 +316,12 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { $pull: { favorites: product }, new: true }
-      ).exec();
+        { $pull: { favorites: product } },
+        { new: true }
+      ).populate({
+        path: 'favorites',
+        model: 'Product'
+      });
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
