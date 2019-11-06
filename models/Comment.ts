@@ -20,18 +20,20 @@ export interface ICommentModel extends Model<ICommentDocument> {
 //Comment DTO class
 
 export class CommentData {
+  _id: string;
   author: UserData;
+  text: string;
   downvotes: IUser[];
   upvotes: IUser[];
-  _id: string;
   product: IProduct;
   rating: number;
 
   constructor(comment: ICommentDocument, user: IUserDocument) {
+    this._id = comment._id;
     this.author = new UserData(user);
+    this.text = comment.text;
     this.downvotes = comment.downvotes;
     this.upvotes = comment.upvotes;
-    this._id = comment._id;
     this.product = comment.product;
     this.rating = comment.rating || 0;
   }

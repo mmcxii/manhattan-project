@@ -9,7 +9,9 @@ export enum ProductType {
 export interface IProduct {
   extID: string;
   type: ProductType;
-  detail: IProductDetails;
+  name: string;
+  imgUrl: string;
+  details: IProductDetails;
   imageUrls: string[];
   comments: ICommentDocument[];
   upvotes: IUserDocument[];

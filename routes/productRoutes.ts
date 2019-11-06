@@ -8,7 +8,8 @@ import {
   Comment,
   IUserDocument,
   User,
-  CommentData
+  CommentData,
+  ProductData
 } from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 import { Dictionary, Response } from 'express-serve-static-core';
@@ -150,13 +151,13 @@ export const ProductRoutes = Router()
     }
 
     try {
-      const product: IProduct | null = await Product.findById(id).populate('comments');
+      const product: IProductDocument | null = await Product.findById(id).populate('comments upvotes downvotes');
 
       if (!product) {
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      return Ok(res, product);
+      return Ok(res, new ProductData(product));
     } catch (error) {
       return ServerError(res, error);
     }
@@ -170,7 +171,9 @@ export const ProductRoutes = Router()
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      return Ok(res, product.comments);
+      const productComments = product.comments.map(c => new CommentData(c, c.author));
+
+      return Ok(res, productComments);
     } catch (error) {
       return ServerError(res, error);
     }
