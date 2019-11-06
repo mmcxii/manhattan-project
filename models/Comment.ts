@@ -1,5 +1,5 @@
 import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
-import { IComment, IUser } from '../interfaces';
+import { IComment, IUser, IProduct } from '../interfaces';
 import { User, IUserDocument, UserData } from '../models';
 import { ObjectID } from 'bson';
 
@@ -11,23 +11,25 @@ export interface ICommentDocument extends IComment, Document {
 
 // Create interface for Comment model
 export interface ICommentModel extends Model<ICommentDocument> {
-  createComment(username: string, comment: string): Promise<ICommentDocument | Error>;
+  createComment(username: string, comment: string, product: string): Promise<ICommentDocument | Error>;
 }
 
 //Comment DTO class
 
 export class CommentData {
-author: UserData;
-downvotes: IUser[];
-upvotes: IUser[];
-_id: string;
+  author: UserData;
+  downvotes: IUser[];
+  upvotes: IUser[];
+  _id: string;
+  product: IProduct;
 
-constructor(comment: ICommentDocument, user: IUserDocument) {
-  this.author = new UserData(user);
-  this.downvotes = comment.downvotes;
-  this.upvotes = comment.upvotes;
-  this._id = comment._id
-}
+  constructor(comment: ICommentDocument, user: IUserDocument) {
+    this.author = new UserData(user);
+    this.downvotes = comment.downvotes;
+    this.upvotes = comment.upvotes;
+    this._id = comment._id;
+    this.product = comment.product;
+  }
 }
 
 const commentSchema = new Schema({
@@ -35,6 +37,11 @@ const commentSchema = new Schema({
     type: Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  product: {
+    type: Types.ObjectId,
+    ref: 'Product',
+    required: true,
   },
   text: {
     type: Types.String,
@@ -74,7 +81,8 @@ commentSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvo
 // Comment schema method to create a new comment
 commentSchema.statics.createComment = async function(
   username: string,
-  comment: string
+  comment: string,
+  product: string
 ): Promise<ICommentDocument | Error> {
   const user: IUserDocument | null = await User.findOne({ username });
 
@@ -84,7 +92,7 @@ commentSchema.statics.createComment = async function(
 
   const text = comment.trim();
 
-  const newComment = await this.create({ author: user._id, text });
+  const newComment = await this.create({ author: user._id, text,  product: product });
 
   return newComment.populate('author').execPopulate();
 };

@@ -1,17 +1,25 @@
 import React from 'react';
 import { ProductProps, MixedProps } from '../SearchForm';
+import { ResultType, ResultDetails } from './ResultsItem';
 
 interface Props {
   item: ProductProps<MixedProps>;
 }
 
-const MixedDetails: React.FC<Props> = ({ item }) => {
-  console.log(item);
+export const MixedDetails: React.FC<Props> = ({ item }) => {
+  const glassType = item.details.glassType || 'any';
+  const ingrediants = item.details.ingredients.map(i => i.name).join(', ');
+
   return (
     <>
-      <p>{item.details.glassType}</p>
-      <p>{item.details.directions}</p>
+      <ResultType>
+        <strong>Served in: </strong>
+        {glassType}
+      </ResultType>
+      <ResultDetails>
+        <strong>Ingrediants: </strong>
+        {ingrediants}
+      </ResultDetails>
     </>
   );
 };
-export default MixedDetails;

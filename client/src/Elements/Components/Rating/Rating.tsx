@@ -32,6 +32,7 @@ const Wrapper = styled.div`
 
   display: flex;
   align-items: center;
+  align-self: flex-start;
 `;
 
 const Icon = styled.i`

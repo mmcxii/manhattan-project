@@ -1,5 +1,5 @@
 import { Schema, SchemaTypes as Types, Model, model, Document } from 'mongoose';
-import { IUser, IUpdateContext } from '../interfaces';
+import { IUser, IUpdateContext, IProduct, IComment } from '../interfaces';
 
 // User DTO class
 export class UserData {
@@ -7,6 +7,8 @@ export class UserData {
   username: string;
   follows: UserData[];
   followers: UserData[];
+  favorites: IProduct[];
+  comments: IComment[];
   theme?: 'dark' | 'light';
   highlightedFavorite?: string;
   name?: string;
@@ -14,11 +16,13 @@ export class UserData {
   bio?: string;
   imgUrl?: string;
 
-  constructor(user: IUserDocument, fillFollowers = true) {
+  constructor(user: IUserDocument, fillFollowers = true, comments?: IComment[]) {
     this.id = user._id;
     this.username = user.username;
     this.theme = user.theme;
     this.highlightedFavorite = user.highlightedFavorite;
+    this.favorites = user.favorites;
+    this.comments = comments ? comments : [];
     this.name = user.name;
     this.age = user.age;
     this.bio = user.bio;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { ThemeContext } from 'Store';
-import { white, black, spacing } from 'Utilities';
+import { white, black, spacing, transition, shrink, expand } from 'Utilities';
 import { Icon } from 'Elements';
 
 interface Props {}
@@ -67,4 +67,16 @@ const OptionButton = styled(Link)`
   background: transparent;
   border: none;
   text-decoration: none;
+  ${transition}
+  :hover {
+    ${expand()}
+  }
+  :active {
+    ${shrink()}
+  }
+  @media (pointer: coarse) {
+    :hover {
+      transform: none;
+    }
+  }
 `;

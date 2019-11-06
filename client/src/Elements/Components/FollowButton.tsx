@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
 import { red, white } from 'Utilities';
-import { Button as SrcButton } from './Button';
+import { Button as B } from './Button';
 
 interface Props {
   followTarget: UserProps;
@@ -12,7 +12,7 @@ interface Props {
 
 export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   const { push } = useHistory();
-  const { dispatch } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
   const lsLoginToken = localStorage.getItem('loginToken');
   const lsUserInfo = localStorage.getItem('userInfo');
   //@ts-ignore
@@ -20,14 +20,14 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   const [userIsFollowing, setUserIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
-    if (userInfo) {
-      userInfo.follows.forEach(follow => {
-        if (follow.username === followTarget.username) {
-          return setUserIsFollowing(true);
-        }
-      });
+    for (let i = 0; i < user.follows.length; i++) {
+      if (user.follows[i].username === followTarget.username) {
+        return setUserIsFollowing(true);
+      }
     }
-  }, []);
+
+    return setUserIsFollowing(false);
+  }, [followTarget, userInfo]);
 
   const toggleFollow = async () => {
     if (lsLoginToken && lsUserInfo) {
@@ -55,7 +55,7 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
         dispatch({ type: userIsFollowing ? 'REMOVE_FOLLOW' : 'ADD_FOLLOW', payload: followTarget });
 
         // Update localstorage based on component state
-        if (userIsFollowing) {
+        if (!userIsFollowing) {
           localStorage.setItem(
             'userInfo',
             JSON.stringify({ ...userInfo, follows: [...userInfo.follows, followTarget] })
@@ -76,15 +76,25 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
   };
 
   return (
-    <Button onClick={toggleFollow} followed={userIsFollowing}>
-      {userIsFollowing ? 'Unfollow' : 'Follow'}
-    </Button>
+    <>
+      {user.username === followTarget.username ? (
+        <NoButton />
+      ) : (
+        <Button onClick={toggleFollow} followed={userIsFollowing}>
+          {userIsFollowing ? 'Unfollow' : 'Follow'}
+        </Button>
+      )}
+    </>
   );
 };
 
 export default FollowButton;
 
-const Button = styled(SrcButton)<{ followed: boolean }>`
+const NoButton = styled.div`
+  grid-area: follow;
+`;
+
+const Button = styled(B)<{ followed: boolean }>`
   grid-area: follow;
   ${props => (props.followed ? `background: ${red} !important; color: ${white} !important;` : null)}
 `;

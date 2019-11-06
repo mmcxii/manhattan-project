@@ -1,15 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { UserProps, UserContext } from 'Store';
-import { useForm } from 'Hooks';
-import { red, white } from 'Utilities';
+import { useForm, useTitle } from 'Hooks';
 import { Button, Card, CardHeader, CardBody, Form, ErrorCard, Input } from 'Elements';
 
 interface Props {}
 
 const CreateUser: React.FC<Props> = () => {
+  useTitle('Create an Account');
   const { push } = useHistory();
   const [error, setError] = useState<string | null>(null);
   const { dispatch } = useContext(UserContext);
