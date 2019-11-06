@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { ProductProps } from 'Store';
@@ -11,13 +11,11 @@ interface Props {
   setNewHighlighted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HighlightedFavorite: React.FC<Props> = ({ product, highlightedFavorite, setNewHighlighted }) => {
-  return (
-    <Wrapper>
-      <FavItem product={product} highlightedFavorite={highlightedFavorite} setNewHighlighted={setNewHighlighted} />
-    </Wrapper>
-  );
-};
+const HighlightedFavorite: React.FC<Props> = ({ product, highlightedFavorite, setNewHighlighted }) => (
+  <Wrapper>
+    <FavItem product={product} highlightedFavorite={highlightedFavorite} setNewHighlighted={setNewHighlighted} />
+  </Wrapper>
+);
 
 export default HighlightedFavorite;
 

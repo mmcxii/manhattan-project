@@ -139,7 +139,9 @@ const SearchForm: React.FC<Props> = () => {
     if (query) {
       onLoadSearch();
     }
-  }, []);
+    // dev-tips wants APISearch to be included in this array but that would require it to be wrapped in useCallback
+    // Since I am unsure of how to correctly implement that I will do that later tonight.
+  }, [type, query]);
 
   return (
     <>

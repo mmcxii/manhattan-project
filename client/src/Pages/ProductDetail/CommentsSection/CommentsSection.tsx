@@ -31,7 +31,7 @@ const CommentsSection: React.FC<Props> = ({ type, productId }) => {
     if (updateComments) {
       fetchComments();
     }
-  }, [updateComments]);
+  }, [updateComments, productId]);
 
   return (
     <Card as='section'>

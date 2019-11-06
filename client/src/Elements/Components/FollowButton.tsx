@@ -27,7 +27,7 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
     }
 
     return setUserIsFollowing(false);
-  }, [followTarget, userInfo]);
+  }, [followTarget, user.follows]);
 
   const toggleFollow = async () => {
     if (lsLoginToken && lsUserInfo) {

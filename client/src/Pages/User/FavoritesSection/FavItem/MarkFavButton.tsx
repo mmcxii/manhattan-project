@@ -30,13 +30,13 @@ const MarkFavButton: React.FC<Props> = ({ productId, highlightedFavorite, setNew
         setIsMarked(false);
       }
     }
-  }, [user, highlightedFavorite]);
+  }, [user, highlightedFavorite, productId]);
 
   const toggleFavorite = async () => {
     const mode: 'DELETE' | 'PUT' = isMarked ? 'DELETE' : 'PUT';
 
     try {
-      const response: Response = await fetch(`/api/users/${username}/favorites/highlighted`, {
+      await fetch(`/api/users/${username}/favorites/highlighted`, {
         method: mode,
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,6 @@ const MarkFavButton: React.FC<Props> = ({ productId, highlightedFavorite, setNew
         },
         body: JSON.stringify({ product: productId })
       });
-      const data = await response.json();
 
       setIsMarked(!isMarked);
       setNewHighlighted(true);
