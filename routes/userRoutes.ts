@@ -23,10 +23,9 @@ export const UserRoutes = Router()
 
     try {
       //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
-      const userDoc: IUserDocument | null = await User.findOne({ username })
-        .populate('follows followers')
-        .populate({ path: 'favorites', model: 'Product' })
-        .populate({ path: 'highlightedFavorite', model: 'Product' });
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate(
+        'follows followers favorites highlightedFavorite'
+      );
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -275,10 +274,7 @@ export const UserRoutes = Router()
 
     try {
       //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
-      const user: IUserDocument | null = await User.findOne({ username }).populate({
-        path: 'favorites',
-        model: 'Product'
-      });
+      const user: IUserDocument | null = await User.findOne({ username }, 'favorites').populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -297,10 +293,7 @@ export const UserRoutes = Router()
         { _id },
         { $addToSet: { favorites: product } },
         { new: true }
-      ).populate({
-        path: 'favorites',
-        model: 'Product'
-      });
+      ).populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -319,10 +312,7 @@ export const UserRoutes = Router()
         { _id },
         { $pull: { favorites: product } },
         { new: true }
-      ).populate({
-        path: 'favorites',
-        model: 'Product'
-      });
+      ).populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -338,13 +328,16 @@ export const UserRoutes = Router()
 
     try {
       //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
-      const user: IUserDocument | null = await User.findOne({ username }).populate({
-        path: 'highlightedFavorite',
-        model: 'Product'
-      });
+      const user: IUserDocument | null = await User.findOne({ username }, 'highlightedFavorite').populate(
+        'highlightedFavorite'
+      );
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      if (!user.highlightedFavorite) {
+        return OkNoContent(res);
       }
 
       return Ok(res, user.highlightedFavorite);
@@ -360,10 +353,7 @@ export const UserRoutes = Router()
         { _id },
         { highlightedFavorite: product },
         { new: true }
-      ).populate({
-        path: 'highlightedFavorite',
-        model: 'Product'
-      });
+      ).populate('highlightedFavorite');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -381,7 +371,7 @@ export const UserRoutes = Router()
         { _id },
         { $unset: { highlightedFavorite: null } },
         { new: true }
-      ).exec();
+      );
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
