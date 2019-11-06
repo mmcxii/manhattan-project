@@ -26,21 +26,19 @@ export const ProductIngredients: React.FC<Props> = ({ ingredients }) => {
     return <p>Not specified.</p>;
   }
 
-  const buildIngredientTable = (ingredientList: Ingredient[]) => {
-    return (
-      <IngredientTable>
-        <tbody>
-          {ingredientList.map(ingredient => (
-            <tr key={ingredient._id}>
-              <td>{ingredient.measurement}</td>
-              <td><Spacer /></td>
-              <td>{ingredient.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </IngredientTable>
-    );
-  };
-
-  return buildIngredientTable(ingredients);
+  return (
+    <IngredientTable>
+      <tbody>
+        {ingredients.map(ingredient => (
+          <tr key={ingredient._id}>
+            <td>{ingredient.measurement}</td>
+            <td>
+              <Spacer />
+            </td>
+            <td>{ingredient.name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </IngredientTable>
+  );
 };
