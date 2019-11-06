@@ -18,26 +18,22 @@ const commentData = {
 
 describe('Comment Modal Tests', () => {
   beforeAll(async () => {
-    await mongoose.connect(
-      global.__MONGO_URI__,
-      { useNewUrlParser: true, useCreateIndex: true },
-      err => {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
+    await mongoose.connect(global.__MONGO_URI__, { useNewUrlParser: true, useCreateIndex: true }, err => {
+      if (err) {
+        console.error(err);
+        process.exit(1);
       }
-    );
+    });
   });
   //test modal
   it('creates a comment', async done => {
     const validComment: ICommentDocument = new Comment(commentData);
     const savedComment = await validComment.save();
 
-    expect(savedComment.author).toBe(savedComment.author);
-    expect(savedComment.text).toBe(savedComment.text);
-    expect(savedComment.upvotes).toBe(savedComment.upvotes);
-    expect(savedComment.downvotes).toBe(savedComment.downvotes);
+    expect(savedComment.author).toBe(validComment.author);
+    expect(savedComment.text).toBe(validComment.text);
+    expect(savedComment.upvotes).toBe(validComment.upvotes);
+    expect(savedComment.downvotes).toBe(validComment.downvotes);
     done();
   });
 

@@ -10,8 +10,9 @@ export enum ProductType {
 export interface IProduct {
   extID: string;
   type: ProductType;
-  detail: IProductDetails;
-  imageUrls: string[];
+  name: string[];
+  details: IProductDetails;
+  imgUrl: string[];
   comments: IComment[];
   upvotes: IUserDocument[];
   downvotes: IUserDocument[];
