@@ -300,7 +300,7 @@ export const UserRoutes = Router()
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
-      console.log(user);
+
       return Ok(res, user.favorites);
     } catch (err) {
       return ServerError(res, err);
@@ -324,7 +324,7 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .get('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
+  .get('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
     const { username } = req.params;
 
     try {
@@ -343,7 +343,7 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .put('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
+  .put('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     const { product } = req.body;
     try {
@@ -363,7 +363,7 @@ export const UserRoutes = Router()
       return ServerError(res, err);
     }
   })
-  .delete('/:username/highlightedfavorite', async (req: IUserRequest, res) => {
+  .delete('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate({ _id }, { favorites: null, new: true }).exec();
