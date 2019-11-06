@@ -13,10 +13,16 @@ interface Props {
 const Comment: React.FC<Props> = ({ comment }) => {
   const { theme } = useContext(ThemeContext);
   const { author } = comment;
-
+  console.log(comment);
   return (
     <Wrapper theme={theme}>
-      <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} />
+      <Rating
+        rating={comment.rating}
+        upvotes={comment.upvotes}
+        downvotes={comment.downvotes}
+        type='comments'
+        id={comment._id}
+      />
       <UserIcon user={author} />
       <Author>
         <Link to={`/user/${author.username}`}>{author.name || author.username}</Link>

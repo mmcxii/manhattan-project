@@ -15,15 +15,12 @@ interface Props {
 const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRating }) => {
   const { user } = useContext(UserContext);
   const [userVote, setUserVote] = useState<'upvote' | 'downvote' | null>(null);
-  const [existingVote, setExistingVote] = useState<'upvote' | 'downvote' | null>(null);
 
   useEffect(() => {
     if (upvotes.includes(user.id)) {
       setUserVote('upvote');
-      setExistingVote('upvote');
     } else if (downvotes.includes(user.id)) {
       setUserVote('downvote');
-      setExistingVote('downvote');
     }
   }, [upvotes, downvotes, user._id]);
 
@@ -55,16 +52,7 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
         });
 
         const data = await response.json();
-
-        console.log(data)
-
-        if (existingVote === null || existingVote !== userVote) {
-          // If the user is casting a vote on something they have not voted on return the data as is
-          action === 'upvotes' ? setRating(data - downvotes.length) : setRating(upvotes.length - data);
-        } else {
-          // If the user is modifying their vote on something offset the result by 1 to account for the change
-          action === 'upvotes' ? setRating(data - downvotes.length + 1) : setRating(upvotes.length - data - 1);
-        }
+        setRating(data.rating);
       } catch (err) {
         // TODO: Handle errors
         console.log(err);
@@ -100,6 +88,7 @@ const OptionButton = styled.button`
   background: transparent;
   border: none;
   color: inherit;
+  outline: none;
   ${transition({ prop: 'color' })};
 `;
 

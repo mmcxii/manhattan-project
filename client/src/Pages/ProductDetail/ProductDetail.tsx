@@ -51,6 +51,7 @@ const ProductDetail: React.FC<Props> = () => {
             <CardHeader>{product.name}</CardHeader>
             <ProductInfo>
               <Rating
+                rating={product.rating}
                 upvotes={product.upvotes}
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
@@ -90,6 +91,7 @@ const ProductDetail: React.FC<Props> = () => {
             <CardHeader>{product.name}</CardHeader>
             <ProductInfo>
               <Rating
+                rating={product.rating}
                 upvotes={product.upvotes}
                 downvotes={product.downvotes}
                 id={productId || 'error: product not found'}
