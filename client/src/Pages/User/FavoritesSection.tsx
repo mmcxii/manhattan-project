@@ -13,15 +13,13 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => (
   <Wrapper>
     <CardHeader as='h3'>{`${profileInfo.name || profileInfo.username}'s cellar`}</CardHeader>
     <CardBody>
-      {profileInfo.favorites && (
-        <HighlightedFavorite>
-          {profileInfo.highlightedFavorite || profileInfo.favorites[0]}
-        </HighlightedFavorite>
+      {profileInfo.favorites.length > 0 && (
+        <HighlightedFavorite>{profileInfo.highlightedFavorite || profileInfo.favorites[0]}</HighlightedFavorite>
       )}
 
       <Favorites>
-        {profileInfo.favorites ? (
-          profileInfo.favorites.map(fav => <FavoritesItem key={fav}>{fav}</FavoritesItem>)
+        {profileInfo.favorites.length > 0 ? (
+          profileInfo.favorites.map(fav => <FavoritesItem key={fav._id}>{fav}</FavoritesItem>)
         ) : (
           <NoFavsMessage>This user does not have any favorites yet</NoFavsMessage>
         )}

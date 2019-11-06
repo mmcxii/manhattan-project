@@ -26,25 +26,6 @@ const Login: React.FC<Props> = () => {
       } = await response.json();
 
       const loginToken: string = data.token;
-      // const userData: UserProps = {
-      //   id: data.user.id,
-      //   username: data.user.username,
-      //   theme: data.user.theme,
-      //   follows: data.user.follows,
-      //   followers: data.user.followers
-      // };
-      // if (data.user.name) {
-      //   userData.name = data.user.name;
-      // }
-      // if (data.user.age) {
-      //   userData.age = data.user.age;
-      // }
-      // if (data.user.bio) {
-      //   userData.bio = data.user.bio;
-      // }
-      // if (data.user.imgUrl) {
-      //   userData.imgUrl = data.user.imgUrl;
-      // }
 
       localStorage.setItem('loginToken', loginToken);
       localStorage.setItem('userInfo', JSON.stringify(data.user));
