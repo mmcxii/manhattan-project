@@ -5,9 +5,11 @@ import { UserContext } from 'Store';
 import { useForm } from 'Hooks';
 import { Input, Form, ErrorCard, Button, CardHeader, CardBody } from 'Elements';
 
-interface Props {}
+interface Props {
+  setUpdateComments: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const AddCommentForm: React.FC<Props> = () => {
+const AddCommentForm: React.FC<Props> = ({ setUpdateComments }) => {
   const { productId } = useParams();
   const { push } = useHistory();
   const { user } = useContext(UserContext);
@@ -38,6 +40,8 @@ const AddCommentForm: React.FC<Props> = () => {
         console.log(data);
       } catch (err) {
         console.log(err.message);
+      } finally {
+        setUpdateComments(true);
       }
     } else {
       // If the user is not logged in (does not have a login token),
@@ -62,6 +66,13 @@ const AddCommentForm: React.FC<Props> = () => {
           e.preventDefault();
 
           addComment();
+
+          handleChange({
+            target: {
+              name: 'text',
+              value: ''
+            }
+          });
         }}
       >
         <Input
