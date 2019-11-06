@@ -52,6 +52,7 @@ const SearchForm: React.FC<Props> = () => {
   const { push } = useHistory();
   const [beerResults, setBeerResults] = useState<ProductProps<BeerProps>[]>([]);
   const [mixedResults, setMixedResults] = useState<ProductProps<MixedProps>[]>([]);
+  const [resultCount, setResultCount] = useState<number>(0);
   const [displayResults, setDisplayResults] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   useTitle(`Search: ${type === 'beer' ? 'Beer' : 'Cocktail'}`);
@@ -59,6 +60,7 @@ const SearchForm: React.FC<Props> = () => {
   const icon = type === 'beer' ? 'fa-beer' : type === 'wine' ? 'fa-wine-glass-alt' : 'fa-glass-martini-alt';
 
   const APISearch = async <T extends unknown>(mode: string): Promise<ProductProps<T>[]> => {
+    setDisplayResults(false);
     let data: ProductProps<T>[] = [];
 
     try {
@@ -86,13 +88,13 @@ const SearchForm: React.FC<Props> = () => {
       }
 
       data = await response.json();
+
+      setResultCount(data.length);
     } catch (err) {
       console.log(err);
     }
 
-    if (displayResults === false) {
-      setDisplayResults(true);
-    }
+    setDisplayResults(true);
 
     return data;
   };
@@ -168,7 +170,7 @@ const SearchForm: React.FC<Props> = () => {
 
       {displayResults && (
         <Card>
-          <CardHeader>{searchTerm}</CardHeader>
+          <CardHeader>{`${searchTerm} - ${resultCount} results`}</CardHeader>
           <CardBody>
             {beerResults.length > 0 &&
               beerResults.map(item => (
