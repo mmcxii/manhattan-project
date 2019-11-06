@@ -1,9 +1,18 @@
 import { Router } from 'express';
 import { IProduct, ProductType, IUser } from '../interfaces';
-import { IProductDocument, Product, Query, ICommentDocument, Comment, IUserDocument, User, CommentData } from '../models';
+import {
+  IProductDocument,
+  Product,
+  Query,
+  ICommentDocument,
+  Comment,
+  IUserDocument,
+  User,
+  CommentData,
+  ProductData
+} from '../models';
 import { Status, NotFound, ServerError, BadRequest, Ok } from './Status';
 import { Dictionary, Response } from 'express-serve-static-core';
-
 
 interface IProductFilters {
   query?: string;
@@ -95,16 +104,7 @@ async function productVote(
       ? product.upvote(user)
       : product.downvote(user));
 
-    //Leaving commented out for now incase we decided to return this object later, but I'm not sure why we would. Numbers should be OK?
-
-    // const productRatingData = {
-    //   id: votedProduct._id,
-    //   rating: votedProduct.rating,
-    //   upvotes: votedProduct.upvotes,
-    //   downvotes: votedProduct.downvotes
-    // };
-
-    return Ok(res, votedProduct.rating);
+    return Ok(res, { rating: votedProduct.rating });
   } catch (error) {
     return ServerError(res, `Product vote error: ${error}`);
   }
@@ -151,13 +151,13 @@ export const ProductRoutes = Router()
     }
 
     try {
-      const product: IProduct | null = await Product.findById(id).populate('comments');
+      const product: IProductDocument | null = await Product.findById(id).populate('comments');
 
       if (!product) {
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      return Ok(res, product);
+      return Ok(res, new ProductData(product));
     } catch (error) {
       return ServerError(res, error);
     }
@@ -171,7 +171,9 @@ export const ProductRoutes = Router()
         return NotFound(res, `Product ${id} not found.`);
       }
 
-      return Ok(res, product.comments);
+      const productComments = product.comments.map(c => new CommentData(c, c.author));
+
+      return Ok(res, productComments);
     } catch (error) {
       return ServerError(res, error);
     }

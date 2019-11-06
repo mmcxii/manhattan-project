@@ -1,7 +1,8 @@
 import { Schema, SchemaTypes as Types, Model, model, Document, QueryUpdateOptions } from 'mongoose';
-import { IUserDocument } from './User';
-import { IProduct } from '../interfaces';
-import { ObjectID } from 'bson';
+import { IUserDocument, UserData } from './User';
+import { IProduct, ProductType, IProductDetails } from '../interfaces';
+import { ObjectID, ObjectId } from 'bson';
+import { CommentData } from './Comment';
 
 export interface IProductDocument extends IProduct, Document {
   upvote(user: IUserDocument): Promise<IProductDocument>;
@@ -10,6 +11,42 @@ export interface IProductDocument extends IProduct, Document {
 
 export interface IProductModel extends Model<IProductDocument> {
   // TODO - define Product model methods
+}
+
+export class ProductData {
+  type: ProductType;
+  name: string;
+  imgUrl: string;
+  details: IProductDetails;
+  imageUrls: string[];
+  comments: CommentData[];
+  rating: number;
+  upvotes: ObjectId[];
+  downvotes: ObjectId[];
+
+  constructor(product: IProductDocument) {
+    this.type = product.type;
+    this.name = product.name;
+    this.imgUrl = product.imgUrl;
+    this.imageUrls = product.imageUrls;
+    this.details = product.details;
+    this.rating = product.rating;
+
+    // Init arrays to empty. Populate if necessary.
+    this.upvotes = [];
+    this.downvotes = [];
+    this.comments = [];
+
+    if (product.upvotes && product.upvotes.length > 0) {
+      this.upvotes = product.upvotes.map(u => u._id);
+    }
+    if (product.downvotes && product.downvotes.length > 0) {
+      this.downvotes = product.downvotes.map(u => u._id);
+    }
+    if (product.comments && product.comments.length > 0) {
+      this.comments = product.comments.map(c => new CommentData(c, c.author));
+    }
+  }
 }
 
 const ingredientsSchema = new Schema({
@@ -43,7 +80,6 @@ const productSchema = new Schema({
     required: true,
     text: true
   },
-  desc: Types.String,
   imgUrl: Types.String,
   comments: [{ type: Types.ObjectId, ref: 'Comment' }],
   upvotes: [
@@ -64,8 +100,7 @@ const productSchema = new Schema({
 productSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
   const upvotes: number = this.upvotes.length;
   const downvotes: number = this.downvotes.length;
-  // Represent rating as a percentage (0.0 -> 1.0);
-  return upvotes / (upvotes + downvotes);
+  return upvotes - downvotes;
 });
 
 // Updates a products's rating

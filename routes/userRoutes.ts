@@ -23,9 +23,9 @@ export const UserRoutes = Router()
 
     try {
       //I know that this is an anti-pattern as well, but it HATES populating favorites for some reason. So, chaining.
-      const userDoc: IUserDocument | null = await User.findOne({ username })
-        .populate('follows followers')
-        .populate({ path: 'favorites', model: 'Product' });
+      const userDoc: IUserDocument | null = await User.findOne({ username }).populate(
+        'follows followers favorites highlightedFavorite'
+      );
 
       if (!userDoc) {
         return NotFound(res, `User ${username} not found.`);
@@ -274,10 +274,7 @@ export const UserRoutes = Router()
 
     try {
       //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
-      const user: IUserDocument | null = await User.findOne({ username }).populate({
-        path: 'favorites',
-        model: 'Product'
-      });
+      const user: IUserDocument | null = await User.findOne({ username }, 'favorites').populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -294,8 +291,9 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { $addToSet: { favorites: product }, new: true }
-      ).exec();
+        { $addToSet: { favorites: product } },
+        { new: true }
+      ).populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -312,8 +310,9 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { $pull: { favorites: product }, new: true }
-      ).exec();
+        { $pull: { favorites: product } },
+        { new: true }
+      ).populate('favorites');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
@@ -329,13 +328,16 @@ export const UserRoutes = Router()
 
     try {
       //I know that we're not using path syntax anywhere else when populating, but for some reason it just returns an empty array when I run populate if I don't do it this way.
-      const user: IUserDocument | null = await User.findOne({ username }).populate({
-        path: 'highlightedFavorite',
-        model: 'Product'
-      });
+      const user: IUserDocument | null = await User.findOne({ username }, 'highlightedFavorite').populate(
+        'highlightedFavorite'
+      );
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
+      }
+
+      if (!user.highlightedFavorite) {
+        return OkNoContent(res);
       }
 
       return Ok(res, user.highlightedFavorite);
@@ -349,16 +351,15 @@ export const UserRoutes = Router()
     try {
       const user: IUserDocument | null = await User.findByIdAndUpdate(
         { _id },
-        { highlightedFavorite: product, new: true }
-      ).exec();
+        { highlightedFavorite: product },
+        { new: true }
+      ).populate('highlightedFavorite');
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
 
-      const userData = new UserData(user);
-
-      return Ok(res, userData.favorites);
+      return Ok(res, user.highlightedFavorite);
     } catch (err) {
       return ServerError(res, err);
     }
@@ -366,14 +367,17 @@ export const UserRoutes = Router()
   .delete('/:username/favorites/highlighted', async (req: IUserRequest, res) => {
     const { _id } = req.token as IUserToken;
     try {
-      const user: IUserDocument | null = await User.findByIdAndUpdate({ _id }, { favorites: null, new: true }).exec();
+      const user: IUserDocument | null = await User.findByIdAndUpdate(
+        { _id },
+        { $unset: { highlightedFavorite: null } },
+        { new: true }
+      );
 
       if (!user) {
         return NotFound(res, `Cannot find username: ${req.params.username}`);
       }
-      const userData = new UserData(user);
 
-      return Ok(res, userData);
+      return Ok(res, `Deleted highlighted favorite for ${req.params.username}`);
     } catch (err) {
       return ServerError(res, err);
     }
