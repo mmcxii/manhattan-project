@@ -10,7 +10,7 @@ export enum Status {
   Forbidden = 403,
   NotFound = 404,
   Unprocessable = 422,
-  ServerError = 500,
+  ServerError = 500
 }
 
 const fillError = (status: Status, res: Response, message: string): Response => {
@@ -22,6 +22,9 @@ export const SendStatus = (res: Response, statusCode: Status): Response => {
 };
 
 export const Ok = <T extends unknown>(res: Response, data: T, okStatus = Status.OK): Response => {
+  if (typeof data === 'undefined' || data == null) {
+    return SendStatus(res, Status.NoContent);
+  }
   const setMsg = typeof data === 'string';
   const resData = setMsg ? { message: data } : data;
   return res.status(okStatus).json(resData);
