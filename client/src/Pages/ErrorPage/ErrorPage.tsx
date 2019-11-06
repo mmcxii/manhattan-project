@@ -2,12 +2,12 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Card, CardHeader, CardBody } from 'Elements';
-import { useDocumentTitle } from 'Hooks';
+import { useTitle } from 'Hooks';
 
 interface Props {}
 
 const ErrorPage: React.FC<Props> = () => {
-  useDocumentTitle('404 Page Not Found');
+  useTitle('404 Page Not Found');
   const { goBack } = useHistory();
 
   return (

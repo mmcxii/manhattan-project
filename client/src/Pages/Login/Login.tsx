@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { UserContext, UserProps } from 'Store';
-import { useForm, useDocumentTitle } from 'Hooks';
+import { useForm, useTitle } from 'Hooks';
 import { Form, Input, Button, Card, CardBody, CardHeader } from 'Elements';
 
 interface Props {}
 
 const Login: React.FC<Props> = () => {
-  useDocumentTitle('Log In');
+  useTitle('Log In');
   const { dispatch } = useContext(UserContext);
   const [values, handleChange] = useForm({ username: '', password: '' });
   const history = useHistory();

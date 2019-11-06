@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { UserProps } from 'Store';
-import { useDocumentTitle } from 'Hooks';
+import { useTitle } from 'Hooks';
 import UserInfo from './UserInfo';
 import FavoritesSection from './FavoritesSection';
 import FollowsAndFollowers from './FollowsAndFollowers';
@@ -12,7 +12,7 @@ interface Props {}
 const User: React.FC<Props> = () => {
   const { username } = useParams();
   const [profileInfo, setProfileInfo] = useState<UserProps | null>(null);
-  useDocumentTitle(profileInfo ? profileInfo.name || profileInfo.username : 'Error: User not found');
+  useTitle(profileInfo ? profileInfo.name || profileInfo.username : 'Error: User not found');
 
   useEffect(() => {
     const getUser = async () => {

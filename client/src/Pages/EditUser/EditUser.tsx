@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { UserProps, UserContext } from 'Store';
-import { useForm, useDocumentTitle } from 'Hooks';
+import { useForm, useTitle } from 'Hooks';
 import { Card, Form, Input, Button, CardBody, CardHeader, Toggle, AvatarUpdater } from 'Elements';
 
 interface Props {}
@@ -10,7 +10,7 @@ interface Props {}
 const EditUser: React.FC<Props> = () => {
   const { username } = useParams();
   const { user, dispatch } = useContext(UserContext);
-  useDocumentTitle(`${user.name || user.username} - Edit Information`);
+  useTitle(`${user.name || user.username} - Edit Information`);
   //@ts-ignore
   const initialState: UserProps = JSON.parse(localStorage.getItem('userInfo'));
   //@ts-ignore

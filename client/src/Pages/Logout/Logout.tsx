@@ -2,14 +2,14 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
-import { useDocumentTitle } from 'Hooks';
+import { useTitle } from 'Hooks';
 import { Card, CardHeader, CardBody, Button } from 'Elements';
 import { UserContext } from 'Store';
 
 interface Props {}
 
 const Logout: React.FC<Props> = () => {
-  useDocumentTitle('Log Out');
+  useTitle('Log Out');
   const { dispatch } = useContext(UserContext);
   const { push } = useHistory();
 

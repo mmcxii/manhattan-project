@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import styled from 'styled-components';
 
 import { ProductProps } from 'Store';
-import { useDocumentTitle } from 'Hooks';
+import { useTitle } from 'Hooks';
 import { spacing } from 'Utilities';
 import { Card, CardHeader, CardBody, GoBackButton, Rating } from 'Elements';
 import placeholder from 'Assets/img/placeholder.png';
@@ -14,7 +14,7 @@ interface Props {}
 const ProductDetail: React.FC<Props> = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState<ProductProps | null>(null);
-  useDocumentTitle(product ? product.name : 'Error: Product not Found');
+  useTitle(product ? product.name : 'Error: Product not Found');
 
   useEffect(() => {
     const getProductDetails = async () => {

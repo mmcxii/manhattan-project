@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useDocumentTitle } from 'Hooks';
+import { useTitle } from 'Hooks';
 import { Card, CardHeader, CardBody } from 'Elements';
 import ModeSelection from './ModeSelection';
 
 interface Props {}
 
 const Home: React.FC<Props> = () => {
-  useDocumentTitle('The Manhattan Project');
+  useTitle('The Manhattan Project');
 
   return (
     <WelcomeCard>
