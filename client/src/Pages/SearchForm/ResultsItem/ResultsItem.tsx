@@ -28,7 +28,6 @@ export const ResultsItem: React.FC<Props> = props => {
 };
 
 export const ResultType = styled.p`
-  margin: ${spacing.md} 0;
   grid-area: type;
 `;
 
