@@ -151,7 +151,7 @@ export const ProductRoutes = Router()
     }
 
     try {
-      const product: IProductDocument | null = await Product.findById(id).populate('comments upvotes downvotes');
+      const product: IProductDocument | null = await Product.findById(id).populate('comments');
 
       if (!product) {
         return NotFound(res, `Product ${id} not found.`);
