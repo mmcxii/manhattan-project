@@ -12,6 +12,7 @@ declare global {
 const commentData = {
   author: new ObjectID(),
   text: 'what a great beer',
+  product: new ObjectID(),
   upvotes: new ObjectID(),
   downvotes: new ObjectID()
 };
@@ -42,7 +43,8 @@ describe('Comment Modal Tests', () => {
     const commentWithInvalidField: ICommentDocument = new Comment({
       author: new ObjectID(),
       text: 'yummy yummy',
-      time: '10am'
+      time: '10am',
+      product: new ObjectID()
     });
     const savedCommentWithInvalidField = await commentWithInvalidField.save();
     expect(savedCommentWithInvalidField._id).toBeDefined();

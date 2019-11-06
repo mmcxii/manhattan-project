@@ -1,7 +1,8 @@
 let app = require('../server');
 import mongoose from 'mongoose';
 import request from 'supertest';
-import { Comment, ICommentDocument, User, IUserDocument } from '../models';
+import { Comment, ICommentDocument, User, IUserDocument, Product } from '../models';
+
 import { ObjectID } from 'bson';
 //adding mongo uri to be a global type
 declare global {
@@ -15,7 +16,7 @@ declare global {
 let server = request.agent(app);
 export let token: any;
 export let userID: any;
-
+let productID: any;
 describe('comment routes', () => {
   beforeAll(async () => {
     await mongoose.connect(global.__MONGO_URI__, { useNewUrlParser: true, useCreateIndex: true }, err => {
@@ -29,6 +30,8 @@ describe('comment routes', () => {
       .send({ username: 'test', password: 'test', admin: 'Not admin' });
     token = response.body.token;
     userID = response.body.user.id;
+
+    productID = await Product.find({});
   });
 
   //post / tests
@@ -36,7 +39,7 @@ describe('comment routes', () => {
   it('should create a comment', async done => {
     const response = await server
       .post('/api/comments')
-      .send({ text: 'this is a comment', author: 'test' })
+      .send({ text: 'this is a comment', author: 'test', product: new ObjectID() })
       .set('Authorization', 'bearer ' + token);
     expect(response.status).toBe(200);
     expect(response.body.text).toBe('this is a comment');
@@ -47,7 +50,7 @@ describe('comment routes', () => {
   it('should return 400 if no text is entered', async done => {
     const response = await server
       .post('/api/comments')
-      .send({ text: '', author: 'test' })
+      .send({ text: '', author: 'test', product: productID[0]._id })
       .set('Authorization', 'bearer ' + token);
     expect(response.status).toBe(400);
     done();
@@ -56,7 +59,7 @@ describe('comment routes', () => {
   it('should return 400 if no author is entered', async done => {
     const response = await server
       .post('/api/comments')
-      .send({ text: 'this is some text', author: '' })
+      .send({ text: 'this is some text', author: '', product: productID[0]._id })
       .set('Authorization', 'bearer ' + token);
     expect(response.status).toBe(400);
     done();
