@@ -21,7 +21,7 @@ const Spacer = styled.span`
   margin: 0 ${spacing.xs};
 `;
 
-export const ProductIngredients: React.FC<Props> = ({ ingredients }) => {
+export const CocktailIngredients: React.FC<Props> = ({ ingredients }) => {
   if (!ingredients || ingredients.length === 0) {
     return <p>Not specified.</p>;
   }
