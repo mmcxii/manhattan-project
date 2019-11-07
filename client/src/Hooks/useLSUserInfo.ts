@@ -44,7 +44,6 @@ export const useReadLSUserInfo = () => {
     const lsLoginToken = localStorage.getItem('loginToken');
 
     if (!lsLoginToken) {
-      resetUserInfo();
       return;
     }
 

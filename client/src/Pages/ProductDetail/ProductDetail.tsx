@@ -18,6 +18,9 @@ const ProductDetail: React.FC<Props> = () => {
   const [displayProduct, setDisplayProduct] = useState<boolean>(false);
   useTitle(product ? product.name : 'Error: Product not Found');
 
+  // quick hack to check 'logged in'
+  const loggedIn = localStorage.getItem('loginToken') !== null;
+
   useEffect(() => {
     let isSubscribed = true;
 
@@ -132,7 +135,7 @@ const ProductDetail: React.FC<Props> = () => {
               type='products'
               ratingValue={product.rating}
             />
-            <FavoriteButton itemId={productId} />
+            {loggedIn && <FavoriteButton itemId={productId} />}
             {drinkTypeDetails}
             <Image
               src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
