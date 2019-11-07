@@ -10,13 +10,7 @@ interface Props {
   setStateAction: any;
 }
 
-export const Toggle: React.FC<Props> = ({
-  name,
-  trueCondition,
-  falseCondition,
-  initialState,
-  setStateAction,
-}) => {
+export const Toggle: React.FC<Props> = ({ name, trueCondition, falseCondition, initialState, setStateAction }) => {
   const [toggled, setToggled] = useState<boolean>(initialState);
 
   const handleToggle = () => {

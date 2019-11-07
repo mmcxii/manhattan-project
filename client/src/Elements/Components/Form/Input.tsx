@@ -21,20 +21,14 @@ export const Input: React.FC<Props> = ({
   icon,
   value,
   onChange,
-  required,
+  required
 }) => {
   return (
     <FormGroup hasIcon={icon !== undefined}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
 
       {type === 'textarea' ? (
-        <TextArea
-          name={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          required={required}
-        />
+        <TextArea name={name} placeholder={placeholder} value={value} onChange={onChange} required={required} />
       ) : (
         <FormInput
           type={type}

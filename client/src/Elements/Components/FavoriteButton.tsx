@@ -2,7 +2,7 @@ import React, { useContext, useState, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { ProductProps, UserContext } from 'Store';
+import { UserContext } from 'Store';
 import { spacing, red } from 'Utilities';
 import { ButtonTrans } from './Button';
 
@@ -30,7 +30,7 @@ export const FavoriteButton: React.FC<Props> = ({ itemId }) => {
 
   const toggleFavorite = async () => {
     const mode: 'DELETE' | 'PUT' = isFavorited ? 'DELETE' : 'PUT';
-    const queryUrl: string = `/api/users/${user.username}/favorites`;
+    const queryUrl = `/api/users/${user.username}/favorites`;
 
     try {
       await fetch(queryUrl, {
@@ -58,7 +58,9 @@ export const FavoriteButton: React.FC<Props> = ({ itemId }) => {
       dispatch({ type: isFavorited ? 'DELETE_FAVORITE' : 'ADD_FAVORITE', payload: itemId });
 
       setIsFavorited(!isFavorited);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { CommentProps, ThemeContext, UserProps } from 'Store';
-import { Rating, UserIcon} from 'Elements';
+import { Rating, UserIcon } from 'Elements';
 import { spacing, white, black, fadeIn } from 'Utilities';
 
 interface Props {
@@ -18,18 +18,22 @@ const UserComment: React.FC<Props> = ({ comment, user }) => {
 
   return (
     <>
-
-    <Wrapper theme={theme}>
-      <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} ratingValue={comment.rating} />
-      <UserIcon user={user} /> 
-      <Author>
-        <Link to={`/${product._id}/detail`}>{product.name}</Link>
-        <Interpunct>{'\u00B7'}</Interpunct>
-        <Date>{moment(dateCreated).fromNow()}</Date>
-      </Author>
-      <Text>{comment.text}</Text>
-    </Wrapper>
-
+      <Wrapper theme={theme}>
+        <Rating
+          upvotes={comment.upvotes}
+          downvotes={comment.downvotes}
+          type='comments'
+          id={comment._id}
+          ratingValue={comment.rating}
+        />
+        <UserIcon user={user} />
+        <Author>
+          <Link to={`/${product._id}/detail`}>{product.name}</Link>
+          <Interpunct>{'\u00B7'}</Interpunct>
+          <Date>{moment(dateCreated).fromNow()}</Date>
+        </Author>
+        <Text>{comment.text}</Text>
+      </Wrapper>
     </>
   );
 };

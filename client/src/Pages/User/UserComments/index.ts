@@ -1,3 +1,3 @@
-import UserCommentsList from "./UserCommentList";
+import UserCommentsList from './UserCommentList';
 
 export default UserCommentsList;

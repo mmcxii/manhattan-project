@@ -9,29 +9,28 @@ export const useReadLSUserInfo = () => {
     const lsLoginToken = localStorage.getItem('loginToken');
 
     try {
-
       if (lsLoginToken) {
         const authUser = async () => {
-          const response: Response = await fetch('/auth/validate', { 
-          method: 'POST', 
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${lsLoginToken}`
+          const response: Response = await fetch('/auth/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${lsLoginToken}`
+            }
+          });
+
+          if (!response.ok) {
+            alert('Token validation failed. Redirecting to login.');
+            return push('/login');
           }
-        })
 
-        if (!response.ok) {
-          alert('Token validation failed. Redirecting to login.');
-          return push('/login');
-        }
+          const userData = await response.json();
 
-        const userData = await response.json();
+          localStorage.setItem('userInfo', JSON.stringify(userData));
 
-        localStorage.setItem('userInfo', JSON.stringify(userData));
-
-        dispatch({ type: 'LOG_USER_IN', payload: userData });
-      }
-       authUser();
+          dispatch({ type: 'LOG_USER_IN', payload: userData });
+        };
+        authUser();
       }
     } catch (error) {
       localStorage.removeItem('loginToken');
@@ -39,7 +38,5 @@ export const useReadLSUserInfo = () => {
       alert('Error authenticating. Please try logging in again!');
       return push('/login');
     }
-
-
   }, [dispatch]);
 };

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { rounded, spacing } from 'Utilities'
+import { rounded, spacing } from 'Utilities';
 
 export const AvatarLg = styled.img`
   max-width: 250px;
