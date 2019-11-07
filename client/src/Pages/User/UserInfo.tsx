@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { UserProps } from 'Store';
@@ -78,14 +77,3 @@ const InfoContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-UserInfo.propTypes = {
-  profileInfo: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    name: PropTypes.string,
-    bio: PropTypes.string,
-    imgUrl: PropTypes.string,
-    age: PropTypes.number
-  }).isRequired
-};

@@ -1,5 +1,4 @@
 import React, { useContext, useState, useLayoutEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -81,7 +80,3 @@ const Button = styled(ButtonTrans)`
 const Icon = styled.i`
   color: ${red};
 `;
-
-FavoriteButton.propTypes = {
-  itemId: PropTypes.string.isRequired
-};
