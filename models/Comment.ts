@@ -111,7 +111,7 @@ commentSchema.statics.createComment = async function(
 
   const text = comment.trim();
 
-  const newComment = await this.create({ author: user._id, text, product: product });
+  const newComment = await this.create({ author: user._id, text, product: product, dateCreated: Date.now() });
 
   return newComment.populate('author').execPopulate();
 };
