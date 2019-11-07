@@ -16,6 +16,8 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
   const [newHighlighted, setNewHighlighted] = useState<boolean>(true);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     const fetchFavorites = async () => {
       try {
         const response: Response = await fetch(`/api/users/${profileInfo.username}/favorites`, {
@@ -28,17 +30,23 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
 
         const data: ProductProps[] = await response.json();
 
-        setFavorites(data);
+        isSubscribed && setFavorites(data);
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchFavorites();
-    setNewHighlighted(true);
+    isSubscribed && setNewHighlighted(true);
+
+    return () => {
+      isSubscribed = false;
+    }
   }, [profileInfo.username]);
 
   useLayoutEffect(() => {
+    let isSubscribed = true;
+
     const fetchHighlightedFavorite = async () => {
       try {
         const response: Response = await fetch(`/api/users/${profileInfo.username}/favorites/highlighted`, {
@@ -51,18 +59,22 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
         }
 
         const data = await response.json();
-        setHighlightedFavorite(data);
+        isSubscribed && setHighlightedFavorite(data);
       } catch (err) {
         console.log(err);
       }
     };
 
     if (newHighlighted) {
-      setHighlightedFavorite(null);
+      isSubscribed && setHighlightedFavorite(null);
 
       fetchHighlightedFavorite().then(() => {
-        setNewHighlighted(false);
+        isSubscribed && setNewHighlighted(false);
       });
+    }
+
+    return () => {
+      isSubscribed = false;
     }
   }, [profileInfo, newHighlighted]);
 

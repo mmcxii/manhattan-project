@@ -19,9 +19,11 @@ const ProductDetail: React.FC<Props> = () => {
   useTitle(product ? product.name : 'Error: Product not Found');
 
   useEffect(() => {
+    let isSubscribed = true;
+
     const getProductDetails = async () => {
       try {
-        setDisplayProduct(false);
+        isSubscribed && setDisplayProduct(false);
         const response: Response = await fetch(`/api/products/${productId}`, { method: 'GET' });
 
         const errorCodes: number[] = [400, 404, 500];
@@ -33,16 +35,20 @@ const ProductDetail: React.FC<Props> = () => {
         if (response.status === 200) {
           const successData = await response.json();
 
-          setProduct(successData);
+          isSubscribed && setProduct(successData);
         }
       } catch (err) {
         console.log(err.message);
       } finally {
-        setDisplayProduct(true);
+        isSubscribed && setDisplayProduct(true);
       }
     };
 
     getProductDetails();
+
+    return () => {
+      isSubscribed = false;
+    }
   }, [productId]);
 
   // Build mixed drink / cocktail results
