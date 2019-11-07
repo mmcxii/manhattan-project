@@ -79,11 +79,11 @@ const FormInput = styled.input`
 
 const TextArea = styled.textarea`
   grid-area: input;
-
   padding: ${spacing.sm} ${spacing.md};
   border-radius: ${roundedInner};
   border: none;
   color: ${black};
+  resize: none;
 `;
 
 const FormIcon = styled.i`
