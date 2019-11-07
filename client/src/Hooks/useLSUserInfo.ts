@@ -4,14 +4,13 @@ import { UserContext } from 'Store';
 
 export const useReadLSUserInfo = () => {
   const { dispatch } = useContext(UserContext);
-
+  const { push } = useHistory();
   useEffect(() => {
     const lsLoginToken = localStorage.getItem('loginToken');
 
     try {
 
       if (lsLoginToken) {
-        const { push } = useHistory();
         const authUser = async () => {
           const response: Response = await fetch('/auth/validate', { 
           method: 'POST', 
@@ -26,6 +25,8 @@ export const useReadLSUserInfo = () => {
         }
 
         const userData = await response.json();
+
+        localStorage.setItem('userInfo', JSON.stringify(userData));
 
         dispatch({ type: 'LOG_USER_IN', payload: userData });
       }
