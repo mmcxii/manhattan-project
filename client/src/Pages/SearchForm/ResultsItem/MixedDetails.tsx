@@ -17,7 +17,7 @@ export const MixedDetails: React.FC<Props> = ({ item }) => {
         {glassType}
       </ResultType>
       <ResultDetails>
-        <strong>Ingrediants: </strong>
+        <strong>Ingredients: </strong>
         {ingrediants}
       </ResultDetails>
     </>
