@@ -57,13 +57,21 @@ export const useReadLSUserInfo = () => {
     };
 
     fetch('/auth/validate', requestData)
-      .then(res => res.json())
+      .then(res => {
+        if (res.status !== 200) {
+          throw new Error('Could not validate user.');
+        }
+        return res.json();
+      })
       .then(userData => {
         if (!userData) {
           throw new Error('No user data returned.');
         }
         setUserInfo(userData);
       })
-      .catch(err => resetUserInfo(err));
+      .catch(err => {
+        alert('Invalid or missing credentials. Please log in.');
+        resetUserInfo(err);
+      });
   }, [dispatch, setUserInfo, resetUserInfo]);
 };

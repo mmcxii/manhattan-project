@@ -27,29 +27,35 @@ const User: React.FC<Props> = () => {
   useTitle(profileInfo ? profileInfo.name || profileInfo.username : 'Error: User not found');
 
   useEffect(() => {
+    let isSubscribed = true;
+
     const getUser = async () => {
       try {
-        setDisplayUser(false);
+        isSubscribed && setDisplayUser(false);
         // Get profile information from database
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
 
         // Error finding user
         if (!response.ok) {
-          setProfileInfo(null);
+          isSubscribed && setProfileInfo(null);
           return;
         }
 
         const data: UserProps = await response.json();
 
-        setProfileInfo(data);
+        isSubscribed && setProfileInfo(data);
       } catch (err) {
         console.log(err);
       } finally {
-        setDisplayUser(true);
+        isSubscribed && setDisplayUser(true);
       }
     };
 
     getUser();
+
+    return () => {
+      isSubscribed = false;
+    }
   }, [username]);
 
   const profile = profileInfo ? (

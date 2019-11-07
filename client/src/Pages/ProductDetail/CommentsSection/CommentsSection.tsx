@@ -15,22 +15,28 @@ const CommentsSection: React.FC<Props> = ({ type, productId }) => {
   const [comments, setComments] = useState<CommentProps[]>([]);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     const fetchComments = async () => {
       try {
         const response: Response = await fetch(`/api/products/${productId}/comments`, { method: 'GET' });
         const data: CommentProps[] = await response.json();
 
-        setComments(data);
+        isSubscribed && setComments(data);
       } catch (error) {
         console.log(error);
       } finally {
-        setUpdateComments(false);
+        isSubscribed && setUpdateComments(false);
       }
     };
 
     if (updateComments) {
       fetchComments();
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [updateComments, productId]);
 
   return (
