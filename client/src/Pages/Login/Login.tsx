@@ -39,7 +39,12 @@ const Login: React.FC<Props> = () => {
       localStorage.setItem('userInfo', JSON.stringify(data.user));
       dispatch({ type: 'LOG_USER_IN', payload: data.user });
 
-      return history.goBack();
+      if (history.action === 'PUSH') {
+        history.push('/');
+        return;
+      }
+
+      history.goBack();
     } catch (err) {
       console.log(err);
     }
