@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { UserProps, UserContext } from 'Store';
 import { useForm, useTitle } from 'Hooks';
-import { Card, Form, Input, Button, CardBody, CardHeader, Toggle, AvatarUpdater } from 'Elements';
+import { Card, Form, Input, Button, CardBody, CardHeader, Toggle, AvatarUpdater, SuccessCard } from 'Elements';
 
 interface Props {}
 
@@ -21,6 +21,7 @@ const EditUser: React.FC<Props> = () => {
     bio: initialState.bio || ''
   });
   const [theme, setTheme] = useState(initialState.theme);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const saveDataToDataBase = async () => {
     try {
@@ -36,6 +37,7 @@ const EditUser: React.FC<Props> = () => {
 
       localStorage.setItem('userInfo', JSON.stringify(data));
       dispatch({ type: 'LOG_USER_IN', payload: data });
+      setSuccess(true);
     } catch (err) {
       console.log(err);
     }
@@ -52,6 +54,14 @@ const EditUser: React.FC<Props> = () => {
       <Card as='section'>
         <CardHeader>Edit Information</CardHeader>
         <CardBody>
+          {success && (
+            <SuccessCard>
+              <CardHeader as='h3'>Success</CardHeader>
+              <CardBody>
+                <p>Your profile information was successfully updated.</p>
+              </CardBody>
+            </SuccessCard>
+          )}
           <Form
             onSubmit={e => {
               e.preventDefault();
