@@ -56,11 +56,11 @@ export const AvatarUpdater: React.FC<Props> = (props: Props) => {
         body: formData
       });
 
-      const userData = await response.json();
+      await response.json();
 
-      if (response.ok) {
-        localStorage.setItem('userInfo', JSON.stringify(userData));
-      }
+      // Clear cached image
+      await window.caches.delete(imgUrl);
+
     } catch (error) {
       alert(`Upload error: ${error.message}`);
     } finally {
