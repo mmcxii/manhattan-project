@@ -5,6 +5,7 @@ import { useHistory } from 'react-router';
 import { useTitle } from 'Hooks';
 import { Card, CardHeader, CardBody, Button } from 'Elements';
 import { UserContext } from 'Store';
+import { spacing } from '../../Utilities';
 
 interface Props {}
 
@@ -26,9 +27,9 @@ const Logout: React.FC<Props> = () => {
     <LogoutCard>
       <CardHeader>Log out</CardHeader>
       <CardBody>
-        <p>
+        <LogoutMessage>
           To log out of <cite>The Manhattan Project</cite> click the button below.
-        </p>
+        </LogoutMessage>
         <Button onClick={logUserOut}>Click here to log out</Button>
       </CardBody>
     </LogoutCard>
@@ -39,4 +40,8 @@ export default Logout;
 
 const LogoutCard = styled(Card).attrs({ as: 'section' })`
   margin: auto;
+`;
+
+const LogoutMessage = styled.p`
+  margin: ${spacing.lg} 0;
 `;
