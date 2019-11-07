@@ -17,7 +17,7 @@ export const ResultsItem: React.FC<Props> = props => {
   return (
     <Wrapper to={`/${item._id}/detail`}>
       <ResultImage src={item.imgUrl === '//:0' || !item.imgUrl ? placeholder : item.imgUrl} alt={item.name} />​
-      <ResultTitle>{item.name}</ResultTitle>​{/* {children} */}​{children}
+      <ResultTitle>{item.name}</ResultTitle>​{children}
       <ItemVotes>
         <h3>
           {`${score}`} <i className={scoreClass} />
