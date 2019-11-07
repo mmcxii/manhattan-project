@@ -1,6 +1,6 @@
 import { Router, Application } from 'express';
 import { AuthRoutes } from './authRoutes';
-import { HtmlRoutes } from './htmlRoutes'
+import { HtmlRoutes } from './htmlRoutes';
 import { UserRoutes } from './userRoutes';
 import { CommentRoutes } from './commentRoutes';
 import { ProductRoutes } from './productRoutes';
