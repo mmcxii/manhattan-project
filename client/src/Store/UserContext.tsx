@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 
 import { ProductProps } from './IProduct';
+import { CommentProps } from './IComment';
 
 export interface UserProps {
   id: string;
@@ -9,6 +10,7 @@ export interface UserProps {
   name?: string;
   age?: number;
   bio?: string;
+  comments?: CommentProps[];
   highlightedFavorite?: string;
   favorites: string[];
   follows: UserProps[];

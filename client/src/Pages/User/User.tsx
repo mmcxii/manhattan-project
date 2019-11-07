@@ -6,6 +6,7 @@ import { useTitle } from 'Hooks';
 import UserInfo from './UserInfo';
 import FavoritesSection from './FavoritesSection';
 import FollowsAndFollowers from './FollowsAndFollowers';
+import UserCommentList from './UserComments';
 
 interface Props {}
 
@@ -20,7 +21,7 @@ const User: React.FC<Props> = () => {
         // Get profile information from database
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
         const data: UserProps = await response.json();
-
+        console.log(data);
         setProfileInfo(data);
       } catch (err) {
         console.log(err);
@@ -39,6 +40,8 @@ const User: React.FC<Props> = () => {
           <FavoritesSection profileInfo={profileInfo} />
 
           <FollowsAndFollowers profileInfo={profileInfo} />
+          {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
+          
         </>
       ) : (
         <p>Error: No User was found with that name.</p>
