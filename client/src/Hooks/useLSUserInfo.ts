@@ -12,7 +12,7 @@ export const useReadLSUserInfo = () => {
       if (lsLoginToken) {
         
         const authUser = async () => {
-          const response: Response = await fetch('/api/auth/validate', { 
+          const response: Response = await fetch('/auth/validate', { 
           method: 'POST', 
           headers: {
             'Content-Type': 'application/json',
@@ -28,6 +28,6 @@ export const useReadLSUserInfo = () => {
       localStorage.removeItem('loginToken');
     }
 
-    dispatch({ type: 'LOG_USER_IN', payload: parsedData });
+    // dispatch({ type: 'LOG_USER_IN', payload: parsedData });
   }, [dispatch]);
 };

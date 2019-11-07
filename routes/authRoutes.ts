@@ -97,6 +97,25 @@ export const AuthRoutes = Router()
 
     return Ok(res, userData);
   })
+  .post('/validate', validateToken, async (req: IUserRequest, res: express.Response) => {
+
+    const userToken: IUserToken | undefined = req.token;
+
+
+    if (!userToken) {
+      return Unauthorized(res, `Token validation failed, please try logging in again.`);
+    }
+
+    const user: IUserDocument | null = await User.findOne({ _id: userToken._id });
+    
+    if (!user) {
+      return NotFound(res, `User ${userToken.username} not found.`);
+    }
+
+    const userData = new UserData(user)
+
+    return Ok(res, userData);
+  })
   .post('/:username', validateToken, async (req: IUserRequest, res: express.Response) => {
     // Verify identity of provided user. Verifies user matches username in supplied token.
     // Returns associated User document, else 401 status.
@@ -111,24 +130,6 @@ export const AuthRoutes = Router()
     const user: IUserDocument | null = await User.findOne({ username });
     if (!user) {
       return NotFound(res, `User ${username} not found.`);
-    }
-
-    const userData = new UserData(user)
-
-    return Ok(res, userData);
-  })
-  .post('/validate', validateToken, async (req: IUserRequest, res: express.Response) => {
-
-    const userToken: IUserToken | undefined = req.token;
-
-
-    if (!userToken) {
-      return Unauthorized(res, `Token validation failed, please try logging in again.`);
-    }
-
-    const user: IUserDocument | null = await User.findOne({ _id: userToken._id });
-    if (!user) {
-      return NotFound(res, `User ${userToken.username} not found.`);
     }
 
     const userData = new UserData(user)
