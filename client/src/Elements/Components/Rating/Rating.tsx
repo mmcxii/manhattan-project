@@ -15,15 +15,21 @@ interface Props {
 export const Rating: React.FC<Props> = ({ upvotes, downvotes, type, id, ratingValue }) => {
   const [rating, setRating] = useState<number>(ratingValue);
 
+  const updateRating = (newRating: number): void => {
+    if (newRating !== rating) {
+      setRating(newRating);
+    }
+  };
+
   return (
     <Wrapper>
       <UpvoteDownvote
         type={type}
         id={id}
-        setRating={setRating}
         upvotes={upvotes}
         downvotes={downvotes}
         rating={rating}
+        updateRating={r => updateRating(r)}
       />
     </Wrapper>
   );

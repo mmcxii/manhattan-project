@@ -32,6 +32,13 @@ const User: React.FC<Props> = () => {
         setDisplayUser(false);
         // Get profile information from database
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
+
+        // Error finding user
+        if (!response.ok) {
+          setProfileInfo(null);
+          return;
+        }
+
         const data: UserProps = await response.json();
 
         setProfileInfo(data);

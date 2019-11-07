@@ -21,7 +21,12 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
         const response: Response = await fetch(`/api/users/${profileInfo.username}/favorites`, {
           method: 'GET'
         });
-        const data = await response.json();
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data: ProductProps[] = await response.json();
 
         setFavorites(data);
       } catch (err) {
@@ -40,8 +45,8 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
           method: 'GET'
         });
 
-        const errorCodes: number[] = [400, 404, 500];
-        if (errorCodes.includes(response.status)) {
+        // If error OR no content (no favorite) -> return
+        if (!response.ok || response.status === 204) {
           return;
         }
 

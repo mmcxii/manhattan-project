@@ -1,45 +1,63 @@
 import { useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { UserContext } from 'Store';
+import { UserContext, UserProps } from 'Store';
 
 export const useReadLSUserInfo = () => {
   const { dispatch } = useContext(UserContext);
   const { push } = useHistory();
+
+  // Clear out localstorage data and redirect to login. Log error if provided.
+  const resetUserInfo = (error?: Error): void => {
+    if (error && error instanceof Error) {
+      console.log('Error updating stored user:', error.message || error);
+    }
+
+    localStorage.removeItem('loginToken');
+    localStorage.removeItem('userInfo');
+    push('/login');
+  };
+
+  // Updates the user data stored in localstorage
+  const setUserInfo = (user: UserProps): void => {
+    try {
+      if (!user) {
+        throw new Error('Invalid or missing user data retrieved.');
+      }
+
+      localStorage.setItem('userInfo', JSON.stringify(user));
+      dispatch({ type: 'LOG_USER_IN', payload: user });
+    } catch (error) {
+      console.log('Error updating stored user data:', error.message || error);
+      resetUserInfo();
+    }
+
+    return;
+  };
+
   useEffect(() => {
     const lsLoginToken = localStorage.getItem('loginToken');
 
-    try {
-
-      if (lsLoginToken) {
-        const authUser = async () => {
-          const response: Response = await fetch('/auth/validate', { 
-          method: 'POST', 
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${lsLoginToken}`
-          }
-        })
-
-        if (!response.ok) {
-          alert('Token validation failed. Redirecting to login.');
-          return push('/login');
-        }
-
-        const userData = await response.json();
-
-        localStorage.setItem('userInfo', JSON.stringify(userData));
-
-        dispatch({ type: 'LOG_USER_IN', payload: userData });
-      }
-       authUser();
-      }
-    } catch (error) {
-      localStorage.removeItem('loginToken');
-      localStorage.removeItem('userInfo');
-      alert('Error authenticating. Please try logging in again!');
-      return push('/login');
+    if (!lsLoginToken) {
+      resetUserInfo();
+      return;
     }
 
+    const requestData = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${lsLoginToken}`
+      }
+    };
 
+    fetch('/auth/validate', requestData)
+      .then(res => res.json())
+      .then(userData => {
+        if (!userData) {
+          throw new Error('No user data returned.');
+        }
+        setUserInfo(userData);
+      })
+      .catch(err => resetUserInfo(err));
   }, [dispatch]);
 };
