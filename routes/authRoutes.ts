@@ -108,10 +108,12 @@ export const AuthRoutes = Router()
       return Unauthorized(res, `Failed to verify identity of user ${username}`);
     }
 
-    const user: IUser | null = await User.findOne({ username });
+    const user: IUserDocument | null = await User.findOne({ username });
     if (!user) {
       return NotFound(res, `User ${username} not found.`);
     }
 
-    return Ok(res, user);
+    const userData = new UserData(user)
+
+    return Ok(res, userData);
   });
