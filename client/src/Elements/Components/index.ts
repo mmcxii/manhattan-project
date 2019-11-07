@@ -2,6 +2,7 @@ export * from './Avatar';
 export * from './AvatarUpdater';
 export * from './Button';
 export * from './Card';
+export * from './FavoriteButton';
 export * from './FollowButton';
 export * from './Form';
 export * from './GoBackButton';

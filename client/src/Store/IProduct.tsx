@@ -14,6 +14,7 @@ interface ProductDetail {
 }
 
 export interface ProductProps {
+  _id: string;
   extID: string;
   type: ProductType;
   details: ProductDetail;
