@@ -104,11 +104,13 @@ const SearchForm: React.FC<Props> = () => {
     // Retrieve appropriate product type and update state
     switch (type) {
       case 'beer':
+        // eslint-disable-next-line
         const beerData = await APISearch<BeerProps>(type);
         setBeerResults(beerData);
         setMixedResults([]);
         break;
       case 'cocktail':
+        // eslint-disable-next-line
         const mixedData = await APISearch<MixedProps>('mixed');
         setMixedResults(mixedData);
         setBeerResults([]);

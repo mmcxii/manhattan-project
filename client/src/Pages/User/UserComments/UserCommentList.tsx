@@ -3,7 +3,7 @@ import React from 'react';
 import { CommentProps, UserProps } from 'Store';
 import UserComment from './UserComment';
 
-import { Card, CardHeader, CardBody } from 'Elements';
+import { CardHeader, CardBody } from 'Elements';
 
 interface Props {
   comments: CommentProps[];
