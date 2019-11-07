@@ -14,6 +14,9 @@ const CommentsSection: React.FC<Props> = ({ type, productId }) => {
   const [updateComments, setUpdateComments] = useState<boolean>(true);
   const [comments, setComments] = useState<CommentProps[]>([]);
 
+  // quick hack to check 'logged in'
+  const loggedIn = localStorage.getItem('loginToken') !== null;
+
   useEffect(() => {
     let isSubscribed = true;
 
@@ -43,7 +46,7 @@ const CommentsSection: React.FC<Props> = ({ type, productId }) => {
     <Card as='section'>
       <CardHeader as='h3'>Comments</CardHeader>
       <CardBody>
-        <AddCommentForm setUpdateComments={setUpdateComments} />
+        {loggedIn && <AddCommentForm setUpdateComments={setUpdateComments} />}
         <CommentsList type={type} comments={comments} />
       </CardBody>
     </Card>
