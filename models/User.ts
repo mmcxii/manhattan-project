@@ -9,7 +9,7 @@ export class UserData {
   follows: UserData[];
   followers: UserData[];
   favorites: IProduct[];
-  comments: ICommentDocument[] | CommentData[];
+  comments: CommentData[];
   theme?: 'dark' | 'light';
   highlightedFavorite?: IProduct;
   name?: string;
