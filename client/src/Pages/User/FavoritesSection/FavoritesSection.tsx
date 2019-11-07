@@ -21,7 +21,12 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
         const response: Response = await fetch(`/api/users/${profileInfo.username}/favorites`, {
           method: 'GET'
         });
-        const data = await response.json();
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data: ProductProps[] = await response.json();
 
         setFavorites(data);
       } catch (err) {
