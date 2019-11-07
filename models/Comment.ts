@@ -90,13 +90,6 @@ commentSchema.pre('findOne', function(next: () => void) {
   next();
 });
 
-commentSchema.virtual('rating').get(function(this: { downvotes: ObjectID[]; upvotes: ObjectID[] }): number {
-  const upvotes: number = this.upvotes.length;
-  const downvotes: number = this.downvotes.length;
-  // Represent rating as a percentage (0.0 -> 1.0);
-  return upvotes / (upvotes + downvotes);
-});
-
 // Comment schema method to create a new comment
 commentSchema.statics.createComment = async function(
   username: string,
