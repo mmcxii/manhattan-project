@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { spacing, elevation, transition, red, white, fadeIn } from 'Utilities';
+import { spacing, elevation, transition, red, green, white, fadeIn } from 'Utilities';
 
 export const Card = styled.div`
   min-width: 100%;
@@ -40,6 +40,13 @@ export const CardBody = styled.div`
 export const ErrorCard = styled(Card)`
   ${CardBody} {
     background: ${red};
+    color: ${white};
+  }
+`;
+
+export const SuccessCard = styled(Card)`
+  ${CardBody} {
+    background: ${green};
     color: ${white};
   }
 `;

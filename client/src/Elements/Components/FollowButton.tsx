@@ -21,7 +21,7 @@ export const FollowButton: React.FC<Props> = ({ followTarget }) => {
 
   useEffect(() => {
     for (let i = 0; i < user.follows.length; i++) {
-      if (user.follows[i].username === followTarget.username) {
+      if (user.follows[i].id === followTarget.id) {
         return setUserIsFollowing(true);
       }
     }
