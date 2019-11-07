@@ -6,9 +6,7 @@ interface Props {
   imgUrl?: string;
 }
 
-
-export const AvatarUpdater: React.FC<Props> = (props: Props) => {
-
+export const AvatarUpdater: React.FC<Props> = () => {
   const userInfo: string | null = localStorage.getItem('userInfo');
   const { imgUrl } = userInfo != null ? JSON.parse(userInfo) : undefined;
 
@@ -60,7 +58,6 @@ export const AvatarUpdater: React.FC<Props> = (props: Props) => {
 
       // Clear cached image
       await window.caches.delete(imgUrl);
-
     } catch (error) {
       alert(`Upload error: ${error.message}`);
     } finally {

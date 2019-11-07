@@ -23,17 +23,7 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, updateR
     } else if (downvotes.includes(user.id)) {
       setUserVote('downvote');
     }
-  }, [upvotes, downvotes, user._id]);
-
-  const handleUpvote = () => {
-    setUserVote('upvote');
-    handleVote('upvotes');
-  };
-
-  const handleDownvote = () => {
-    setUserVote('downvote');
-    handleVote('downvotes');
-  };
+  }, [upvotes, downvotes, user.id]);
 
   const handleVote = async (action: 'upvotes' | 'downvotes') => {
     const lsLoginToken = localStorage.getItem('loginToken');
@@ -65,6 +55,16 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, updateR
         alert(`Error changing vote: ${err.message || err}`);
       }
     }
+  };
+
+  const handleUpvote = () => {
+    setUserVote('upvote');
+    handleVote('upvotes');
+  };
+
+  const handleDownvote = () => {
+    setUserVote('downvote');
+    handleVote('downvotes');
   };
 
   // Buttons will not render if a user is not logged in

@@ -104,11 +104,13 @@ const SearchForm: React.FC<Props> = () => {
     // Retrieve appropriate product type and update state
     switch (type) {
       case 'beer':
+        // eslint-disable-next-line
         const beerData = await APISearch<BeerProps>(type);
         setBeerResults(beerData);
         setMixedResults([]);
         break;
       case 'cocktail':
+        // eslint-disable-next-line
         const mixedData = await APISearch<MixedProps>('mixed');
         setMixedResults(mixedData);
         setBeerResults([]);
@@ -137,6 +139,7 @@ const SearchForm: React.FC<Props> = () => {
     }
     // dev-tips wants APISearch to be included in this array but that would require it to be wrapped in useCallback
     // Since I am unsure of how to correctly implement that I will do that later tonight.
+    // eslint-disable-next-line
   }, [type, query]);
 
   return (

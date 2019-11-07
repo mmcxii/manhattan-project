@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UserContext, UserProps } from 'Store';
 
@@ -7,32 +7,38 @@ export const useReadLSUserInfo = () => {
   const { push } = useHistory();
 
   // Clear out localstorage data and redirect to login. Log error if provided.
-  const resetUserInfo = (error?: Error): void => {
-    if (error && error instanceof Error) {
-      console.log('Error updating stored user:', error.message || error);
-    }
-
-    localStorage.removeItem('loginToken');
-    localStorage.removeItem('userInfo');
-    push('/login');
-  };
-
-  // Updates the user data stored in localstorage
-  const setUserInfo = (user: UserProps): void => {
-    try {
-      if (!user) {
-        throw new Error('Invalid or missing user data retrieved.');
+  const resetUserInfo = useCallback(
+    (error?: Error): void => {
+      if (error && error instanceof Error) {
+        console.log('Error updating stored user:', error.message || error);
       }
 
-      localStorage.setItem('userInfo', JSON.stringify(user));
-      dispatch({ type: 'LOG_USER_IN', payload: user });
-    } catch (error) {
-      console.log('Error updating stored user data:', error.message || error);
-      resetUserInfo();
-    }
+      localStorage.removeItem('loginToken');
+      localStorage.removeItem('userInfo');
+      push('/login');
+    },
+    [push]
+  );
 
-    return;
-  };
+  // Updates the user data stored in localstorage
+  const setUserInfo = useCallback(
+    (user: UserProps): void => {
+      try {
+        if (!user) {
+          throw new Error('Invalid or missing user data retrieved.');
+        }
+
+        localStorage.setItem('userInfo', JSON.stringify(user));
+        dispatch({ type: 'LOG_USER_IN', payload: user });
+      } catch (error) {
+        console.log('Error updating stored user data:', error.message || error);
+        resetUserInfo();
+      }
+
+      return;
+    },
+    [dispatch, resetUserInfo]
+  );
 
   useEffect(() => {
     const lsLoginToken = localStorage.getItem('loginToken');
@@ -67,5 +73,5 @@ export const useReadLSUserInfo = () => {
         alert('Invalid or missing credentials. Please log in.');
         resetUserInfo(err);
       });
-  }, [dispatch]);
+  }, [dispatch, setUserInfo, resetUserInfo]);
 };

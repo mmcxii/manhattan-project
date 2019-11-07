@@ -4,7 +4,7 @@ const spacing = {
   md: '1rem',
   lg: '1.5rem',
   xl: '2rem',
-  xxl: '2.5rem',
+  xxl: '2.5rem'
 };
 
 export default spacing;

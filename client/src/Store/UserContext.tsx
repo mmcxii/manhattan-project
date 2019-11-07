@@ -6,7 +6,7 @@ import { CommentProps } from './IComment';
 export interface UserProps {
   id: string;
   username: string;
-  theme: 'dark' | 'light';
+  theme?: 'dark' | 'light';
   name?: string;
   age?: number;
   bio?: string;
