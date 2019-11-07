@@ -116,4 +116,22 @@ export const AuthRoutes = Router()
     const userData = new UserData(user)
 
     return Ok(res, userData);
+  })
+  .post('/validate', validateToken, async (req: IUserRequest, res: express.Response) => {
+
+    const userToken: IUserToken | undefined = req.token;
+
+
+    if (!userToken) {
+      return Unauthorized(res, `Token validation failed, please try logging in again.`);
+    }
+
+    const user: IUserDocument | null = await User.findOne({ _id: userToken._id });
+    if (!user) {
+      return NotFound(res, `User ${userToken.username} not found.`);
+    }
+
+    const userData = new UserData(user)
+
+    return Ok(res, userData);
   });
