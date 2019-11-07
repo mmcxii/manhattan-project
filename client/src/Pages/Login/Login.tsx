@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { UserContext, UserProps } from 'Store';
 import { useForm, useTitle } from 'Hooks';
-import { Form, Input, Button, Card, CardBody, CardHeader } from 'Elements';
+import { Form, Input, Button, Card, CardBody, CardHeader, ErrorCard } from 'Elements';
 
 interface Props {}
 
@@ -11,6 +11,7 @@ const Login: React.FC<Props> = () => {
   useTitle('Log In');
   const { dispatch } = useContext(UserContext);
   const [values, handleChange] = useForm({ username: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
   const history = useHistory();
 
   const attemptLogin = async () => {
@@ -20,6 +21,13 @@ const Login: React.FC<Props> = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values })
       });
+
+      if (!response.ok) {
+        const errorData: { status: number; message: string } = await response.json();
+        setError(errorData.message);
+        return ;
+      }
+
       const data: {
         token: string;
         user: UserProps;
@@ -41,6 +49,12 @@ const Login: React.FC<Props> = () => {
     <Card as='section'>
       <CardHeader>Please log in to access the Manhattan Project</CardHeader>
       <CardBody>
+      {error && (
+          <ErrorCard>
+            <CardHeader as='h3'>Error</CardHeader>
+            <CardBody>{error}</CardBody>
+          </ErrorCard>
+        )}
         <Form
           onSubmit={e => {
             e.preventDefault();
