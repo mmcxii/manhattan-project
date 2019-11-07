@@ -12,9 +12,9 @@ export interface UserProps {
   bio?: string;
   comments?: CommentProps[];
   highlightedFavorite?: string;
-  favorites?: string[];
-  follows?: UserProps[];
-  followers?: UserProps[];
+  favorites: string[];
+  follows: UserProps[];
+  followers: UserProps[];
   imgUrl?: string;
 }
 

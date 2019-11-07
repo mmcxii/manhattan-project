@@ -23,7 +23,7 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
     } else if (downvotes.includes(user.id)) {
       setUserVote('downvote');
     }
-  }, [upvotes, downvotes, user._id]);
+  }, [upvotes, downvotes, user.id]);
 
   const handleVote = async (action: 'upvotes' | 'downvotes') => {
     const lsLoginToken = localStorage.getItem('loginToken');

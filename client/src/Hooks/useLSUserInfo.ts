@@ -38,5 +38,5 @@ export const useReadLSUserInfo = () => {
       alert('Error authenticating. Please try logging in again!');
       return push('/login');
     }
-  }, [dispatch]);
+  }, [dispatch, push]);
 };

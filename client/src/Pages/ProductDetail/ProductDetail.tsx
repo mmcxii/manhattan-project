@@ -26,13 +26,13 @@ const ProductDetail: React.FC<Props> = () => {
 
         const errorCodes: number[] = [400, 404, 500];
         if (errorCodes.includes(response.status)) {
-          // TODO: Handle Errors
-          return;
+          const errorData: { message: string; status: number } = await response.json();
+
+          return alert(errorData.message);
         }
 
         if (response.status === 200) {
           const successData = await response.json();
-          console.log(successData);
 
           setProduct(successData);
         }
