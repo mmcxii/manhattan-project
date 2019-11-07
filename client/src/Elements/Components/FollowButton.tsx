@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -98,3 +99,10 @@ const Button = styled(B)<{ followed: boolean }>`
   grid-area: follow;
   ${props => (props.followed ? `background: ${red} !important; color: ${white} !important;` : null)}
 `;
+
+FollowButton.propTypes = {
+  followTarget: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired
+  }).isRequired
+};
