@@ -10,12 +10,22 @@ export const useReadLSUserInfo = () => {
 
     try {
       if (lsLoginToken) {
-
         
+        const authUser = async () => {
+          const response: Response = await fetch('/api/auth/validate', { 
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${lsLoginToken}`
+          }
+        })
+
+        console.log(response);
+      }
+       authUser();
       }
     } catch (error) {
       localStorage.removeItem('loginToken');
-      localStorage.removeItem('userInfo');
     }
 
     dispatch({ type: 'LOG_USER_IN', payload: parsedData });
