@@ -15,11 +15,13 @@ interface Props {}
 const ProductDetail: React.FC<Props> = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState<ProductProps | null>(null);
+  const [displayProduct, setDisplayProduct] = useState<boolean>(false);
   useTitle(product ? product.name : 'Error: Product not Found');
 
   useEffect(() => {
     const getProductDetails = async () => {
       try {
+        setDisplayProduct(false);
         const response: Response = await fetch(`/api/products/${productId}`, { method: 'GET' });
 
         const errorCodes: number[] = [400, 404, 500];
@@ -36,109 +38,111 @@ const ProductDetail: React.FC<Props> = () => {
         }
       } catch (err) {
         console.log(err.message);
+      } finally {
+        setDisplayProduct(true);
       }
     };
 
     getProductDetails();
   }, [productId]);
 
+  // Build mixed drink / cocktail results
+  const mixedProductDetail = (product: ProductProps) => {
+    return (
+      <Details>
+        <DetailWrapper>
+          <strong>Glass Type:</strong>
+          <br />
+          <p>{product.details.glassType}</p>
+        </DetailWrapper>
+
+        <DetailWrapper>
+          <strong>Directions:</strong>
+          <br />
+          <p>{product.details.directions}</p>
+        </DetailWrapper>
+
+        <DetailWrapper>
+          <strong>Ingredients: </strong>
+          <br />
+          <CocktailIngredients ingredients={product.details.ingredients} />
+        </DetailWrapper>
+      </Details>
+    );
+  };
+
+  // Build beer details
+  const beerProductDetail = (product: ProductProps) => {
+    return (
+      <Details>
+        <DetailWrapper>
+          <strong>Type: </strong>
+          <br />
+          <p>{product.details.subType || 'Not specified'}</p>
+        </DetailWrapper>
+
+        <DetailWrapper>
+          <strong>ABV: </strong>
+          <br />
+          <p>{product.details.ABV ? `${product.details.ABV}%` : 'Not available'}</p>
+        </DetailWrapper>
+
+        {product.details.organic === true && (
+          <DetailWrapper>
+            <p>
+              <strong>Organic: </strong>
+              <i className='fas fa-seedling' />
+            </p>
+          </DetailWrapper>
+        )}
+
+        <DetailWrapper>
+          <strong>Description: </strong>
+          <br />
+          <p>{product.details.desc || 'Not available'}</p>
+        </DetailWrapper>
+      </Details>
+    );
+  };
+
+  // Builds product/drink details
+  const productDetails = (product: ProductProps | null) => {
+    if (!product || product === null) {
+      return <p> Product doesn't exist </p>;
+    }
+
+    const type = product.type;
+    const drinkTypeDetails = type === 'MIXED' ? mixedProductDetail(product) : beerProductDetail(product);
+
+    return (
+      <>
+        <Card as='section'>
+          <CardHeader>{product.name}</CardHeader>
+          <ProductInfo>
+            <Rating
+              upvotes={product.upvotes}
+              downvotes={product.downvotes}
+              id={productId || 'error: product not found'}
+              type='products'
+              ratingValue={product.rating}
+            />
+            <FavoriteButton itemId={productId} />
+            {drinkTypeDetails}
+            <Image
+              src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
+              alt={product.name}
+            />
+          </ProductInfo>
+        </Card>
+        <CommentsSection type={product.type} productId={productId} />
+      </>
+    );
+  };
+
   return (
     <>
       <GoBackButton />
-
-      {product === null ? (
-        <p> Product doesn't exist </p>
-      ) : product.type === 'MIXED' ? (
-        <>
-          <Card as='section'>
-            <CardHeader>{product.name}</CardHeader>
-            <ProductInfo>
-              <Rating
-                upvotes={product.upvotes}
-                downvotes={product.downvotes}
-                id={productId || 'error: product not found'}
-                type='products'
-                ratingValue={product.rating}
-              />
-              <FavoriteButton itemId={productId} />
-              <Details>
-                <DetailWrapper>
-                  <strong>Glass Type:</strong>
-                  <br />
-                  <p>{product.details.glassType}</p>
-                </DetailWrapper>
-
-                <DetailWrapper>
-                  <strong>Directions:</strong>
-                  <br />
-                  <p>{product.details.directions}</p>
-                </DetailWrapper>
-
-                <DetailWrapper>
-                  <strong>Ingredients: </strong>
-                  <br />
-                  <CocktailIngredients ingredients={product.details.ingredients} />
-                </DetailWrapper>
-              </Details>
-              <Image
-                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
-                alt={product.name}
-              />
-            </ProductInfo>
-          </Card>
-          <CommentsSection type={product.type} productId={productId} />
-        </>
-      ) : (
-        <>
-          <Card as='section'>
-            <CardHeader>{product.name}</CardHeader>
-            <ProductInfo>
-              <Rating
-                upvotes={product.upvotes}
-                downvotes={product.downvotes}
-                id={productId || 'error: product not found'}
-                type='products'
-                ratingValue={product.rating}
-              />
-              <FavoriteButton itemId={productId} />
-              <Details>
-                <DetailWrapper>
-                  <strong>Type: </strong>
-                  <br />
-                  <p>{product.details.subType || 'Not specified'}</p>
-                </DetailWrapper>
-
-                <DetailWrapper>
-                  <strong>ABV: </strong>
-                  <br />
-                  <p>{product.details.ABV ? `${product.details.ABV}%` : 'Not available'}</p>
-                </DetailWrapper>
-
-                {product.details.organic === true && (
-                  <DetailWrapper>
-                    <p>
-                      <strong>Organic: </strong>
-                      <i className='fas fa-seedling' />
-                    </p>
-                  </DetailWrapper>
-                )}
-
-                <DetailWrapper>
-                  <strong>Description: </strong>
-                  <br />
-                  <p>{product.details.desc || 'Not available'}</p>
-                </DetailWrapper>
-              </Details>
-
-              <Image
-                src={product.imgUrl === '//:0' || !product.imgUrl ? placeholder : product.imgUrl}
-                alt={product.name}
-              />
-            </ProductInfo>
-          </Card>
-          <CommentsSection type={product.type} productId={productId} />
-        </>
-      )}
+      {displayProduct && productDetails(product)}
     </>
   );
 };
