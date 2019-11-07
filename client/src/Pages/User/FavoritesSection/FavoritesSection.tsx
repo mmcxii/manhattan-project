@@ -45,8 +45,8 @@ const FavoritesSection: React.FC<Props> = ({ profileInfo }) => {
           method: 'GET'
         });
 
-        const errorCodes: number[] = [400, 404, 500];
-        if (errorCodes.includes(response.status)) {
+        // If error OR no content (no favorite) -> return
+        if (!response.ok || response.status === 204) {
           return;
         }
 
