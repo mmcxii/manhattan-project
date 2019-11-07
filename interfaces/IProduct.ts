@@ -1,6 +1,5 @@
 import { IProductDetails } from './IProductDetails';
-import { IComment } from './IComment';
-import { IUserDocument } from '../models';
+import { IUserDocument, ICommentDocument } from '../models';
 
 export enum ProductType {
   BEER = 'BEER',
@@ -10,10 +9,11 @@ export enum ProductType {
 export interface IProduct {
   extID: string;
   type: ProductType;
-  name: string[];
+  name: string;
+  imgUrl: string;
   details: IProductDetails;
-  imgUrl: string[];
-  comments: IComment[];
+  imageUrls: string[];
+  comments: ICommentDocument[];
   upvotes: IUserDocument[];
   downvotes: IUserDocument[];
   rating: number;

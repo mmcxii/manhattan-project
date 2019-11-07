@@ -4,7 +4,7 @@ import { UserProps } from './UserContext';
 type ProductType = 'BEER' | 'WINE' | 'MIXED';
 
 interface ProductDetail {
-  subtype?: string;
+  subType?: string;
   ingredients?: { _id: string; name: string; measurement: string }[];
   directions?: string;
   glassType?: string;
@@ -14,6 +14,7 @@ interface ProductDetail {
 }
 
 export interface ProductProps {
+  _id: string;
   extID: string;
   type: ProductType;
   details: ProductDetail;

@@ -11,23 +11,18 @@ const ProjectInfo: React.FC<Props> = () => {
     {
       name: 'source code',
       link: 'https://github.com/mmcxii/manhattan-project',
-      icon: 'fab fa-github',
+      icon: 'fab fa-github'
     },
     {
       name: 'Brewery DB',
       link: 'https://www.brewerydb.com/',
-      icon: 'fas fa-beer',
+      icon: 'fas fa-beer'
     },
     {
       name: 'The CocktailDB',
       link: 'https://www.thecocktaildb.com/api.php',
-      icon: 'fas fa-glass-martini-alt',
-    },
-    {
-      name: 'quini wine',
-      link: 'https://quiniwine.com/developers',
-      icon: 'fas fa-wine-glass-alt',
-    },
+      icon: 'fas fa-glass-martini-alt'
+    }
   ];
 
   return (

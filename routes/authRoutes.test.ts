@@ -113,10 +113,4 @@ describe('auth routes', () => {
     expect(response.text).toBe('{"message":"Password incorrect.","status":401}');
     done();
   });
-
-  //:username Routes
-
-  it('should return user if username and token match', async done => {
-    const response = await server.post(`/auth/${'johns the best'}`).send({});
-  });
 });

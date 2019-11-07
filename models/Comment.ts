@@ -12,29 +12,40 @@ export interface ICommentDocument extends IComment, Document {
 // Create interface for Comment model
 export interface ICommentModel extends Model<ICommentDocument> {
   createComment(username: string, comment: string, product: string): Promise<ICommentDocument | Error>;
+  author: IUserDocument;
+  downvotes: IUserDocument[];
+  upvotes: IUserDocument[];
 }
 
 //Comment DTO class
 
 export class CommentData {
-  author: UserData;
+  _id: string;
+  dateCreated: Date;
+  author: UserData | 'No author';
+  text: string;
   downvotes: IUser[];
   upvotes: IUser[];
-  _id: string;
   product: IProduct;
   rating: number;
 
-  constructor(comment: ICommentDocument, user: IUserDocument) {
-    this.author = new UserData(user);
+  constructor(comment: ICommentDocument, user?: IUserDocument) {
+    this._id = comment._id;
+    this.dateCreated = comment.dateCreated;
+    this.author = user ? new UserData(user) : 'No author';
+    this.text = comment.text;
     this.downvotes = comment.downvotes;
     this.upvotes = comment.upvotes;
-    this._id = comment._id;
     this.product = comment.product;
     this.rating = comment.rating || 0;
   }
 }
 
 const commentSchema = new Schema({
+  dateCreated: {
+    type: Types.Date,
+    default: Date.now()
+  },
   author: {
     type: Types.ObjectId,
     ref: 'User',
@@ -100,7 +111,7 @@ commentSchema.statics.createComment = async function(
 
   const text = comment.trim();
 
-  const newComment = await this.create({ author: user._id, text, product: product });
+  const newComment = await this.create({ author: user._id, text, product: product, dateCreated: Date.now() });
 
   return newComment.populate('author').execPopulate();
 };

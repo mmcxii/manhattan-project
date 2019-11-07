@@ -112,13 +112,13 @@ export const CommentRoutes = Router()
     }
 
     // Perform upvote, then return updated upvote count
-    const upvotes: number | Error = await comment.upvote(user);
+    const newRating: number | Error = await comment.upvote(user);
 
-    if (upvotes instanceof Error) {
-      return ServerError(res, upvotes);
+    if (newRating instanceof Error) {
+      return ServerError(res, newRating);
     }
 
-    return Ok(res, upvotes);
+    return Ok(res, { rating: newRating });
   })
   .put('/:id/downvotes', async (req, res) => {
     // Add comment downvoter
@@ -145,11 +145,11 @@ export const CommentRoutes = Router()
     }
 
     // Perform downvote, then return updated downvote count
-    const downvotes: number | Error = await comment.downvote(user);
+    const newRating: number | Error = await comment.downvote(user);
 
-    if (downvotes instanceof Error) {
-      return ServerError(res, downvotes);
+    if (newRating instanceof Error) {
+      return ServerError(res, newRating);
     }
 
-    return Ok(res, downvotes);
+    return Ok(res, { rating: newRating });
   });

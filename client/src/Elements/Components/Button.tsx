@@ -16,3 +16,9 @@ export const ButtonLink = styled(Link)`
   display: inline-block;
   text-decoration: none;
 `;
+
+export const ButtonTrans = styled.button`
+  cursor: pointer;
+  border: none;
+  background: transparent;
+`;

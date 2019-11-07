@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 
 import { ProductProps } from './IProduct';
+import { CommentProps } from './IComment';
 
 export interface UserProps {
   id: string;
@@ -9,23 +10,24 @@ export interface UserProps {
   name?: string;
   age?: number;
   bio?: string;
-  highlightedFavorite?: ProductProps;
-  favorites?: string[];
+  comments?: CommentProps[];
+  highlightedFavorite?: string;
+  favorites: string[];
   follows: UserProps[];
   followers: UserProps[];
   imgUrl?: string;
 }
 
 interface ActionProps {
-  type: 'LOG_USER_IN' | 'LOG_USER_OUT' | 'ADD_FOLLOW' | 'REMOVE_FOLLOW';
+  type: 'LOG_USER_IN' | 'LOG_USER_OUT' | 'ADD_FOLLOW' | 'REMOVE_FOLLOW' | 'ADD_FAVORITE' | 'REMOVE_FAVORITE';
   payload: UserProps;
 }
 
-const initialState: UserProps = { id: '', username: '', theme: 'dark', follows: [], followers: [] };
+const initialState: UserProps = { id: '', username: '', theme: 'dark', favorites: [], follows: [], followers: [] };
 
 export const UserContext = createContext<UserProps | any>(initialState);
 
-const reducer = (state: UserProps, action: ActionProps): UserProps => {
+const reducer = (state: UserProps, action: ActionProps | ProductProps): UserProps => {
   switch (action.type) {
     case 'LOG_USER_IN':
       return { ...action.payload };
@@ -38,6 +40,17 @@ const reducer = (state: UserProps, action: ActionProps): UserProps => {
 
     case 'REMOVE_FOLLOW':
       return { ...state, follows: state.follows.filter(item => item.id !== action.payload.id) };
+
+    case 'ADD_FAVORITE':
+      //@ts-ignore
+      return { ...state, favorites: [...state.favorites, action.payload] };
+
+    case 'REMOVE_FAVORITE':
+      //@ts-ignore
+      return { ...state, favorites: state.favorites.filter(item => item._id !== action.payload._id) };
+
+    default:
+      return state;
   }
 };
 
