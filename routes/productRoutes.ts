@@ -44,26 +44,18 @@ function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProdu
       .toString()
       .trim()
       .toLowerCase();
-  if (prodType) {
-    switch (prodType) {
-      case 'beer':
-        productQuery.where('type', ProductType.BEER);
-        break;
-      case 'cocktail':
-        productQuery.where('type', ProductType.MIXED);
-        break;
-    }
-  }
+
+  const searchType = prodType === 'beer' ? ProductType.BEER : ProductType.MIXED;
 
   // Determine search name
   const queryString = query && query.trim();
   if (queryString) {
     if (fuzzy) {
       const pattern = new RegExp(queryString);
-      productQuery.where({ name: { $regex: pattern, $options: 'i' } });
+      productQuery.where({ type: searchType, name: { $regex: pattern, $options: 'i' } });
     } else {
       // Do text search by default
-      productQuery.where({ $text: { $search: queryString } });
+      productQuery.where({ type: searchType, $text: { $search: queryString } });
     }
   }
 
