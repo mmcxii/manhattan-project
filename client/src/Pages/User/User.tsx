@@ -7,6 +7,7 @@ import { useTitle } from 'Hooks';
 import UserInfo from './UserInfo';
 import FavoritesSection from './FavoritesSection';
 import FollowsAndFollowers from './FollowsAndFollowers';
+import UserCommentList from './UserComments';
 
 interface Props {}
 
@@ -47,10 +48,9 @@ const User: React.FC<Props> = () => {
   const profile = profileInfo ? (
     <>
       <UserInfo profileInfo={profileInfo} />
-
       <FavoritesSection profileInfo={profileInfo} />
-
       <FollowsAndFollowers profileInfo={profileInfo} />
+      {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList user={profileInfo} comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
     </>
   ) : (
     <ErrorText>No user was found with that name.</ErrorText>

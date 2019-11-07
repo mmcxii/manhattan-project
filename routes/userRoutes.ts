@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User, IUserDocument, UserData, Comment, ICommentDocument } from '../models';
+import { User, IUserDocument, UserData, Comment, ICommentDocument, CommentData } from '../models';
 import { NotFound, ServerError, BadRequest, Ok, OkNoContent, SendStatus } from './Status';
 import { IUserToken, IUserRequest } from '../interfaces';
 import { s3methods } from '../util/AWS';
