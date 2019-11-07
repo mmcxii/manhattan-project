@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { UserProps } from 'Store';
 import { useTitle } from 'Hooks';
@@ -10,14 +11,25 @@ import UserCommentList from './UserComments';
 
 interface Props {}
 
+const ErrorText = styled.p`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+  margin: 2em 0;
+  font-size: 1.5rem;
+`;
+
 const User: React.FC<Props> = () => {
   const { username } = useParams();
   const [profileInfo, setProfileInfo] = useState<UserProps | null>(null);
+  const [displayUser, setDisplayUser] = useState<boolean>(false);
   useTitle(profileInfo ? profileInfo.name || profileInfo.username : 'Error: User not found');
 
   useEffect(() => {
     const getUser = async () => {
       try {
+        setDisplayUser(false);
         // Get profile information from database
         const response: Response = await fetch(`/api/users/${username}`, { method: 'GET' });
         const data: UserProps = await response.json();
@@ -25,29 +37,26 @@ const User: React.FC<Props> = () => {
         setProfileInfo(data);
       } catch (err) {
         console.log(err);
+      } finally {
+        setDisplayUser(true);
       }
     };
 
     getUser();
   }, [username]);
 
-  return (
+  const profile = profileInfo ? (
     <>
-      {profileInfo ? (
-        <>
-          <UserInfo profileInfo={profileInfo} />
-
-          <FavoritesSection profileInfo={profileInfo} />
-
-          <FollowsAndFollowers profileInfo={profileInfo} />
-          {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList user={profileInfo} comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
-          
-        </>
-      ) : (
-        <p>Error: No User was found with that name.</p>
-      )}
+      <UserInfo profileInfo={profileInfo} />
+      <FavoritesSection profileInfo={profileInfo} />
+      <FollowsAndFollowers profileInfo={profileInfo} />
+      {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList user={profileInfo} comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
     </>
+  ) : (
+    <ErrorText>No user was found with that name.</ErrorText>
   );
+
+  return <>{displayUser && profile}</>;
 };
 
 export default User;
