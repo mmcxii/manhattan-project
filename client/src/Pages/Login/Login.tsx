@@ -26,6 +26,8 @@ const Login: React.FC<Props> = () => {
         const errorData: { status: number; message: string } = await response.json();
         setError(errorData.message);
         return ;
+      } else {
+        setError(null);
       }
 
       const data: {
