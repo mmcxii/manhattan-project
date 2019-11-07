@@ -22,17 +22,17 @@ export interface ICommentModel extends Model<ICommentDocument> {
 export class CommentData {
   _id: string;
   dateCreated: Date;
-  author: UserData;
+  author: UserData | 'No author';
   text: string;
   downvotes: IUser[];
   upvotes: IUser[];
   product: IProduct;
   rating: number;
 
-  constructor(comment: ICommentDocument, user: IUserDocument) {
+  constructor(comment: ICommentDocument, user?: IUserDocument) {
     this._id = comment._id;
     this.dateCreated = comment.dateCreated;
-    this.author = new UserData(user);
+    this.author = user ? new UserData(user) : 'No author';
     this.text = comment.text;
     this.downvotes = comment.downvotes;
     this.upvotes = comment.upvotes;

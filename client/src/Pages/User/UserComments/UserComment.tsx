@@ -3,22 +3,23 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-import { CommentProps, ThemeContext } from 'Store';
+import { CommentProps, ThemeContext, UserProps } from 'Store';
 import { Rating, UserIcon } from 'Elements';
 import { spacing, white, black, fadeIn } from 'Utilities';
 
 interface Props {
   comment: CommentProps;
+  user: UserProps;
 }
 
-const UserComment: React.FC<Props> = ({ comment }) => {
+const UserComment: React.FC<Props> = ({ comment, user }) => {
   const { theme } = useContext(ThemeContext);
-  const { author, dateCreated, product } = comment;
+  const { dateCreated, product } = comment;
 
   return (
     <Wrapper theme={theme}>
       <Rating upvotes={comment.upvotes} downvotes={comment.downvotes} type='comments' id={comment._id} ratingValue={comment.rating} />
-      <UserIcon user={author} />
+      <UserIcon user={user} /> 
       <Author>
         <Link to={`/${product._id}/detail`}>{product.name}</Link>
         <Interpunct>{'\u00B7'}</Interpunct>

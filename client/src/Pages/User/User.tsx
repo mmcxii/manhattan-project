@@ -40,7 +40,7 @@ const User: React.FC<Props> = () => {
           <FavoritesSection profileInfo={profileInfo} />
 
           <FollowsAndFollowers profileInfo={profileInfo} />
-          {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
+          {profileInfo.comments && profileInfo.comments.length > 0 ? <UserCommentList user={profileInfo} comments={profileInfo.comments} /> : 'This user hasn\'t commented on anything'}
           
         </>
       ) : (
