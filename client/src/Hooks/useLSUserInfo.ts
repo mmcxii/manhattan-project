@@ -1,13 +1,24 @@
 import { useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { UserContext } from 'Store';
+import { UserContext, UserProps } from 'Store';
 
 export const useReadLSUserInfo = () => {
   const { dispatch } = useContext(UserContext);
   const { push } = useHistory();
-  useEffect(() => {
-    const lsLoginToken = localStorage.getItem('loginToken');
 
+  // Clear out localstorage data and redirect to login. Log error if provided.
+  const resetUserInfo = (error?: Error): void => {
+    if (error && error instanceof Error) {
+      console.log('Error updating stored user:', error.message || error);
+    }
+
+    localStorage.removeItem('loginToken');
+    localStorage.removeItem('userInfo');
+    push('/login');
+  };
+
+  // Updates the user data stored in localstorage
+  const setUserInfo = (user: UserProps): void => {
     try {
       if (lsLoginToken) {
         const authUser = async () => {

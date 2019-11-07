@@ -118,6 +118,7 @@ const DropdownToggle = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
+  outline: none;
 `;
 
 const Wrapper = styled.div<{}>`

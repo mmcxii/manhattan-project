@@ -10,10 +10,10 @@ interface Props {
   downvotes: UserProps[];
   type: 'products' | 'comments';
   id: string;
-  setRating: React.Dispatch<React.SetStateAction<number>>;
+  updateRating: (rating: number) => void;
 }
 
-const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRating, rating }) => {
+const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, updateRating, rating }) => {
   const { user } = useContext(UserContext);
   const [userVote, setUserVote] = useState<'upvote' | 'downvote' | null>(null);
 
@@ -43,16 +43,14 @@ const UpvoteDownvote: React.FC<Props> = ({ upvotes, downvotes, type, id, setRati
         });
 
         if (!response.ok) {
+          console.log(`Vote error: action=${action} type=${type} id=${id}`)
           return;
         }
 
         const { rating } = await response.json();
-        if (!rating) {
-          return;
-        }
 
         // Update rating with value returned in response
-        setRating(rating);
+        updateRating(rating);
       } catch (err) {
         alert(`Error changing vote: ${err.message || err}`);
       }

@@ -35,9 +35,8 @@ const AddCommentForm: React.FC<Props> = ({ setUpdateComments }) => {
           return setErrorMessage(errorData.message);
         }
 
-        const data = await response.json();
+        await response.json();
 
-        console.log(data);
       } catch (err) {
         console.log(err.message);
       } finally {

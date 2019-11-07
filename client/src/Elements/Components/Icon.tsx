@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ThemeContext } from 'Store';
-import { spacing, transition, green, white, red, black, elevation, rounded } from 'Utilities';
+import { spacing, transition, green, white, red, black, elevation, grey } from 'Utilities';
 
 interface Props {
   icon: string;
@@ -24,7 +24,7 @@ export const IconButton: React.FC<Props> = (props: Props) => {
 
   return (
     <ButtonWrapper theme={theme} onClick={props.onClick}>
-      <BtnI className={props.icon} /> Upload
+      <span><BtnI className={props.icon} /> Upload</span>
     </ButtonWrapper>
   );
 };
@@ -53,11 +53,14 @@ const ButtonWrapper = styled.button<{ theme: string }>`
   border: none;
   padding: ${spacing.sm} ${spacing.xl};
   margin: ${spacing.sm} 0;
-  border-radius: ${rounded};
   cursor: pointer;
-  color: ${black};
-  background-color: ${white};
+  color: ${p => p.theme === 'dark' ? black : white};
+  background-color: ${p => p.theme === 'dark' ? white : grey};
   outline: none;
+  & + span {
+    color: ${p => p.theme === 'dark' ? black : white};
+    background-color: ${p => p.theme === 'dark' ? white : grey};
+  }
   :hover {
     background-color: ${green};
   }
@@ -73,5 +76,5 @@ const I = styled.i`
 `;
 
 const BtnI = styled.i`
-  color: ${black};
+  background-color: ${p => p.theme === 'dark' ? black : 'inherit'};
 `;
