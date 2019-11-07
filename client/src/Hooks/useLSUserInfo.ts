@@ -21,7 +21,8 @@ export const useReadLSUserInfo = () => {
         })
 
         if (!response.ok) {
-          return push('/login')
+          alert('Token validation failed. Redirecting to login.');
+          return push('/login');
         }
 
         const userData = await response.json();
@@ -35,7 +36,8 @@ export const useReadLSUserInfo = () => {
     } catch (error) {
       localStorage.removeItem('loginToken');
       localStorage.removeItem('userInfo');
-      return alert('Error authenticating. Please try logging in again!');
+      alert('Error authenticating. Please try logging in again!');
+      return push('/login');
     }
 
 
