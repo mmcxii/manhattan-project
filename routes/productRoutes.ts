@@ -57,6 +57,8 @@ function buildProductsQuery(parms: IProductFilters, fuzzy = false): Query<IProdu
       // Do text search by default
       productQuery.where({ type: searchType, $text: { $search: queryString } });
     }
+  } else {
+    productQuery.where({ type: searchType });
   }
 
   return productQuery;
