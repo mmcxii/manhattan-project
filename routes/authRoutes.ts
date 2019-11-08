@@ -83,8 +83,10 @@ export const AuthRoutes = Router()
       return BadRequest(res, 'Login failed. Missing authorization header.');
     }
 
+    const usernameValue = username.trim().toLowerCase();
+
     // Lookup associated User doc and return with token
-    const user: IUserDocument | null = await User.findOne({ username }).populate('follows followers');
+    const user: IUserDocument | null = await User.findOne({ username: usernameValue }).populate('follows followers');
 
     if (!user) {
       return NotFound(res, `User ${username} not found.`);
